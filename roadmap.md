@@ -36,4 +36,4 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 - [x] Run 29 rule/routing tests, three-account request/decline/block/privacy flows, unsigned-callback rejection and desktop/mobile screenshots.
 - [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
 
-Phase 3 excludes Airscale, AI, feedback and administration.
+Phase 3 excludes Airscale, AI, feedback and administration.- [x] Replace the favicon with the event site favicon (32x32 G mark served at /favicon.png).
