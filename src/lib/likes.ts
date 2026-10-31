@@ -1,5 +1,7 @@
 import { useCallback, useSyncExternalStore } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { toggleSessionLike, type Session } from "./event";
+import { useAuth } from "./auth";
 
 const KEY = "hey-genai:likes";
 const EMPTY: string[] = [];
@@ -45,15 +47,21 @@ function subscribe(l: () => void) {
   };
 }
 
-/** Likes are private, local to this device for phase 1. */
+/** Likes are private, and require a signed-in account. */
 export function useLikes() {
   const likes = useSyncExternalStore(subscribe, read, () => EMPTY);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const toggle = useCallback(
     (session: Session, all: Session[]) => {
+      if (!user) {
+        void navigate({ to: "/login" });
+        return;
+      }
       write(toggleSessionLike(read(), session, all));
     },
-    [],
+    [user, navigate],
   );
 
   return { likes, toggle };
