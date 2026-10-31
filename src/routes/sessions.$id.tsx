@@ -10,6 +10,8 @@ import { CalendarButtons } from "@/components/CalendarButtons";
 export const Route = createFileRoute("/sessions/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Session · Hey GenAI Days" },
       { name: "description", content: "Détail d'une session des GenAI Days : horaire, salle, speakers." },
       { property: "og:title", content: "Session · Hey GenAI Days" },

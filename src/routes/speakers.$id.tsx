@@ -1,4 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth";
+import { membersOptions } from "@/lib/member-queries";
+import { Button } from "@/components/ui/button";
 import { ExternalLink, Globe, Linkedin } from "lucide-react";
 import { useSessions, useSpeakers } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
@@ -9,6 +13,8 @@ import { SessionCard } from "@/components/SessionCard";
 export const Route = createFileRoute("/speakers/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Speaker · Hey GenAI Days" },
       { name: "description", content: "Bio, parcours et sessions d'un speaker des GenAI Days." },
       { property: "og:title", content: "Speaker · Hey GenAI Days" },
@@ -33,6 +39,9 @@ function SpeakerPage() {
   const { data, isPending, isError, refetch } = useSpeakers();
   const { data: sessionsData } = useSessions();
   const { likes, toggle } = useLikes();
+  const { user } = useAuth();
+  const members = useQuery({ ...membersOptions(), enabled: !!user });
+  const member = members.data?.find(p => p.profile_status?.speaker_id === id);
 
   if (isPending) return <LoadingView />;
   if (isError || !data) return <ErrorView onRetry={() => refetch()} />;
@@ -50,6 +59,7 @@ function SpeakerPage() {
   return (
     <article className="space-y-6 px-4 pb-6 pt-4">
       <BackLink to="/speakers" />
+      {member && <Button asChild variant="outline"><Link to="/networking/$id" params={{id:member.user_id}}>{t('directory.speakerLink')}</Link></Button>}
       <header className="flex items-center gap-4">
         {s.photo && <img src={s.photo} alt="" className="size-24 shrink-0 rounded-full object-cover shadow-card" />}
         <div className="min-w-0">

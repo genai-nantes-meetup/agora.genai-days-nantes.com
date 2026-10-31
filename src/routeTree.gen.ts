@@ -10,29 +10,50 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MessagesRouteImport } from './routes/messages'
-import { Route as NetworkingRouteImport } from './routes/networking'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DonneesRouteImport } from './routes/donnees'
+import { Route as JoinRouteImport } from './routes/join'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlanRouteImport } from './routes/plan'
-import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
+import { Route as AuthenticatedNetworkingRouteImport } from './routes/_authenticated/networking'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as SessionsIdRouteImport } from './routes/sessions.$id'
 import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
 import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
+import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
+import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authenticated/networking.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MessagesRoute = MessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NetworkingRoute = NetworkingRouteImport.update({
-  id: '/networking',
-  path: '/networking',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonneesRoute = DonneesRouteImport.update({
+  id: '/donnees',
+  path: '/donnees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanRoute = PlanRouteImport.update({
@@ -40,10 +61,20 @@ const PlanRoute = PlanRouteImport.update({
   path: '/plan',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfilRoute = ProfilRouteImport.update({
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNetworkingRoute = AuthenticatedNetworkingRouteImport.update({
+  id: '/networking',
+  path: '/networking',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const SessionsIdRoute = SessionsIdRouteImport.update({
   id: '/sessions/$id',
@@ -70,89 +101,139 @@ const SponsorsIdRoute = SponsorsIdRouteImport.update({
   path: '/sponsors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedNetworkingIndexRoute =
+  AuthenticatedNetworkingIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedNetworkingRoute,
+  } as any)
+const AuthenticatedNetworkingIdRoute =
+  AuthenticatedNetworkingIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedNetworkingRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
+  '/auth': typeof AuthRoute
+  '/donnees': typeof DonneesRoute
+  '/join': typeof JoinRoute
+  '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/messages': typeof AuthenticatedMessagesRoute
+  '/networking': typeof AuthenticatedNetworkingRouteWithChildren
+  '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
+  '/auth': typeof AuthRoute
+  '/donnees': typeof DonneesRoute
+  '/join': typeof JoinRoute
+  '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/messages': typeof AuthenticatedMessagesRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers': typeof SpeakersIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
+  '/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/networking': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/donnees': typeof DonneesRoute
+  '/join': typeof JoinRoute
+  '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/networking': typeof AuthenticatedNetworkingRouteWithChildren
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/_authenticated/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/donnees'
+    | '/join'
+    | '/login'
+    | '/plan'
     | '/messages'
     | '/networking'
-    | '/plan'
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/networking/$id'
+    | '/networking/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/messages'
-    | '/networking'
+    | '/auth'
+    | '/donnees'
+    | '/join'
+    | '/login'
     | '/plan'
+    | '/messages'
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers'
     | '/sponsors'
+    | '/networking/$id'
+    | '/networking'
   id:
     | '__root__'
     | '/'
-    | '/messages'
-    | '/networking'
+    | '/_authenticated'
+    | '/auth'
+    | '/donnees'
+    | '/join'
+    | '/login'
     | '/plan'
-    | '/profil'
+    | '/_authenticated/messages'
+    | '/_authenticated/networking'
+    | '/_authenticated/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/_authenticated/networking/$id'
+    | '/_authenticated/networking/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MessagesRoute: typeof MessagesRoute
-  NetworkingRoute: typeof NetworkingRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  DonneesRoute: typeof DonneesRoute
+  JoinRoute: typeof JoinRoute
+  LoginRoute: typeof LoginRoute
   PlanRoute: typeof PlanRoute
-  ProfilRoute: typeof ProfilRoute
   SessionsIdRoute: typeof SessionsIdRoute
   SpeakersIdRoute: typeof SpeakersIdRoute
   SponsorsIdRoute: typeof SponsorsIdRoute
@@ -169,18 +250,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/messages': {
-      id: '/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/networking': {
-      id: '/networking'
-      path: '/networking'
-      fullPath: '/networking'
-      preLoaderRoute: typeof NetworkingRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donnees': {
+      id: '/donnees'
+      path: '/donnees'
+      fullPath: '/donnees'
+      preLoaderRoute: typeof DonneesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plan': {
@@ -190,12 +292,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profil': {
-      id: '/profil'
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/networking': {
+      id: '/_authenticated/networking'
+      path: '/networking'
+      fullPath: '/networking'
+      preLoaderRoute: typeof AuthenticatedNetworkingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
       path: '/profil'
       fullPath: '/profil'
-      preLoaderRoute: typeof ProfilRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/sessions/$id': {
       id: '/sessions/$id'
@@ -232,15 +348,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/networking/': {
+      id: '/_authenticated/networking/'
+      path: '/'
+      fullPath: '/networking/'
+      preLoaderRoute: typeof AuthenticatedNetworkingIndexRouteImport
+      parentRoute: typeof AuthenticatedNetworkingRoute
+    }
+    '/_authenticated/networking/$id': {
+      id: '/_authenticated/networking/$id'
+      path: '/$id'
+      fullPath: '/networking/$id'
+      preLoaderRoute: typeof AuthenticatedNetworkingIdRouteImport
+      parentRoute: typeof AuthenticatedNetworkingRoute
+    }
   }
 }
 
+interface AuthenticatedNetworkingRouteChildren {
+  AuthenticatedNetworkingIdRoute: typeof AuthenticatedNetworkingIdRoute
+  AuthenticatedNetworkingIndexRoute: typeof AuthenticatedNetworkingIndexRoute
+}
+
+const AuthenticatedNetworkingRouteChildren: AuthenticatedNetworkingRouteChildren =
+  {
+    AuthenticatedNetworkingIdRoute: AuthenticatedNetworkingIdRoute,
+    AuthenticatedNetworkingIndexRoute: AuthenticatedNetworkingIndexRoute,
+  }
+
+const AuthenticatedNetworkingRouteWithChildren =
+  AuthenticatedNetworkingRoute._addFileChildren(
+    AuthenticatedNetworkingRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedNetworkingRoute: typeof AuthenticatedNetworkingRouteWithChildren
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedNetworkingRoute: AuthenticatedNetworkingRouteWithChildren,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MessagesRoute: MessagesRoute,
-  NetworkingRoute: NetworkingRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  DonneesRoute: DonneesRoute,
+  JoinRoute: JoinRoute,
+  LoginRoute: LoginRoute,
   PlanRoute: PlanRoute,
-  ProfilRoute: ProfilRoute,
   SessionsIdRoute: SessionsIdRoute,
   SpeakersIdRoute: SpeakersIdRoute,
   SponsorsIdRoute: SponsorsIdRoute,

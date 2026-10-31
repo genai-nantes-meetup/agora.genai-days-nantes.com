@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { I18nProvider } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { setupServiceWorker } from "@/lib/pwa";
+import { AuthProvider } from "@/lib/auth";
 
 function NotFoundComponent() {
   return (
@@ -121,10 +122,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
+        <AuthProvider>
         <AppShell>
           <Outlet />
         </AppShell>
         <Toaster position="top-center" richColors closeButton />
+        </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>
   );

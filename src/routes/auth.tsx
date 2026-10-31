@@ -1,0 +1,2 @@
+import {createFileRoute,redirect} from '@tanstack/react-router';
+export const Route=createFileRoute('/auth')({beforeLoad:()=>{throw redirect({to:'/login'});},head:()=>({meta:[{title:'Accès · Hey GenAI Days'},{name:'description',content:'Accès aux comptes de Hey GenAI Days.'},{property:'og:title',content:'Accès · Hey GenAI Days'},{property:'og:description',content:'Connexion par lien magique.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]})});

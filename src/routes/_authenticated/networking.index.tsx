@@ -1,0 +1,30 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { LoadingView,ErrorView } from "@/components/common";
+import {useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {SlidersHorizontal,Search} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Sheet,SheetContent,SheetHeader,SheetTitle} from '@/components/ui/sheet';
+import {Choices} from '@/components/ProfileForm';
+import {MemberCard} from '@/components/MemberCard';
+import {membersOptions} from '@/lib/member-queries';
+import {useSponsors} from '@/lib/data';
+import {jobTags,intentions,aiLevels,companySizes} from '@/lib/networking';
+import {useI18n} from '@/lib/i18n';
+
+export const Route = createFileRoute("/_authenticated/networking/")({
+  head: () => ({
+    meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { title: "Networking · Hey GenAI Days" },
+      { name: "description", content: "Networking — bientôt disponible dans Hey GenAI Days." },
+      { property: "og:title", content: "Networking · Hey GenAI Days" },
+      { property: "og:description", content: "Networking — bientôt disponible dans l'app des GenAI Days." },
+    ],
+  }),
+  component: Directory,
+});
+
+function Directory(){const {t}=useI18n();const q=useQuery(membersOptions());const sponsors=useSponsors();const [search,setSearch]=useState('');const [open,setOpen]=useState(false);const [tags,setTags]=useState<string[]>([]);const [goals,setGoals]=useState<string[]>([]);const [level,setLevel]=useState('');const [size,setSize]=useState('');const [sector,setSector]=useState('');const [status,setStatus]=useState('');if(q.isPending)return <LoadingView/>;if(q.isError)return <ErrorView onRetry={()=>q.refetch()}/>;const rows=q.data.filter(p=>[p.first_name,p.last_name,p.job_title,p.company].join(' ').toLocaleLowerCase().includes(search.toLocaleLowerCase())&&(!tags.length||tags.some(x=>p.job_tags.includes(x as typeof p.job_tags[number])))&&(!goals.length||goals.some(x=>p.intentions.includes(x as typeof p.intentions[number])))&&(!level||p.ai_level===level)&&(!size||p.company_size===size)&&(!sector||p.sector===sector)&&(!status||(status==='speaker'?p.profile_status?.is_speaker:status==='participant'?!p.profile_status?.is_speaker&&!p.profile_status?.sponsor_tier:p.profile_status?.sponsor_tier===status)));const sectors=[...new Set(q.data.map(x=>x.sector).filter((x):x is string=>!!x))].sort();function reset(){setTags([]);setGoals([]);setLevel('');setSize('');setSector('');setStatus('');}return <div className="px-4 py-6"><h1 className="text-4xl">{t('directory.title')}</h1><div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] gap-2"><div className="relative min-w-0"><Search className="absolute left-3 top-3 size-4 text-muted-foreground"/><Input className="pl-9" aria-label={t('directory.search')} placeholder={t('directory.search')} value={search} onChange={e=>setSearch(e.target.value)}/></div><Button variant="outline" size="icon" aria-label={t('directory.filters')} title={t('directory.filters')} onClick={()=>setOpen(true)}><SlidersHorizontal className="size-4"/></Button></div><p className="my-4 text-xs text-muted-foreground">{t('directory.results',{n:rows.length})}</p>{rows.length?<div className="grid gap-3 sm:grid-cols-2">{rows.map(p=><MemberCard key={p.user_id} member={p} sponsorLogo={sponsors.data?.sponsors.find(s=>s.id===p.profile_status?.sponsor_id)?.logo??undefined}/>)}</div>:<p className="py-12 text-center text-muted-foreground">{t('directory.empty')}</p>}<Sheet open={open} onOpenChange={setOpen}><SheetContent className="overflow-y-auto"><SheetHeader><SheetTitle>{t('directory.filters')}</SheetTitle></SheetHeader><div className="space-y-5 p-4"><fieldset><legend className="mb-2 font-bold">{t('form.job_tags')}</legend><Choices values={jobTags} selected={tags} onChange={setTags} prefix="tag."/></fieldset><fieldset><legend className="mb-2 font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={goals} onChange={setGoals} prefix="intention."/></fieldset>{[{label:'form.ai_level' as const,value:level,set:setLevel,values:aiLevels,prefix:'level.'},{label:'form.company_size' as const,value:size,set:setSize,values:companySizes,prefix:'size.'}].map(item=><label key={item.label} className="block space-y-2 text-sm font-bold">{t(item.label)}<select className="h-10 w-full rounded-md border bg-card px-2" value={item.value} onChange={e=>item.set(e.target.value)}><option value="">{t('filter.all')}</option>{item.values.map(x=><option key={x} value={x}>{t(`${item.prefix}${x}` as Parameters<typeof t>[0])}</option>)}</select></label>)}<label className="block text-sm font-bold">{t('form.sector')}<select className="mt-2 h-10 w-full rounded-md border bg-card px-2" value={sector} onChange={e=>setSector(e.target.value)}><option value="">{t('filter.all')}</option>{sectors.map(x=><option key={x}>{x}</option>)}</select></label><label className="block text-sm font-bold">{t('directory.status')}<select className="mt-2 h-10 w-full rounded-md border bg-card px-2" value={status} onChange={e=>setStatus(e.target.value)}><option value="">{t('filter.all')}</option>{['platinum','gold','silver'].map(x=><option key={x} value={x}>{t('directory.sponsor')} {x}</option>)}<option value="speaker">{t('directory.speaker')}</option><option value="participant">{t('directory.participant')}</option></select></label><Button variant="outline" onClick={reset}>{t('directory.reset')}</Button><Button className="w-full" onClick={()=>setOpen(false)}>{t('directory.apply')}</Button></div></SheetContent></Sheet></div>}
