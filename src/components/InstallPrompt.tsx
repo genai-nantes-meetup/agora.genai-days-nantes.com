@@ -32,6 +32,7 @@ export function InstallPrompt() {
     } catch {
       /* ignore */
     }
+    return undefined;
   }, []);
 
   if (!ios) return null;
