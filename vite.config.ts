@@ -37,8 +37,14 @@ export default defineConfig({
             },
             {
               urlPattern: ({ url }) => url.origin === "https://genai-days-nantes.com" && url.pathname.startsWith("/api/"),
-              handler: "StaleWhileRevalidate",
-              options: { cacheName: "event-data", cacheableResponse: { statuses: [0, 200] } },
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "event-data",
+                networkTimeoutSeconds: 4,
+                cacheableResponse: { statuses: [0, 200] },
+                matchOptions: { ignoreSearch: true },
+                fetchOptions: { cache: "no-store" },
+              },
             },
             {
               urlPattern: ({ request, url }) =>
