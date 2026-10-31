@@ -50,11 +50,12 @@ function subscribe(l: () => void) {
 /** Likes are private, and require a signed-in account. */
 export function useLikes() {
   const likes = useSyncExternalStore(subscribe, read, () => EMPTY);
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const navigate = useNavigate();
 
   const toggle = useCallback(
     (session: Session, all: Session[]) => {
+      if (!ready) return;
       if (!user) {
         void navigate({ to: "/login" });
         return;
