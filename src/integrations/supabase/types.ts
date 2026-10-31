@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_calls: {
+        Row: {
+          created_at: string
+          function: string
+          id: string
+          success: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          function: string
+          id?: string
+          success?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          function?: string
+          id?: string
+          success?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_calls_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       blocks: {
         Row: {
           blocked_id: string
@@ -204,6 +236,38 @@ export type Database = {
           },
         ]
       }
+      enrichment_cache: {
+        Row: {
+          created_at: string
+          linkedin_url: string
+          result: Json | null
+          success: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          linkedin_url: string
+          result?: Json | null
+          success?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          linkedin_url?: string
+          result?: Json | null
+          success?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrichment_cache_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           billetweb_ref: string | null
@@ -211,7 +275,9 @@ export type Database = {
           claimed_at: string | null
           created_at: string
           email: string
+          first_name: string
           id: string
+          last_name: string
           token: string
           used_at: string | null
         }
@@ -221,7 +287,9 @@ export type Database = {
           claimed_at?: string | null
           created_at?: string
           email: string
+          first_name?: string
           id?: string
+          last_name?: string
           token?: string
           used_at?: string | null
         }
@@ -231,7 +299,9 @@ export type Database = {
           claimed_at?: string | null
           created_at?: string
           email?: string
+          first_name?: string
           id?: string
+          last_name?: string
           token?: string
           used_at?: string | null
         }
@@ -396,6 +466,36 @@ export type Database = {
         }
         Relationships: []
       }
+      purge_control: {
+        Row: {
+          completed_at: string | null
+          id: boolean
+          last_error: string | null
+          lease_id: string | null
+          lease_until: string | null
+          paused: boolean
+          preserve_user_ids: string[]
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: boolean
+          last_error?: string | null
+          lease_id?: string | null
+          lease_until?: string | null
+          paused?: boolean
+          preserve_user_ids?: string[]
+        }
+        Update: {
+          completed_at?: string | null
+          id?: boolean
+          last_error?: string | null
+          lease_id?: string | null
+          lease_until?: string | null
+          paused?: boolean
+          preserve_user_ids?: string[]
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
@@ -467,6 +567,38 @@ export type Database = {
           {
             foreignKeyName: "reports_reporter_id_fkey"
             columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      session_feedback: {
+        Row: {
+          choices: string[]
+          comment: string
+          session_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          choices?: string[]
+          comment?: string
+          session_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          choices?: string[]
+          comment?: string
+          session_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_feedback_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
@@ -552,11 +684,24 @@ export type Database = {
         Args: { claim: string; invite_token: string }
         Returns: string
       }
+      claim_purge: { Args: { claim: string }; Returns: boolean }
       complete_invitation: {
         Args: { claim: string; fields: Json; invite_token: string; uid: string }
         Returns: undefined
       }
       decline_connection: { Args: { request: string }; Returns: undefined }
+      feedback_comments: {
+        Args: { sid: string }
+        Returns: {
+          choices: string[]
+          comment: string
+          first_name: string
+          last_name: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      feedback_counts: { Args: { sid: string }; Returns: Json }
       finish_connection_accept: {
         Args: {
           claim: string
@@ -580,6 +725,11 @@ export type Database = {
         }[]
       }
       request_connection: { Args: { target: string }; Returns: string }
+      reserve_ai_call: { Args: { kind: string; uid: string }; Returns: string }
+      reserve_enrichment: {
+        Args: { uid: string; url: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
