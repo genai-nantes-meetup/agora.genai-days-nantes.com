@@ -22,13 +22,16 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 # Phase 3
 
 - [x] Replace overlapping session likes silently with the newly liked session, without notifications; rule tests and program UI verified.
-- [ ] Confirm Twilio credentials and verified app-email sender domain.
-- [ ] Add private connection/conversation/message-event/push-subscription storage and block cleanup.
-- [ ] Implement request/accept/decline actions and profile/message inbox states.
-- [ ] Add Twilio provisioning, short-lived identity tokens, realtime messaging and unread badges.
-- [ ] Enforce messaging closure on 24 November 2026 at midnight Paris time.
-- [ ] Add signed Twilio event handling, browser push and one-time permission invitation.
-- [ ] Add bilingual per-event emails and five-minute unread reminder checks with deduplication.
-- [ ] Run rule tests and two-account end-to-end checks; report blockers and webhook URL.
+- [ ] Verify Twilio credentials: saved, but Twilio rejects Roles and Webhooks reads with 401/code 70051; needs an authorized Standard/Main key.
+- [x] Add private connection/conversation/message-event/push-subscription storage, private data-free realtime doorbells and durable block/deletion cleanup.
+- [x] Implement request/accept/decline actions and profile/message inbox states; requests, declines and blocking verified with three temporary accounts.
+- [x] Implement Twilio provisioning, short-lived identity tokens, realtime client and unread badges; real exchanges blocked by Twilio permissions and unpublished callback configuration.
+- [x] Enforce messaging closure on 24 November 2026 at midnight Paris time through authenticated send functions and read-only Twilio client roles; exact date unit-tested.
+- [x] Add signed Twilio callbacks, Web Push delivery code and one-time permission invitation.
+- [ ] Activate browser push: requires a securely supplied VAPID public/private key pair and real-device verification.
+- [ ] Add bilingual per-event emails and five-minute reminder sends: blocked on configuring an owned email domain; no email scaffold or schedule created yet.
+- [ ] Activate cleanup/reconciliation schedule and configure read-only Twilio roles/callbacks: blocked on authorized Twilio key and publication.
+- [x] Run 29 rule/routing tests, three-account request/decline/block/privacy flows, unsigned-callback rejection and desktop/mobile screenshots.
+- [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
 
 Phase 3 excludes Airscale, AI, feedback and administration.
