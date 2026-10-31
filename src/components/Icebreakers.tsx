@@ -1,0 +1,6 @@
+import {useEffect,useState} from 'react';
+import {useServerFn} from '@tanstack/react-start';
+import {suggestIcebreakers} from '@/lib/phase4/ai.functions';
+import {useI18n} from '@/lib/i18n';
+import {Button} from './ui/button';
+export function Icebreakers({id,onChoose,onSend}:{id:string;onChoose:(text:string)=>void;onSend:(text:string)=>void}){const {t,lang}=useI18n();const suggest=useServerFn(suggestIcebreakers);const [messages,setMessages]=useState<string[]>([]);const [hidden,setHidden]=useState(false);useEffect(()=>{let active=true;void suggest({data:{id,lang}}).then(r=>{if(active)setMessages(r.messages);}).catch(()=>{});return()=>{active=false;};},[id,lang,suggest]);if(hidden||!messages.length)return null;return <section className="space-y-3"><h2 className="text-xl">{t('ai.icebreakers')}</h2>{messages.map((message,i)=><div key={i} className="border-l-2 border-secondary pl-3"><p className="text-sm font-normal">{message}</p><div className="mt-2 flex gap-2"><Button size="sm" variant="outline" onClick={()=>onChoose(message)}>{t('form.edit')}</Button><Button size="sm" onClick={()=>onSend(message)}>{t('messages.send')}</Button></div></div>)}<Button variant="ghost" size="sm" onClick={()=>setHidden(true)}>{t('ai.ignore')}</Button></section>;}
