@@ -13,6 +13,7 @@ export async function twilio<T>(path:string,body?:Record<string,string>):Promise
  return response.json() as Promise<T>;
 }
 export async function issueTwilioToken(uid:string){
+ await assertSafeTwilioConfiguration();
  const c=twilioConfig();const now=Math.floor(Date.now()/1000);
  return new SignJWT({grants:{identity:uid,chat:{service_sid:c.service}}}).setProtectedHeader({alg:'HS256',typ:'JWT',cty:'twilio-fpa;v=1'}).setIssuer(c.key).setSubject(c.account).setJti(`${c.key}-${crypto.randomUUID()}`).setIssuedAt(now).setExpirationTime(now+600).sign(new TextEncoder().encode(c.secret));
 }
@@ -26,7 +27,13 @@ export async function verifyTwilioRequest(request:Request,raw:string):Promise<bo
 }
 type TwilioConversation={sid:string;state:string};
 type Participant={sid:string;identity:string;last_read_message_index:number|null};
+export async function assertSafeTwilioConfiguration(){
+ const [configuration,webhooks,roles]=await Promise.all([twilio<{default_chat_service_role_sid:string;default_conversation_role_sid:string;default_conversation_creator_role_sid:string}>('/Configuration'),twilio<{pre_webhook_url:string;post_webhook_url:string;filters:string[]}>('/Configuration/Webhooks'),twilio<{roles:{sid:string;type:string;permissions:string[]}[]}>('/Roles')]);
+ const serviceRole=roles.roles.find(r=>r.sid===configuration.default_chat_service_role_sid);const participantRole=roles.roles.find(r=>r.sid===configuration.default_conversation_role_sid);const creatorRole=roles.roles.find(r=>r.sid===configuration.default_conversation_creator_role_sid);
+ if(!serviceRole||serviceRole.permissions.some(p=>p!=='editOwnUserInfo')||!participantRole||!creatorRole||[participantRole,creatorRole].some(r=>r.permissions.some(p=>p!=='sendMessage'))||!participantRole.permissions.includes('sendMessage')||webhooks.pre_webhook_url!==`${APP_ORIGIN}/api/public/twilio/pre`||webhooks.post_webhook_url!==`${APP_ORIGIN}/api/public/twilio/events`||!webhooks.filters.includes('onMessageAdd')||!webhooks.filters.includes('onMessageAdded'))throw new Error('UnsafeTwilioConfiguration');
+}
 export async function provisionConversation(requestId:string,a:string,b:string){
+ await assertSafeTwilioConfiguration();
  const unique=`genai-${requestId}`;
  let conversation:TwilioConversation;
  try{conversation=await twilio<TwilioConversation>(`/Conversations/${unique}`);}catch(error){if(!(error instanceof Error)||!error.message.includes('[404]'))throw error;conversation=await twilio<TwilioConversation>('/Conversations',{UniqueName:unique,State:'active'});}

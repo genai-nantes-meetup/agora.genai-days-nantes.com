@@ -12,7 +12,7 @@ export const inbox=createServerFn({method:'POST'}).middleware([requireSupabaseAu
  return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data};
 });
 export const sendConnection=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {data:id,error}=await context.supabase.rpc('request_connection',{target:data.id});if(error||!id)throw new Error('Forbidden');return {id};
+ setResponseHeader('Cache-Control','no-store');const {data:before}=await context.supabase.rpc('member_connections');const existing=before?.some(r=>[r.requester_id,r.recipient_id].includes(data.id));const {data:id,error}=await context.supabase.rpc('request_connection',{target:data.id});if(error||!id)throw new Error('Forbidden');if(!existing){const {notifyRequest}=await import('./notifications.server');await notifyRequest(id).catch(()=>{});}return {id};
 });
 export const declineConnection=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
  setResponseHeader('Cache-Control','no-store');const {error}=await context.supabase.rpc('decline_connection',{request:data.id});if(error)throw new Error('Forbidden');return {ok:true};

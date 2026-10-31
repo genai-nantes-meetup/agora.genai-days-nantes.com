@@ -21,3 +21,6 @@
 - Never cache account pages or private responses in the service worker; only public event pages are eligible for navigation caching.
 - Administrative authorization uses protected user_roles rows; profile_status.is_admin is display-only and editable invitation email never grants administrative access.
 - Keep networking validation and sorting browser-independent in src/lib/networking.ts, with concrete rule tests alongside it.
+- Keep messaging rules browser-independent in src/lib/messaging.ts; private states are returned through authenticated RPCs so declined requests remain hidden from their sender.
+- Twilio SDK is imported only after hydration; issue tokens only after restrictive role and signed pre-event webhook configuration checks, because ChatGrant is identity/service-scoped rather than conversation-scoped.
+- Browser notifications use a separate worker under /notifications/ and Worker-native Web Push; sender keys remain server-only except the public subscription key.

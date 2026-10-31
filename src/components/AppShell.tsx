@@ -6,6 +6,7 @@ import { InstallPrompt } from "./InstallPrompt";
 import { Wordmark } from "./common";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
+import {useMessaging} from '@/lib/messaging-client';
 
 const tabs: { to: "/networking" | "/messages" | "/" | "/plan" | "/profil"; key: TKey; icon: typeof Users; match: (p: string) => boolean }[] = [
   { to: "/networking", key: "nav.networking", icon: Users, match: (p) => p.startsWith("/networking") },
@@ -35,6 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const online = useOnline();
   const { user } = useAuth();
+  const {unread}=useMessaging();
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col lg:max-w-6xl lg:px-6">
@@ -80,7 +82,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   className={`flex flex-col items-center gap-1 py-2 text-[11px] font-medium ${active ? "text-foreground" : "text-muted-foreground"}`}
                 >
                   <span className={`flex h-7 w-12 items-center justify-center rounded-full transition-colors ${active ? "bg-accent" : ""}`}>
-                    <Icon className="size-5" strokeWidth={active ? 2.25 : 1.75} />
+                    <Icon className="size-5" strokeWidth={active ? 2.25 : 1.75} />{key==='nav.messages'&&unread>0&&<span className="ml-1 rounded-full bg-secondary px-1 text-[10px] text-secondary-foreground">{unread}</span>}
                   </span>
                   {t(key)}
                 </Link>
