@@ -10,29 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MessagesRouteImport } from './routes/messages'
-import { Route as NetworkingRouteImport } from './routes/networking'
 import { Route as PlanRouteImport } from './routes/plan'
-import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as SessionsIdRouteImport } from './routes/sessions.$id'
 import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
 import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
+import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MessagesRoute = MessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NetworkingRoute = NetworkingRouteImport.update({
-  id: '/networking',
-  path: '/networking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanRoute = PlanRouteImport.update({
@@ -40,8 +30,13 @@ const PlanRoute = PlanRouteImport.update({
   path: '/plan',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfilRoute = ProfilRouteImport.update({
-  id: '/profil',
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/_authenticated/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
+  id: '/_authenticated/profil',
   path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
@@ -70,94 +65,100 @@ const SponsorsIdRoute = SponsorsIdRouteImport.update({
   path: '/sponsors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedNetworkingIndexRoute =
+  AuthenticatedNetworkingIndexRouteImport.update({
+    id: '/_authenticated/networking/',
+    path: '/networking/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/messages': typeof AuthenticatedMessagesRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/messages': typeof AuthenticatedMessagesRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers': typeof SpeakersIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
+  '/networking': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/messages': typeof MessagesRoute
-  '/networking': typeof NetworkingRoute
   '/plan': typeof PlanRoute
-  '/profil': typeof ProfilRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/messages'
-    | '/networking'
     | '/plan'
+    | '/messages'
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/networking/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/messages'
-    | '/networking'
     | '/plan'
+    | '/messages'
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers'
     | '/sponsors'
+    | '/networking'
   id:
     | '__root__'
     | '/'
-    | '/messages'
-    | '/networking'
     | '/plan'
-    | '/profil'
+    | '/_authenticated/messages'
+    | '/_authenticated/profil'
     | '/sessions/$id'
     | '/speakers/$id'
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/_authenticated/networking/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MessagesRoute: typeof MessagesRoute
-  NetworkingRoute: typeof NetworkingRoute
   PlanRoute: typeof PlanRoute
-  ProfilRoute: typeof ProfilRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   SessionsIdRoute: typeof SessionsIdRoute
   SpeakersIdRoute: typeof SpeakersIdRoute
   SponsorsIdRoute: typeof SponsorsIdRoute
   SpeakersIndexRoute: typeof SpeakersIndexRoute
   SponsorsIndexRoute: typeof SponsorsIndexRoute
+  AuthenticatedNetworkingIndexRoute: typeof AuthenticatedNetworkingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -169,20 +170,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/messages': {
-      id: '/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/networking': {
-      id: '/networking'
-      path: '/networking'
-      fullPath: '/networking'
-      preLoaderRoute: typeof NetworkingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/plan': {
       id: '/plan'
       path: '/plan'
@@ -190,11 +177,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profil': {
-      id: '/profil'
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
       path: '/profil'
       fullPath: '/profil'
-      preLoaderRoute: typeof ProfilRouteImport
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sessions/$id': {
@@ -232,20 +226,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/networking/': {
+      id: '/_authenticated/networking/'
+      path: '/networking'
+      fullPath: '/networking/'
+      preLoaderRoute: typeof AuthenticatedNetworkingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MessagesRoute: MessagesRoute,
-  NetworkingRoute: NetworkingRoute,
   PlanRoute: PlanRoute,
-  ProfilRoute: ProfilRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   SessionsIdRoute: SessionsIdRoute,
   SpeakersIdRoute: SpeakersIdRoute,
   SponsorsIdRoute: SponsorsIdRoute,
   SpeakersIndexRoute: SpeakersIndexRoute,
   SponsorsIndexRoute: SponsorsIndexRoute,
+  AuthenticatedNetworkingIndexRoute: AuthenticatedNetworkingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

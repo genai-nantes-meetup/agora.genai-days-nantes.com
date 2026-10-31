@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ComingSoon } from "@/components/common";
 
-export const Route = createFileRoute("/messages")({
+export const Route = createFileRoute("/_authenticated/messages")({
   head: () => ({
     meta: [
       { title: "Messages · Hey GenAI Days" },
