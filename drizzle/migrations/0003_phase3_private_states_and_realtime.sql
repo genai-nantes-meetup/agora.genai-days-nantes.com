@@ -1,0 +1,13 @@
+REVOKE SELECT ON public.connection_requests FROM authenticated;
+CREATE FUNCTION public.member_connections() RETURNS TABLE(id uuid,requester_id uuid,recipient_id uuid,status text,created_at timestamptz,cancelled_at timestamptz) LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT r.id,r.requester_id,r.recipient_id,CASE WHEN r.requester_id=auth.uid() AND r.status='declined' THEN 'pending' ELSE r.status END,r.created_at,r.cancelled_at FROM public.connection_requests r WHERE auth.uid() IN(r.requester_id,r.recipient_id) AND public.is_active_member(auth.uid()) $$;
+REVOKE ALL ON FUNCTION public.member_connections() FROM PUBLIC; GRANT EXECUTE ON FUNCTION public.member_connections() TO authenticated;
+CREATE FUNCTION public.messaging_doorbell() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ DECLARE a uuid; b uuid; BEGIN IF TG_TABLE_NAME='connection_requests' THEN a=NEW.requester_id; b=NEW.recipient_id; ELSE a=NEW.user_a; b=NEW.user_b; END IF; PERFORM realtime.send('{}'::jsonb,'changed','inbox:'||a::text,true); PERFORM realtime.send('{}'::jsonb,'changed','inbox:'||b::text,true); RETURN NEW; END $$;
+CREATE TRIGGER requests_doorbell AFTER INSERT OR UPDATE ON public.connection_requests FOR EACH ROW EXECUTE FUNCTION public.messaging_doorbell();
+CREATE TRIGGER conversations_doorbell AFTER INSERT OR UPDATE ON public.conversations FOR EACH ROW EXECUTE FUNCTION public.messaging_doorbell();
+CREATE POLICY inbox_doorbell_read ON realtime.messages FOR SELECT TO authenticated USING(realtime.topic()='inbox:'||auth.uid()::text);
+CREATE TABLE public.twilio_cleanup (conversation_sid text PRIMARY KEY, created_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.twilio_cleanup TO service_role; ALTER TABLE public.twilio_cleanup ENABLE ROW LEVEL SECURITY;
+CREATE FUNCTION public.retain_twilio_cleanup() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF OLD.conversation_sid IS NOT NULL THEN INSERT INTO public.twilio_cleanup(conversation_sid) VALUES(OLD.conversation_sid) ON CONFLICT DO NOTHING; END IF; RETURN OLD; END $$;
+CREATE TRIGGER retain_deleted_conversation BEFORE DELETE ON public.conversations FOR EACH ROW EXECUTE FUNCTION public.retain_twilio_cleanup();
+CREATE FUNCTION public.suspend_conversations() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF NEW.suspended AND NOT OLD.suspended THEN UPDATE public.conversations SET closed_at=coalesce(closed_at,now()) WHERE NEW.user_id IN(user_a,user_b); END IF; RETURN NEW; END $$;
+CREATE TRIGGER suspension_close AFTER UPDATE OF suspended ON public.profile_status FOR EACH ROW EXECUTE FUNCTION public.suspend_conversations();
