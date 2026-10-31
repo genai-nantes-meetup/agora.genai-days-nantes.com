@@ -47,6 +47,163 @@ export type Database = {
           },
         ]
       }
+      connection_requests: {
+        Row: {
+          cancelled_at: string | null
+          created_at: string
+          id: string
+          provisioning_at: string | null
+          provisioning_claim: string | null
+          recipient_id: string
+          request_email_sent_at: string | null
+          requester_id: string
+          responded_at: string | null
+          status: string
+        }
+        Insert: {
+          cancelled_at?: string | null
+          created_at?: string
+          id?: string
+          provisioning_at?: string | null
+          provisioning_claim?: string | null
+          recipient_id: string
+          request_email_sent_at?: string | null
+          requester_id: string
+          responded_at?: string | null
+          status?: string
+        }
+        Update: {
+          cancelled_at?: string | null
+          created_at?: string
+          id?: string
+          provisioning_at?: string | null
+          provisioning_claim?: string | null
+          recipient_id?: string
+          request_email_sent_at?: string | null
+          requester_id?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connection_requests_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "connection_requests_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      conversation_receipts: {
+        Row: {
+          conversation_id: string
+          last_reminder_index: number | null
+          read_index: number
+          reminder_claim: string | null
+          reminder_claimed_at: string | null
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          last_reminder_index?: number | null
+          read_index?: number
+          reminder_claim?: string | null
+          reminder_claimed_at?: string | null
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          last_reminder_index?: number | null
+          read_index?: number
+          reminder_claim?: string | null
+          reminder_claimed_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_receipts_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_receipts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          closed_at: string | null
+          conversation_sid: string | null
+          created_at: string
+          id: string
+          participant_a_sid: string | null
+          participant_b_sid: string | null
+          request_id: string
+          twilio_closed_at: string | null
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          closed_at?: string | null
+          conversation_sid?: string | null
+          created_at?: string
+          id?: string
+          participant_a_sid?: string | null
+          participant_b_sid?: string | null
+          request_id: string
+          twilio_closed_at?: string | null
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          closed_at?: string | null
+          conversation_sid?: string | null
+          created_at?: string
+          id?: string
+          participant_a_sid?: string | null
+          participant_b_sid?: string | null
+          request_id?: string
+          twilio_closed_at?: string | null
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "connection_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_user_a_fkey"
+            columns: ["user_a"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "conversations_user_b_fkey"
+            columns: ["user_b"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           billetweb_ref: string | null
@@ -79,6 +236,61 @@ export type Database = {
           used_at?: string | null
         }
         Relationships: []
+      }
+      message_events: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          excerpt: string
+          message_index: number
+          message_sid: string
+          push_attempted_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          excerpt?: string
+          message_index: number
+          message_sid: string
+          push_attempted_at?: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          excerpt?: string
+          message_index?: number
+          message_sid?: string
+          push_attempted_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_events_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_events_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "message_events_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       profile_status: {
         Row: {
@@ -184,6 +396,41 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       reports: {
         Row: {
           created_at: string
@@ -265,6 +512,27 @@ export type Database = {
     }
     Functions: {
       can_view_profile: { Args: { target: string }; Returns: boolean }
+      claim_connection_accept: {
+        Args: { actor: string; claim: string; request: string }
+        Returns: {
+          cancelled_at: string | null
+          created_at: string
+          id: string
+          provisioning_at: string | null
+          provisioning_claim: string | null
+          recipient_id: string
+          request_email_sent_at: string | null
+          requester_id: string
+          responded_at: string | null
+          status: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "connection_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       claim_invitation: {
         Args: { claim: string; invite_token: string }
         Returns: string
@@ -273,7 +541,19 @@ export type Database = {
         Args: { claim: string; fields: Json; invite_token: string; uid: string }
         Returns: undefined
       }
+      decline_connection: { Args: { request: string }; Returns: undefined }
+      finish_connection_accept: {
+        Args: {
+          claim: string
+          pa: string
+          pb: string
+          request: string
+          sid: string
+        }
+        Returns: string
+      }
       is_active_member: { Args: { uid: string }; Returns: boolean }
+      request_connection: { Args: { target: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
