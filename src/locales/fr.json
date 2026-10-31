@@ -106,7 +106,6 @@
   "auth.unknown": "Aucun compte avec cet e-mail. Utilise le lien reçu dans ton invitation.",
   "auth.invalid": "Cette invitation est invalide ou a déjà été utilisée.",
   "auth.logout": "Déconnexion",
-  "auth.invitation": "Utilisez le lien reçu dans votre invitation pour créer votre profil.",
   "auth.suspended": "Votre accès à l’annuaire est suspendu.",
   "form.identity": "Identité",
   "form.activity": "Activité",
