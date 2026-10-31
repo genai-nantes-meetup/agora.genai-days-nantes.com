@@ -38,10 +38,10 @@ export const requestMagicLink=createServerFn({method:'POST'}).inputValidator(z.o
  const {error:sendError}=await supabaseAdmin.auth.signInWithOtp({email:data.email.toLowerCase(),options:{shouldCreateUser:true,emailRedirectTo:`${origin}/login`}});if(sendError)throw new Error('unavailable');return {exists:true};
 });
 export const saveProfile=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(profileSchema).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:current,error}=await context.supabase.from('profiles').select('email').eq('user_id',context.userId).single();if(error)throw error;
+ setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:current,error}=await context.supabase.from('profiles').select('email,consent_at').eq('user_id',context.userId).single();if(error)throw error;
  const {consent,email,...fields}=data;
  if(email!==current.email){const {error:emailError}=await context.supabase.auth.updateUser({email});if(emailError)throw new Error('unavailable');}
- const {error:saveError}=await context.supabase.from('profiles').update({...fields,consent_at:new Date().toISOString()}).eq('user_id',context.userId);if(saveError)throw saveError;
+ const {error:saveError}=await context.supabase.from('profiles').update({...fields,consent_at:current.consent_at??new Date().toISOString()}).eq('user_id',context.userId);if(saveError)throw saveError;
  const {recalculateStatus}=await import('./members.server');await recalculateStatus(context.userId,current.email,data.linkedin_url);return {emailPending:email!==current.email};
 });
 export const deleteAccount=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
