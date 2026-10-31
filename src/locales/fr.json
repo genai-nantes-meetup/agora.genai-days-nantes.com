@@ -145,7 +145,7 @@
   "action.cancel": "Annuler",
   "action.confirm": "Confirmer",
   "action.error": "L’opération a échoué. Réessayez.",
-  "legal.title": "Vos données et conditions d’utilisation",
+  "legal.title": "Vos données et conditions d'utilisation",
   "legal.link": "Mes données",
   "legal.updated": "Dernière mise à jour : [date de mise en ligne].",
   "tag.general_management": "Direction générale",
@@ -190,7 +190,7 @@
   "legal.6.body": "Nous faisons appel à des prestataires pour l'hébergement, la messagerie, l'envoi d'e-mails, l'enrichissement des profils et les fonctions d'intelligence artificielle de l'application. Certains peuvent traiter des données hors de l'Union européenne. Ces transferts sont encadrés par les clauses contractuelles types de la Commission européenne.",
   "legal.7.heading": "Vos droits.",
   "legal.7.body": "Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition, de limitation et de portabilité. Écrivez à [adresse e-mail RGPD de NaoMakers]. Vous pouvez aussi saisir la CNIL (Commission nationale de l'informatique et des libertés) sur cnil.fr.",
-  "legal.8.heading": "Règles d’usage.",
+  "legal.8.heading": "Règles d'usage.",
   "legal.8.body": "L'application sert à des échanges professionnels et respectueux. Le harcèlement, les propos injurieux ou discriminatoires et les envois massifs de messages identiques sont proscrits. Chaque utilisateur·ice peut bloquer ou signaler un compte. L'équipe organisatrice examine les signalements et peut suspendre un compte sans préavis.",
   "legal.9.heading": "Modifications.",
   "legal.9.body": "NaoMakers peut mettre à jour cette page. La date de la dernière mise à jour figure en bas."
