@@ -491,6 +491,21 @@ export type Database = {
         }
         Relationships: []
       }
+      twilio_cleanup: {
+        Row: {
+          conversation_sid: string
+          created_at: string
+        }
+        Insert: {
+          conversation_sid: string
+          created_at?: string
+        }
+        Update: {
+          conversation_sid?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           role: string
@@ -553,6 +568,17 @@ export type Database = {
         Returns: string
       }
       is_active_member: { Args: { uid: string }; Returns: boolean }
+      member_connections: {
+        Args: never
+        Returns: {
+          cancelled_at: string
+          created_at: string
+          id: string
+          recipient_id: string
+          requester_id: string
+          status: string
+        }[]
+      }
       request_connection: { Args: { target: string }; Returns: string }
     }
     Enums: {
