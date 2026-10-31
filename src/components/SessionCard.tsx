@@ -13,7 +13,7 @@ export function SessionCard({
   session: Session;
   liked: boolean;
   onLike: () => void;
-  now?: "live" | "next";
+  now?: "live" | "next" | undefined;
 }) {
   const { t } = useI18n();
   const { room, floor } = resolveRoom(session);
@@ -24,7 +24,7 @@ export function SessionCard({
       to="/sessions/$id"
       params={{ id: session.id }}
       id={`s-${session.id}`}
-      className={`relative block scroll-mt-32 rounded-xl border-l-4 bg-card p-3.5 shadow-card transition-transform active:scale-[0.99] ${trackBorder[session.track] ?? trackBorder.commun} ${now === "live" ? "ring-2 ring-accent" : ""}`}
+      className={`relative block scroll-mt-32 rounded-xl border-l-4 bg-card p-3.5 shadow-card transition-transform active:scale-[0.99] ${trackBorder[session.track] ?? trackBorder["commun"]} ${now === "live" ? "ring-2 ring-accent" : ""}`}
     >
       {now && (
         <span className={`font-label absolute -top-2.5 right-3 rounded-full bg-accent px-2 py-0.5 text-[11px] uppercase text-accent-foreground ${now === "live" ? "now-pulse" : ""}`}>

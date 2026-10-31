@@ -73,7 +73,7 @@ export function resolveRoom(s: Pick<Session, "room" | "track">): { room: string 
 
 export function toMinutes(hhmm: string): number {
   const [h, m] = hhmm.split(":").map(Number);
-  return h * 60 + (m || 0);
+  return (h || 0) * 60 + (m || 0);
 }
 
 export function fromMinutes(min: number): string {

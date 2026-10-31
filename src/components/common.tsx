@@ -57,7 +57,7 @@ export function TrackTag({ track }: { track: Track | string }) {
   const { t } = useI18n();
   const key = (["tech", "decideurs", "commun"].includes(track) ? `track.${track}` : "track.commun") as "track.tech";
   return (
-    <span className={`font-label inline-block rounded px-1.5 py-0.5 text-[11px] uppercase ${trackStyles[track] ?? trackStyles.commun}`}>
+    <span className={`font-label inline-block rounded px-1.5 py-0.5 text-[11px] uppercase ${trackStyles[track] ?? trackStyles["commun"]}`}>
       {t(key)}
     </span>
   );
