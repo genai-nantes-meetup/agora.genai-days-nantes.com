@@ -24,6 +24,7 @@ import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
 import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
+import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
 import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authenticated/networking.$id'
 
@@ -101,6 +102,11 @@ const SponsorsIdRoute = SponsorsIdRouteImport.update({
   path: '/sponsors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMessagesIdRoute = AuthenticatedMessagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedMessagesRoute,
+} as any)
 const AuthenticatedNetworkingIndexRoute =
   AuthenticatedNetworkingIndexRouteImport.update({
     id: '/',
@@ -121,7 +127,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/messages': typeof AuthenticatedMessagesRoute
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/networking': typeof AuthenticatedNetworkingRouteWithChildren
   '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
@@ -139,13 +146,14 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/messages': typeof AuthenticatedMessagesRoute
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers': typeof SpeakersIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking': typeof AuthenticatedNetworkingIndexRoute
 }
@@ -158,7 +166,7 @@ export interface FileRoutesById {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/_authenticated/networking': typeof AuthenticatedNetworkingRouteWithChildren
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/messages/$id'
     | '/networking/$id'
     | '/networking/'
   fileRoutesByTo: FileRoutesByTo
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers'
     | '/sponsors'
+    | '/messages/$id'
     | '/networking/$id'
     | '/networking'
   id:
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/_authenticated/messages/$id'
     | '/_authenticated/networking/$id'
     | '/_authenticated/networking/'
   fileRoutesById: FileRoutesById
@@ -348,6 +360,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/messages/$id': {
+      id: '/_authenticated/messages/$id'
+      path: '/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof AuthenticatedMessagesIdRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
+    }
     '/_authenticated/networking/': {
       id: '/_authenticated/networking/'
       path: '/'
@@ -364,6 +383,19 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedMessagesRouteChildren {
+  AuthenticatedMessagesIdRoute: typeof AuthenticatedMessagesIdRoute
+}
+
+const AuthenticatedMessagesRouteChildren: AuthenticatedMessagesRouteChildren = {
+  AuthenticatedMessagesIdRoute: AuthenticatedMessagesIdRoute,
+}
+
+const AuthenticatedMessagesRouteWithChildren =
+  AuthenticatedMessagesRoute._addFileChildren(
+    AuthenticatedMessagesRouteChildren,
+  )
 
 interface AuthenticatedNetworkingRouteChildren {
   AuthenticatedNetworkingIdRoute: typeof AuthenticatedNetworkingIdRoute
@@ -382,13 +414,13 @@ const AuthenticatedNetworkingRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRouteWithChildren
   AuthenticatedNetworkingRoute: typeof AuthenticatedNetworkingRouteWithChildren
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRouteWithChildren,
   AuthenticatedNetworkingRoute: AuthenticatedNetworkingRouteWithChildren,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
 }
