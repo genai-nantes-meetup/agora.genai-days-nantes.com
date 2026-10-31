@@ -25,6 +25,7 @@ import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
 import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
+import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authenticated/networking.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -106,6 +107,12 @@ const AuthenticatedNetworkingIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedNetworkingRoute,
   } as any)
+const AuthenticatedNetworkingIdRoute =
+  AuthenticatedNetworkingIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedNetworkingRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesByTo {
@@ -138,6 +146,7 @@ export interface FileRoutesByTo {
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers': typeof SpeakersIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
+  '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRoutesById {
@@ -157,6 +166,7 @@ export interface FileRoutesById {
   '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
+  '/_authenticated/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
 }
 export interface FileRouteTypes {
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/networking/$id'
     | '/networking/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers'
     | '/sponsors'
+    | '/networking/$id'
     | '/networking'
   id:
     | '__root__'
@@ -210,6 +222,7 @@ export interface FileRouteTypes {
     | '/sponsors/$id'
     | '/speakers/'
     | '/sponsors/'
+    | '/_authenticated/networking/$id'
     | '/_authenticated/networking/'
   fileRoutesById: FileRoutesById
 }
@@ -342,15 +355,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNetworkingIndexRouteImport
       parentRoute: typeof AuthenticatedNetworkingRoute
     }
+    '/_authenticated/networking/$id': {
+      id: '/_authenticated/networking/$id'
+      path: '/$id'
+      fullPath: '/networking/$id'
+      preLoaderRoute: typeof AuthenticatedNetworkingIdRouteImport
+      parentRoute: typeof AuthenticatedNetworkingRoute
+    }
   }
 }
 
 interface AuthenticatedNetworkingRouteChildren {
+  AuthenticatedNetworkingIdRoute: typeof AuthenticatedNetworkingIdRoute
   AuthenticatedNetworkingIndexRoute: typeof AuthenticatedNetworkingIndexRoute
 }
 
 const AuthenticatedNetworkingRouteChildren: AuthenticatedNetworkingRouteChildren =
   {
+    AuthenticatedNetworkingIdRoute: AuthenticatedNetworkingIdRoute,
     AuthenticatedNetworkingIndexRoute: AuthenticatedNetworkingIndexRoute,
   }
 
