@@ -28,9 +28,15 @@ export const acceptConnection=createServerFn({method:'POST'}).middleware([requir
 export const twilioToken=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
  setResponseHeader('Cache-Control','no-store');const {data:active}=await context.supabase.rpc('is_active_member',{uid:context.userId});if(!active)throw new Error('Forbidden');const {issueTwilioToken}=await import('./twilio.server');return {token:await issueTwilioToken(context.userId)};
 });
+export const sendMessage=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({id:z.string().uuid(),body:z.string().trim().min(1).max(1600)})).handler(async({data,context})=>{
+ setResponseHeader('Cache-Control','no-store');const {data:c,error}=await context.supabase.from('conversations').select('*').eq('id',data.id).single();if(error||!c||c.closed_at||!c.conversation_sid)throw new Error('Forbidden');
+ const {canSendTwilio,twilio}=await import('./twilio.server');if(!await canSendTwilio(c.conversation_sid,context.userId))throw new Error('Forbidden');
+ const message=await twilio<{sid:string;index:number}>(`/Conversations/${c.conversation_sid}/Messages`,{Author:context.userId,Body:data.body});
+ const {supabaseAdmin}=await import('@/integrations/supabase/client.server');await supabaseAdmin.from('message_events').upsert({message_sid:message.sid,conversation_id:c.id,sender_id:context.userId,recipient_id:c.user_a===context.userId?c.user_b:c.user_a,message_index:message.index,excerpt:data.body.slice(0,240)},{onConflict:'message_sid',ignoreDuplicates:true});return {sid:message.sid};
+});
 export const blockMember=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
  setResponseHeader('Cache-Control','no-store');const {error}=await context.supabase.from('blocks').insert({blocker_id:context.userId,blocked_id:data.id});if(error)throw new Error('Forbidden');
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:rows}=await supabaseAdmin.from('conversations').select('id,conversation_sid').or(`and(user_a.eq.${context.userId},user_b.eq.${data.id}),and(user_b.eq.${context.userId},user_a.eq.${data.id})`).not('closed_at','is',null).is('twilio_closed_at',null);
- const {closeTwilioConversation}=await import('./twilio.server');for(const c of rows??[]){if(!c.conversation_sid)continue;try{await closeTwilioConversation(c.conversation_sid);await supabaseAdmin.from('conversations').update({twilio_closed_at:new Date().toISOString()}).eq('id',c.id);}catch{console.error('Conversation closure awaiting reconciliation');}}
+ const {deleteTwilioConversation}=await import('./twilio.server');for(const c of rows??[]){if(!c.conversation_sid)continue;try{await deleteTwilioConversation(c.conversation_sid);await supabaseAdmin.from('conversations').update({twilio_closed_at:new Date().toISOString()}).eq('id',c.id);}catch{console.error('Conversation closure awaiting reconciliation');}}
  return {ok:true};
 });

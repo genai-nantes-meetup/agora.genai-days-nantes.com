@@ -7,10 +7,10 @@ export function twilioConfig(){
  if(!account||!key||!secret||!service)throw new Error('TwilioNotConfigured');
  return {account,key,secret,service};
 }
-export async function twilio<T>(path:string,body?:Record<string,string>):Promise<T>{
- const c=twilioConfig();const response=await fetch(`https://conversations.twilio.com/v1/Services/${c.service}${path}`,{method:body?'POST':'GET',headers:{Authorization:`Basic ${btoa(`${c.key}:${c.secret}`)}`,...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},...(body?{body:new URLSearchParams(body)}:{}),signal:AbortSignal.timeout(4000)});
+export async function twilio<T>(path:string,body?:Record<string,string>,method?:'DELETE'):Promise<T>{
+ const c=twilioConfig();const response=await fetch(`https://conversations.twilio.com/v1/Services/${c.service}${path}`,{method:method??(body?'POST':'GET'),headers:{Authorization:`Basic ${btoa(`${c.key}:${c.secret}`)}`,'X-Twilio-Webhook-Enabled':'true',...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},...(body?{body:new URLSearchParams(body)}:{}),signal:AbortSignal.timeout(4000)});
  if(!response.ok){const text=await response.text();let code:string|number='unknown';try{code=JSON.parse(text).code??'unknown';}catch{}console.error('Twilio request failed',response.status,code);throw new Error(`Twilio request failed [${response.status}] code ${code}`);}
- return response.json() as Promise<T>;
+ return (response.status===204?null:await response.json()) as T;
 }
 export async function issueTwilioToken(uid:string){
  await assertSafeTwilioConfiguration();
@@ -30,7 +30,7 @@ type Participant={sid:string;identity:string;last_read_message_index:number|null
 export async function assertSafeTwilioConfiguration(){
  const [configuration,webhooks,roles]=await Promise.all([twilio<{default_chat_service_role_sid:string;default_conversation_role_sid:string;default_conversation_creator_role_sid:string}>('/Configuration'),twilio<{pre_webhook_url:string;post_webhook_url:string;filters:string[]}>('/Configuration/Webhooks'),twilio<{roles:{sid:string;type:string;permissions:string[]}[]}>('/Roles')]);
  const serviceRole=roles.roles.find(r=>r.sid===configuration.default_chat_service_role_sid);const participantRole=roles.roles.find(r=>r.sid===configuration.default_conversation_role_sid);const creatorRole=roles.roles.find(r=>r.sid===configuration.default_conversation_creator_role_sid);
- if(!serviceRole||serviceRole.permissions.some(p=>p!=='editOwnUserInfo')||!participantRole||!creatorRole||[participantRole,creatorRole].some(r=>r.permissions.some(p=>p!=='sendMessage'))||!participantRole.permissions.includes('sendMessage')||webhooks.pre_webhook_url!==`${APP_ORIGIN}/api/public/twilio/pre`||webhooks.post_webhook_url!==`${APP_ORIGIN}/api/public/twilio/events`||!webhooks.filters.includes('onMessageAdd')||!webhooks.filters.includes('onMessageAdded'))throw new Error('UnsafeTwilioConfiguration');
+ if(!serviceRole||serviceRole.permissions.some(p=>p!=='editOwnUserInfo')||!participantRole||!creatorRole||[participantRole,creatorRole].some(r=>r.permissions.some(p=>p!=='editOwnUserInfo'))||webhooks.pre_webhook_url!==`${APP_ORIGIN}/api/public/twilio/pre`||webhooks.post_webhook_url!==`${APP_ORIGIN}/api/public/twilio/events`||!webhooks.filters.includes('onMessageAdd')||!webhooks.filters.includes('onMessageAdded'))throw new Error('UnsafeTwilioConfiguration');
 }
 export async function provisionConversation(requestId:string,a:string,b:string){
  await assertSafeTwilioConfiguration();
@@ -42,6 +42,7 @@ export async function provisionConversation(requestId:string,a:string,b:string){
  const pa=await add(a);const pb=await add(b);return {sid:conversation.sid,pa,pb};
 }
 export async function closeTwilioConversation(sid:string){await twilio(`/Conversations/${sid}`,{State:'closed'});}
+export async function deleteTwilioConversation(sid:string){try{await twilio(`/Conversations/${sid}`,undefined,'DELETE');}catch(error){if(!(error instanceof Error)||!error.message.includes('[404]'))throw error;}}
 export async function readHorizon(sid:string,participant:string){return (await twilio<Participant>(`/Conversations/${sid}/Participants/${participant}`)).last_read_message_index??-1;}
 export async function canSendTwilio(sid:string,author:string){
  if(messagingReadOnly())return false;
