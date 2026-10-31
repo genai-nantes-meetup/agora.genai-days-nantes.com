@@ -45,3 +45,13 @@ Phase 3 excludes Airscale, AI, feedback and administration.
 - [x] Prefill available public speaker information with a non-blocking manual fallback; arbitrary LinkedIn enrichment still requires Airscale credentials.
 - [ ] Enable general LinkedIn enrichment: blocked on a connected enrichment provider or its credentials.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
+
+# Phase 4
+- [ ] Airscale: verified API contract, secret, cached enrichment, five-call limit, private avatar copy and manual fallback.
+- [ ] AI: tags, pitch, natural-language filters and icebreakers with validated output, per-account limits and content-free logs.
+- [ ] Session feedback: server-timed access, editable contribution, aggregates, comments and block/suspension privacy.
+- [ ] Admin: protected roles, verified Maxime grant, Samuel grant, CSV preview/import/export, reports, suspension, speaker overrides, sponsor domains and metrics.
+- [ ] n8n: secret-protected idempotent invitation endpoint and exact request format.
+- [ ] App emails: inspect sender domain; only implement when configured.
+- [ ] Purge: dated paused/simulation controls, safe batches, two preserved admins and managed schedule; no real purge during tests.
+- [ ] Verify phase 4 blocks with temporary accounts, clean up fixtures and keep existing tests green.
