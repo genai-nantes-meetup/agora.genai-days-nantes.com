@@ -35,21 +35,21 @@ function SpeakersPage() {
       ) : !list.length ? (
         <p className="p-6 text-center text-muted-foreground">{t("speakers.empty")}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3">
+        <ul className="grid grid-cols-2 items-start gap-3 p-4 sm:grid-cols-3">
           {list.map((s) => (
             <li key={s.id}>
-              <Link to="/speakers/$id" params={{ id: s.id }} className="flex h-full flex-col overflow-hidden rounded-xl bg-card shadow-card">
-                <div className="aspect-square bg-surface">
-                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="size-full object-cover" />}
+              <Link to="/speakers/$id" params={{ id: s.id }} className="flex flex-col overflow-hidden rounded-xl bg-card shadow-card">
+                <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-surface">
+                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />}
                 </div>
-                <div className="grid h-36 grid-rows-[1.25rem_3.25rem_2.25rem] gap-1 p-3">
+                <div className="min-w-0 space-y-1.5 p-3">
+                  <p className="font-display break-words text-lg font-semibold leading-tight">{s.name}</p>
                   {s.eventRole && (
-                    <span className="font-label w-fit max-w-full truncate rounded bg-accent px-1.5 py-0.5 text-[10px] uppercase text-accent-foreground">
+                    <span className="inline-block max-w-full rounded bg-accent px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent-foreground">
                       {s.eventRole}
                     </span>
-                  ) || <span aria-hidden="true" />}
-                  <p className="font-display line-clamp-2 text-lg font-semibold leading-tight">{s.name}</p>
-                  <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
+                  )}
+                  <p className="break-words text-xs text-muted-foreground">
                     {[s.role, s.company].filter(Boolean).join(" · ")}
                   </p>
                 </div>

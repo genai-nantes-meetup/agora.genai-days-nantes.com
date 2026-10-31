@@ -3,7 +3,7 @@
 - [x] Activate Lovable Cloud.
 - [ ] Re-read live sessions API and verify added closing keynote, breaks and lunch appear correctly.
 - [ ] Retry updated sessions API and preserve speakers API ordering without alphabetical sorting.
-- [ ] Make all speaker cards the same height and verify on mobile and desktop.
+- [ ] Keep speaker photos square with identical height, variable text sections and role tags below names; verify mobile and desktop.
 - [ ] Use a distinct desktop navigation while retaining mobile bottom tabs.
 - [ ] Confirm profile storage before authentication implementation (required authentication setup question).
 - [ ] Confirm immediate signup session with editable invitation email; require email ownership verification before assigning initial admin privileges.
