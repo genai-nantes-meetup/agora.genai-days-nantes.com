@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { currentOrNext, parisNow, toMinutes, type Session } from "@/lib/event";
 import { useSessions } from "@/lib/data";
-import { useI18n, type TKey } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { useLikes } from "@/lib/likes";
 import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/components/common";
 import { SessionCard } from "@/components/SessionCard";
@@ -129,7 +129,7 @@ function ProgramPage() {
                     key={s.id}
                     session={s}
                     liked={likes.includes(s.id)}
-                    onLike={() => toggle(s, sessions, (title) => t("like.overlap" as TKey, { title }))}
+                    onLike={() => toggle(s, sessions)}
                     now={nowInfo.ids.includes(s.id) ? (nowInfo.live ? "live" : "next") : undefined}
                   />
                 ))}

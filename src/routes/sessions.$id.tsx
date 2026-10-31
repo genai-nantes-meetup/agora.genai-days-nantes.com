@@ -52,7 +52,7 @@ function SessionPage() {
               <TrackTag track={s.track} />
               <span className="font-label text-xs uppercase text-muted-foreground">{t(`format.${s.format}` as TKey)}</span>
             </div>
-            <LikeButton size="lg" liked={liked} onClick={() => toggle(s, data.sessions, (title) => t("like.overlap", { title }))} />
+            <LikeButton size="lg" liked={liked} onClick={() => toggle(s, data.sessions)} />
           </div>
           {speakers.length > 0 && (
             <p className="mt-1 font-display text-2xl font-extrabold leading-tight">{speakers.map((x) => x.name).join(", ")}</p>

@@ -87,7 +87,7 @@ function SpeakerPage() {
         <Section title={t("sessions")}>
           <div className="space-y-3">
             {mySessions.map((x) => (
-              <SessionCard key={x.id} session={x} liked={likes.includes(x.id)} onLike={() => toggle(x, allSessions, (title) => t("like.overlap", { title }))} />
+              <SessionCard key={x.id} session={x} liked={likes.includes(x.id)} onLike={() => toggle(x, allSessions)} />
             ))}
           </div>
         </Section>
