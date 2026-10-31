@@ -5,6 +5,7 @@ import { useSessions, useSpeakers } from "@/lib/data";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { useLikes } from "@/lib/likes";
 import { BackLink, ErrorView, LikeButton, LoadingView, TrackTag } from "@/components/common";
+import {SessionFeedback} from "@/components/SessionFeedback";
 import { CalendarButtons } from "@/components/CalendarButtons";
 
 export const Route = createFileRoute("/sessions/$id")({
@@ -127,6 +128,7 @@ function SessionPage() {
           )}
         </section>
 
+        <SessionFeedback id={s.id} date={data.event.date} time={s.startTime}/>
         {s.pageUrl && (
           <a href={s.pageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-secondary underline underline-offset-4">
             {t("moreInfo")} <ExternalLink className="size-3.5" />
