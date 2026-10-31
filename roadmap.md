@@ -39,6 +39,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 Phase 3 excludes Airscale, AI, feedback and administration.
 - [x] Remove LinkedIn sign-in; retain email magic links.
 - [ ] Unify email login/signup and skip onboarding for completed profiles.
+- [ ] Show the same email form directly on signed-out Profile and login pages, without an extra welcome step.
 - [ ] Add LinkedIn-first onboarding, followed by first name, last name, job title, company and intentions, retaining explicit consent.
 - [ ] Prefill available LinkedIn information with a non-blocking manual fallback and verify the onboarding flow.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
