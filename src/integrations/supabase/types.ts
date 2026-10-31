@@ -712,6 +712,10 @@ export type Database = {
         }
         Returns: string
       }
+      grant_retained_admin: {
+        Args: { actor: string; target: string }
+        Returns: undefined
+      }
       is_active_member: { Args: { uid: string }; Returns: boolean }
       member_connections: {
         Args: never
@@ -730,6 +734,7 @@ export type Database = {
         Args: { uid: string; url: string }
         Returns: boolean
       }
+      set_purge_paused: { Args: { value: boolean }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
