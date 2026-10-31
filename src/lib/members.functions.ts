@@ -4,6 +4,19 @@ import {z} from 'zod';
 import {requireSupabaseAuth} from '@/integrations/supabase/auth-middleware';
 import {profileSchema} from './networking';
 const tokenSchema=z.string().min(32).max(128).regex(/^[a-f0-9]+$/);
+export const prefillLinkedIn=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({linkedin_url:profileSchema.shape.linkedin_url,lang:z.enum(['fr','en'])})).handler(async({data})=>{
+ setResponseHeader('Cache-Control','no-store');
+ try{
+  const {normalizeLinkedIn}=await import('./networking');
+  const response=await fetch(`https://genai-days-nantes.com/api/${data.lang}/speakers.json`,{cache:'no-store',signal:AbortSignal.timeout(4000)});
+  if(!response.ok)return {profile:null};
+  const payload=await response.json() as import('./event').SpeakersPayload;
+  const speaker=payload.speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalizeLinkedIn(data.linkedin_url));
+  if(!speaker)return {profile:null};
+  const [first_name,...last]=speaker.name.trim().split(/\s+/);
+  return {profile:{first_name:first_name??'',last_name:last.join(' '),job_title:speaker.role??null,company:speaker.company??null}};
+ }catch{return {profile:null};}
+});
 export const checkInvitation=createServerFn({method:'POST'}).inputValidator(z.object({token:tokenSchema})).handler(async({data})=>{
  setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:row,error}=await supabaseAdmin.from('invitations').select('email,used_at').eq('token',data.token).maybeSingle();if(error)throw new Error('unavailable');return row&&!row.used_at?{valid:true,email:row.email}:{valid:false,email:null};
 });
