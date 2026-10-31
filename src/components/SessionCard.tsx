@@ -43,11 +43,11 @@ export function SessionCard({
           <p className="mt-1 truncate text-sm text-muted-foreground">
             {speakers.length ? speakers.map((s) => s.name).join(", ") : t("speakers.tbc")}
           </p>
-          <p className="font-label mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+          <p className="font-label mt-2 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs text-muted-foreground">
             <span className="whitespace-nowrap">{session.startTime}–{endTime(session)}</span>
             <span aria-hidden>·</span>
             <MapPin className="size-3" />
-            <span className="min-w-0 truncate">
+            <span className="min-w-0">
               {room ?? t("room.tbc")}
               {floor ? ` · ${t(`floor.${floor}`)}` : ""}
             </span>
