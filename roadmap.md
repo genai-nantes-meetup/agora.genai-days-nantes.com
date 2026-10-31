@@ -21,6 +21,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 
 # Phase 3
 
+- [ ] Replace overlapping session likes silently with the newly liked session, without notifications; test the rule.
 - [ ] Confirm Twilio credentials and verified app-email sender domain.
 - [ ] Add private connection/conversation/message-event/push-subscription storage and block cleanup.
 - [ ] Implement request/accept/decline actions and profile/message inbox states.
