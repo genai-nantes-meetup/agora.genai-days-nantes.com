@@ -8,6 +8,8 @@ import { CoOrgBadge, SponsorLogo } from "@/components/sponsors";
 export const Route = createFileRoute("/sponsors/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Sponsor · Hey GenAI Days" },
       { name: "description", content: "Présentation d'un sponsor des GenAI Days 2026 à Nantes." },
       { property: "og:title", content: "Sponsor · Hey GenAI Days" },

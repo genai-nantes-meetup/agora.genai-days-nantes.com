@@ -9,6 +9,8 @@ import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/componen
 export const Route = createFileRoute("/sponsors/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Sponsors · Hey GenAI Days" },
       { name: "description", content: "Les sponsors et partenaires des GenAI Days 2026 à Nantes : Platinum, Gold et Silver." },
       { property: "og:title", content: "Sponsors · Hey GenAI Days" },

@@ -10,6 +10,8 @@ import { SessionCard } from "@/components/SessionCard";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Programme · Hey GenAI Days" },
       { name: "description", content: "Le programme des GenAI Days du 17 novembre 2026 à Nantes : talks, keynotes et tables rondes." },
       { property: "og:title", content: "Programme · Hey GenAI Days" },

@@ -16,6 +16,8 @@ import {useI18n} from '@/lib/i18n';
 export const Route = createFileRoute("/_authenticated/networking/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Networking · Hey GenAI Days" },
       { name: "description", content: "Networking — bientôt disponible dans Hey GenAI Days." },
       { property: "og:title", content: "Networking · Hey GenAI Days" },

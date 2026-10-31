@@ -13,6 +13,8 @@ import { SessionCard } from "@/components/SessionCard";
 export const Route = createFileRoute("/speakers/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Speaker · Hey GenAI Days" },
       { name: "description", content: "Bio, parcours et sessions d'un speaker des GenAI Days." },
       { property: "og:title", content: "Speaker · Hey GenAI Days" },

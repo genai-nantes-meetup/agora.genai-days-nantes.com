@@ -6,6 +6,8 @@ import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/componen
 export const Route = createFileRoute("/speakers/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Speakers · Hey GenAI Days" },
       { name: "description", content: "Les intervenantes et intervenants des GenAI Days 2026 à Nantes." },
       { property: "og:title", content: "Speakers · Hey GenAI Days" },

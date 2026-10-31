@@ -13,6 +13,8 @@ const FLOORS = [
 export const Route = createFileRoute("/plan")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Plan · Hey GenAI Days" },
       { name: "description", content: "Plan de l'Hôtel de Région Pays de la Loire : rez-de-chaussée et 1er étage." },
       { property: "og:title", content: "Plan · Hey GenAI Days" },
