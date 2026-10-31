@@ -7,6 +7,10 @@ export function normalizeLinkedIn(value: string) {
   try { const u = new URL(value.includes('://') ? value : `https://${value}`); if(u.hostname.toLowerCase().replace(/^www\./,'') !== 'linkedin.com') return ''; return `${u.hostname.toLowerCase().replace(/^www\./,'')}${u.pathname.toLowerCase().replace(/\/+$/,'')}`; } catch { return ''; }
 }
 export function emailDomain(email: string) { return email.trim().toLowerCase().split('@')[1] ?? ''; }
+export const LINKEDIN_PREFIX='https://www.linkedin.com/in/';
+export function linkedInSuffix(value:string){
+ return value.trim().replace(/^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\//i,'').replace(/^[/?#]+/,'').split(/[?#]/)[0].replace(/\/+$/,'');
+}
 export const profileSchema = z.object({
   email:z.string().trim().email().max(254).transform(x=>x.toLowerCase()), first_name:z.string().trim().min(1).max(100),last_name:z.string().trim().min(1).max(100),
   linkedin_url:z.string().trim().max(300).refine(x=>/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(x))).transform(x=>`https://${normalizeLinkedIn(x)}`),

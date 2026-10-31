@@ -1,6 +1,10 @@
 import {describe,it,expect} from 'vitest';
-import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,emptyProfile,profileComplete} from './networking';
+import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX} from './networking';
 describe('phase 2 rules',()=>{
+ it('uses the requested fixed LinkedIn prefix',()=>expect(LINKEDIN_PREFIX).toBe('https://www.linkedin.com/in/'));
+ it('strips the prefix of a pasted full LinkedIn URL',()=>expect(linkedInSuffix('https://www.linkedin.com/in/camille-test')).toBe('camille-test'));
+ it('keeps only the profile suffix without tracking parameters',()=>expect(linkedInSuffix('https://linkedin.com/in/camille-test/?trk=hello')).toBe('camille-test'));
+ it('keeps a typed profile suffix',()=>expect(linkedInSuffix('camille-test')).toBe('camille-test'));
  it('normalizes protocol, www, case, parameters and trailing slash',()=>expect(normalizeLinkedIn('HTTPS://WWW.LinkedIn.com/in/Maxime/?trk=hello#x')).toBe('linkedin.com/in/maxime'));
  it('rejects impersonating domains',()=>expect(normalizeLinkedIn('https://linkedin.com.evil.test/in/maxime')).toBe(''));
  it('finds exact lowercase sponsor domain',()=>expect(emailDomain(' Maxime@ExploreTheVault.ai ')).toBe('explorethevault.ai'));

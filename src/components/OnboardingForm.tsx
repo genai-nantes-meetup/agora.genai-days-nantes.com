@@ -8,6 +8,7 @@ import {useI18n} from '@/lib/i18n';
 import {emptyProfile,normalizeLinkedIn,profileSchema,intentions,type ProfileInput} from '@/lib/networking';
 import {prefillLinkedIn} from '@/lib/members.functions';
 import {Choices} from './ProfileForm';
+import {LinkedInInput} from './LinkedInInput';
 
 export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileInput>;busy:boolean;onSubmit:(profile:ProfileInput)=>Promise<void>}) {
  const {t,lang}=useI18n();
@@ -34,7 +35,7 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
  const field=(key:'linkedin_url'|'first_name'|'last_name'|'job_title'|'company',required=false)=><label className="block space-y-2 text-sm font-bold" key={key}>{t(`form.${key}`)}<Input required={required} value={value[key]??''} maxLength={key==='linkedin_url'?300:160} autoComplete={key==='first_name'?'given-name':key==='last_name'?'family-name':key==='company'?'organization':key==='job_title'?'organization-title':'url'} onChange={e=>setValue(old=>({...old,[key]:e.target.value}))}/></label>;
  return <form className="space-y-6" onSubmit={e=>{e.preventDefault();void submit();}}>
   <div className="flex items-center justify-between font-label text-xs"><span>{t(step===0?'form.linkedin_url':'form.identity')}</span><span>{step+1}/2</span></div>
-  {step===0?field('linkedin_url',true):<div className="space-y-5">
+  {step===0?<LinkedInInput value={value.linkedin_url} onChange={v=>setValue(old=>({...old,linkedin_url:v}))}/>:<div className="space-y-5">
    {field('first_name',true)}{field('last_name',true)}{field('job_title')}{field('company')}
    <fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>setValue(old=>({...old,intentions:intentions.filter(item=>v.includes(item))}))} prefix="intention."/></fieldset>
    <div className="flex items-start gap-3"><Checkbox id="onboarding-consent" checked={consent} onCheckedChange={v=>setConsent(v===true)}/><div className="text-sm leading-relaxed"><label htmlFor="onboarding-consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div>
