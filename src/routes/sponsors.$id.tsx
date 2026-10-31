@@ -3,7 +3,7 @@ import { ExternalLink } from "lucide-react";
 import { useSponsors } from "@/lib/data";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { BackLink, ErrorView, LoadingView, OfflineDataNote } from "@/components/common";
-import { CoOrgBadge, SponsorLogo } from "./sponsors.index";
+import { CoOrgBadge, SponsorLogo } from "@/components/sponsors";
 
 export const Route = createFileRoute("/sponsors/$id")({
   head: () => ({

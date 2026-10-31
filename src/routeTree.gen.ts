@@ -17,6 +17,8 @@ import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as SessionsIdRouteImport } from './routes/sessions.$id'
 import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
 import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
+import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
+import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +60,16 @@ const SpeakersIdRoute = SpeakersIdRouteImport.update({
   path: '/speakers/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
+  id: '/sponsors/',
+  path: '/sponsors/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorsIdRoute = SponsorsIdRouteImport.update({
+  id: '/sponsors/$id',
+  path: '/sponsors/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,7 +79,9 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
+  '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
+  '/sponsors/': typeof SponsorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,7 +91,9 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
+  '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers': typeof SpeakersIndexRoute
+  '/sponsors': typeof SponsorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,7 +104,9 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
   '/speakers/$id': typeof SpeakersIdRoute
+  '/sponsors/$id': typeof SponsorsIdRoute
   '/speakers/': typeof SpeakersIndexRoute
+  '/sponsors/': typeof SponsorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,7 +118,9 @@ export interface FileRouteTypes {
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
+    | '/sponsors/$id'
     | '/speakers/'
+    | '/sponsors/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,7 +130,9 @@ export interface FileRouteTypes {
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
+    | '/sponsors/$id'
     | '/speakers'
+    | '/sponsors'
   id:
     | '__root__'
     | '/'
@@ -120,7 +142,9 @@ export interface FileRouteTypes {
     | '/profil'
     | '/sessions/$id'
     | '/speakers/$id'
+    | '/sponsors/$id'
     | '/speakers/'
+    | '/sponsors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,7 +155,9 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   SessionsIdRoute: typeof SessionsIdRoute
   SpeakersIdRoute: typeof SpeakersIdRoute
+  SponsorsIdRoute: typeof SponsorsIdRoute
   SpeakersIndexRoute: typeof SpeakersIndexRoute
+  SponsorsIndexRoute: typeof SponsorsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +218,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SpeakersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sponsors/': {
+      id: '/sponsors/'
+      path: '/sponsors'
+      fullPath: '/sponsors/'
+      preLoaderRoute: typeof SponsorsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsors/$id': {
+      id: '/sponsors/$id'
+      path: '/sponsors/$id'
+      fullPath: '/sponsors/$id'
+      preLoaderRoute: typeof SponsorsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -203,7 +243,9 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   SessionsIdRoute: SessionsIdRoute,
   SpeakersIdRoute: SpeakersIdRoute,
+  SponsorsIdRoute: SponsorsIdRoute,
   SpeakersIndexRoute: SpeakersIndexRoute,
+  SponsorsIndexRoute: SponsorsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
