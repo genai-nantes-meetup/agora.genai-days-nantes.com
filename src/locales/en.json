@@ -106,7 +106,6 @@
   "auth.unknown": "No account with this email. Use the link you received in your invitation.",
   "auth.invalid": "This invitation is invalid or has already been used.",
   "auth.logout": "Sign out",
-  "auth.invitation": "Use the link in your invitation to create your profile.",
   "auth.suspended": "Your directory access has been suspended.",
   "form.identity": "Identity",
   "form.activity": "Activity",
