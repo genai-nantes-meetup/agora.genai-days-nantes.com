@@ -13,7 +13,9 @@ export function SiteFooter(){
           <ul className="mx-auto grid w-full max-w-80 grid-cols-2 items-center justify-items-center gap-x-7 gap-y-5">
             {sponsors.map(s=>(
               <li key={s.id} className="flex h-14 w-full min-w-0 items-center justify-center">
-                <img src={s.logo??''} alt={s.name} loading="lazy" className="max-h-full max-w-full object-contain"/>
+                <a href={s.website??''} target="_blank" rel="noreferrer" className="flex h-full w-full items-center justify-center" aria-label={s.name}>
+                  <img src={s.logo??''} alt={s.name} loading="lazy" className="max-h-full max-w-full object-contain"/>
+                </a>
               </li>
             ))}
           </ul>
