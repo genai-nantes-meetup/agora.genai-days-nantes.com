@@ -17,4 +17,17 @@
 - [x] Test pure rules, two-account cross-read/status protection/mutual blocking, onboarding/profile edit/delete on mobile; check public desktop/mobile layouts.
 - [ ] Verify delivered magic-link emails, avatar upload/cropping and authenticated desktop flows; not fully verified this turn.
 
-Scope excludes connection requests, messaging, Airscale, AI, invitation email sending and session feedback.
+Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation email sending and session feedback.
+
+# Phase 3
+
+- [ ] Confirm Twilio credentials and verified app-email sender domain.
+- [ ] Add private connection/conversation/message-event/push-subscription storage and block cleanup.
+- [ ] Implement request/accept/decline actions and profile/message inbox states.
+- [ ] Add Twilio provisioning, short-lived identity tokens, realtime messaging and unread badges.
+- [ ] Enforce messaging closure on 24 November 2026 at midnight Paris time.
+- [ ] Add signed Twilio event handling, browser push and one-time permission invitation.
+- [ ] Add bilingual per-event emails and five-minute unread reminder checks with deduplication.
+- [ ] Run rule tests and two-account end-to-end checks; report blockers and webhook URL.
+
+Phase 3 excludes Airscale, AI, feedback and administration.
