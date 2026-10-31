@@ -16,6 +16,7 @@ import { Route as DonneesRouteImport } from './routes/donnees'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlanRouteImport } from './routes/plan'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedNetworkingRouteImport } from './routes/_authenticated/networking'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
@@ -66,6 +67,11 @@ const PlanRoute = PlanRouteImport.update({
   id: '/plan',
   path: '/plan',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
   id: '/messages',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/networking': typeof AuthenticatedNetworkingRouteWithChildren
   '/profil': typeof AuthenticatedProfilRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/profil': typeof AuthenticatedProfilRoute
   '/sessions/$id': typeof SessionsIdRoute
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
   '/plan': typeof PlanRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/_authenticated/networking': typeof AuthenticatedNetworkingRouteWithChildren
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/plan'
+    | '/admin'
     | '/messages'
     | '/networking'
     | '/profil'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/plan'
+    | '/admin'
     | '/messages'
     | '/profil'
     | '/sessions/$id'
@@ -280,6 +291,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/plan'
+    | '/_authenticated/admin'
     | '/_authenticated/messages'
     | '/_authenticated/networking'
     | '/_authenticated/profil'
@@ -368,6 +380,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/plan'
       preLoaderRoute: typeof PlanRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/messages': {
       id: '/_authenticated/messages'
@@ -514,12 +533,14 @@ const AuthenticatedNetworkingRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRouteWithChildren
   AuthenticatedNetworkingRoute: typeof AuthenticatedNetworkingRouteWithChildren
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRouteWithChildren,
   AuthenticatedNetworkingRoute: AuthenticatedNetworkingRouteWithChildren,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
