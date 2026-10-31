@@ -44,10 +44,10 @@ export function SessionCard({
             {speakers.length ? speakers.map((s) => s.name).join(", ") : t("speakers.tbc")}
           </p>
           <p className="font-label mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-            <span>{session.startTime}–{endTime(session)}</span>
+            <span className="whitespace-nowrap">{session.startTime}–{endTime(session)}</span>
             <span aria-hidden>·</span>
             <MapPin className="size-3" />
-            <span className="truncate">
+            <span className="min-w-0 truncate">
               {room ?? t("room.tbc")}
               {floor ? ` · ${t(`floor.${floor}`)}` : ""}
             </span>

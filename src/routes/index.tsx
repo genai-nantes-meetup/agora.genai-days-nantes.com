@@ -118,9 +118,9 @@ function ProgramPage() {
       ) : (
         <ol className="space-y-6 px-4 pt-2">
           {slots.map(({ time, list }) => (
-            <li key={time} className="grid grid-cols-[3.25rem_1fr] gap-3">
+            <li key={time} className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3">
               <div className="font-label pt-3 text-sm">{time}</div>
-              <div className={`grid gap-3 ${list.length > 1 ? "sm:grid-cols-2" : ""}`}>
+              <div className={`grid min-w-0 gap-3 ${list.length > 1 ? "sm:grid-cols-2" : ""}`}>
                 {list.map((s) => (
                   <SessionCard
                     key={s.id}
