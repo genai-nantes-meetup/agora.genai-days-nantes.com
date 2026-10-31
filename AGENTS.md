@@ -21,8 +21,11 @@
 - Never cache account pages or private responses in the service worker; only public event pages are eligible for navigation caching.
 - Administrative authorization uses protected user_roles rows; profile_status.is_admin is display-only and editable invitation email never grants administrative access.
 - Keep networking validation and sorting browser-independent in src/lib/networking.ts, with concrete rule tests alongside it.
-- Email signup/login shares the passwordless flow; the account layout gates incomplete profiles with the two-step onboarding form, and completion is validated by the shared schema and database trigger. LinkedIn prefill uses exact public speaker matches until an enrichment provider is connected, with manual fallback.
+- Email signup/login shares the passwordless flow; the account layout gates incomplete profiles with the two-step onboarding form, and completion is validated by the shared schema and database trigger. LinkedIn prefill uses server-only Airscale with durable per-account reservations and manual fallback.
 - Signed-out account screens and /login render the shared EmailSignIn form directly, avoiding a second welcome-to-login step.
 - Keep messaging rules browser-independent in src/lib/messaging.ts; private states are returned through authenticated RPCs so declined requests remain hidden from their sender.
 - Twilio SDK is imported only after hydration and has read-only roles; messages are sent through authenticated server functions with deadline/block checks, because old ChatGrant tokens and webhook outages must never bypass those rules. Issue tokens only after role and signed webhook configuration checks.
 - Browser notifications use a separate worker under /notifications/ and Worker-native Web Push; sender keys remain server-only except the public subscription key.
+
+- Phase 4 modules live in src/lib/phase4: pure schemas/rules have focused tests, provider code stays in server helpers, and authenticated RPCs validate access before privileged work.
+- Purge runs in bounded leased batches, checks its dated paused control before destructive stages, preserves two verified designated admins, and is never executed destructively in tests.
