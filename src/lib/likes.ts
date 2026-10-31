@@ -62,7 +62,7 @@ export function useLikes() {
       }
       write(toggleSessionLike(read(), session, all));
     },
-    [user, navigate],
+    [user, ready, navigate],
   );
 
   return { likes, toggle };
