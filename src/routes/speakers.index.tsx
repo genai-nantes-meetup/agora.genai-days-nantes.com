@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
 import { useSpeakers } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
 import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/components/common";
@@ -17,12 +16,9 @@ export const Route = createFileRoute("/speakers/")({
 });
 
 function SpeakersPage() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const { data, offlineAt, isPending, isError, refetch } = useSpeakers();
-  const list = useMemo(
-    () => [...(data?.speakers ?? [])].sort((a, b) => a.name.localeCompare(b.name, lang)),
-    [data, lang],
-  );
+  const list = data?.speakers ?? [];
 
   return (
     <div>
@@ -42,17 +38,17 @@ function SpeakersPage() {
         <ul className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3">
           {list.map((s) => (
             <li key={s.id}>
-              <Link to="/speakers/$id" params={{ id: s.id }} className="block overflow-hidden rounded-xl bg-card shadow-card">
+              <Link to="/speakers/$id" params={{ id: s.id }} className="flex h-full flex-col overflow-hidden rounded-xl bg-card shadow-card">
                 <div className="aspect-square bg-surface">
                   {s.photo && <img src={s.photo} alt="" loading="lazy" className="size-full object-cover" />}
                 </div>
-                <div className="p-3">
+                <div className="grid h-36 grid-rows-[1.25rem_3.25rem_2.25rem] gap-1 p-3">
                   {s.eventRole && (
-                    <span className="font-label mb-1 inline-block rounded bg-accent px-1.5 py-0.5 text-[10px] uppercase text-accent-foreground">
+                    <span className="font-label w-fit max-w-full truncate rounded bg-accent px-1.5 py-0.5 text-[10px] uppercase text-accent-foreground">
                       {s.eventRole}
                     </span>
-                  )}
-                  <p className="font-display text-lg font-semibold leading-tight">{s.name}</p>
+                  ) || <span aria-hidden="true" />}
+                  <p className="font-display line-clamp-2 text-lg font-semibold leading-tight">{s.name}</p>
                   <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                     {[s.role, s.company].filter(Boolean).join(" · ")}
                   </p>
