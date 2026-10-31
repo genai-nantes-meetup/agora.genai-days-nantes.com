@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { ArrowLeft, CloudOff, Heart, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import type { Track } from "@/lib/event";
 
@@ -27,7 +27,7 @@ export function ErrorView({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-export function BackLink({ to = "/" }: { to?: "/" | "/speakers" }) {
+export function BackLink({ to = "/" }: { to?: "/" | "/speakers" | "/sponsors" }) {
   const { t } = useI18n();
   const router = useRouter();
   return (
@@ -98,14 +98,35 @@ export function ComingSoon() {
   );
 }
 
-export function ProgramTabs({ active }: { active: "program" | "speakers" }) {
+export function ProgramTabs({ active }: { active: "program" | "speakers" | "sponsors" }) {
   const { t } = useI18n();
   const cls = (on: boolean) =>
-    `flex-1 rounded-full py-2 text-center text-sm font-semibold transition-colors ${on ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`;
+    `flex-1 rounded-full py-2 text-center text-sm font-bold transition-colors ${on ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`;
   return (
     <div className="mx-4 mt-4 flex rounded-full bg-surface p-1">
       <Link to="/" className={cls(active === "program")}>{t("tabs.program")}</Link>
       <Link to="/speakers" className={cls(active === "speakers")}>{t("tabs.speakers")}</Link>
+      <Link to="/sponsors" className={cls(active === "sponsors")}>{t("tabs.sponsors")}</Link>
     </div>
+  );
+}
+
+/** Discreet notice shown when data comes from the on-device copy. */
+export function OfflineDataNote({ at }: { at: number | null }) {
+  const { t } = useI18n();
+  if (!at) return null;
+  const time = new Date(at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" });
+  return (
+    <p role="status" className="font-label mx-4 mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+      <CloudOff className="size-3.5" /> {t("data.offline", { time })}
+    </p>
+  );
+}
+
+export function Wordmark({ className = "" }: { className?: string }) {
+  return (
+    <span className={`font-display font-semibold uppercase tracking-tight ${className}`}>
+      GEN<span className="font-extrabold italic">AI</span> DAYS
+    </span>
   );
 }

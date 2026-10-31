@@ -60,5 +60,15 @@
   "close": "Close",
   "offline": "Offline: showing saved data",
   "lang.switch": "Passer en français",
-  "speakers.empty": "No speakers yet."
+  "speakers.empty": "No speakers yet.",
+  "tabs.sponsors": "Sponsors",
+  "sponsors.coorg": "Co-organizer",
+  "sponsors.empty": "No sponsors yet.",
+  "tier.platinum": "Platinum",
+  "tier.gold": "Gold",
+  "tier.silver": "Silver",
+  "sponsors.visit": "Visit website",
+  "data.offline": "Offline data, last updated at {time}",
+  "date.event": "17 November 2026",
+  "nav.sponsors": "Sponsors"
 }

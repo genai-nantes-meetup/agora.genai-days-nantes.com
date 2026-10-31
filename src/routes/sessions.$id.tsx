@@ -44,35 +44,42 @@ function SessionPage() {
         <img src={s.image} alt="" className="mt-3 aspect-[16/9] w-full object-cover sm:rounded-xl" loading="eager" />
       )}
       <div className="space-y-5 px-4 pt-5">
-        <div className="flex items-start gap-3">
-          <div className="min-w-0 flex-1">
+        <div className="grain relative overflow-hidden rounded-2xl border-2 border-foreground/80 bg-card p-4 shadow-card">
+          <div className="flex items-start justify-between gap-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <TrackTag track={s.track} />
               <span className="font-label text-xs uppercase text-muted-foreground">{t(`format.${s.format}` as TKey)}</span>
             </div>
-            <h1 className="mt-2 text-3xl font-medium leading-tight">{s.title}</h1>
-            {s.subtitle && <p className="mt-1 text-lg text-muted-foreground">{s.subtitle}</p>}
+            <LikeButton size="lg" liked={liked} onClick={() => toggle(s, data.sessions, (title) => t("like.overlap", { title }))} />
           </div>
-          <LikeButton size="lg" liked={liked} onClick={() => toggle(s, data.sessions, (title) => t("like.overlap", { title }))} />
+          {speakers.length > 0 && (
+            <p className="mt-1 font-display text-2xl font-extrabold leading-tight">{speakers.map((x) => x.name).join(", ")}</p>
+          )}
+          <h1 className="mt-2 text-2xl font-semibold italic leading-snug">{s.title}</h1>
+          {s.subtitle && <p className="mt-1 text-muted-foreground">{s.subtitle}</p>}
+          <div aria-hidden className="relative -mx-4 my-4 border-t-2 border-dashed border-foreground/30">
+            <span className="absolute -left-3 -top-3 size-6 rounded-full bg-background" />
+            <span className="absolute -right-3 -top-3 size-6 rounded-full bg-background" />
+          </div>
+          <dl className="grid gap-2 text-sm">
+            <div className="flex items-center gap-2 font-bold">
+              <Clock className="size-4" />
+              <dt className="sr-only">{t("cal.add")}</dt>
+              <dd>
+                {t("date.event")} · <span className="font-label font-normal">{s.startTime}–{endTime(s)}</span>{" "}
+                <span className="font-normal text-muted-foreground">({t("minutes", { n: s.durationMinutes })})</span>
+              </dd>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="size-4" />
+              <dt className="sr-only">{t("cal.room")}</dt>
+              <dd className="font-label">
+                {room ?? t("room.tbc")}
+                {floor ? ` · ${t(`floor.${floor}`)}` : ""}
+              </dd>
+            </div>
+          </dl>
         </div>
-
-        <dl className="font-label grid gap-2 rounded-xl bg-surface p-4 text-sm">
-          <div className="flex items-center gap-2">
-            <Clock className="size-4" />
-            <dt className="sr-only">Horaire</dt>
-            <dd>
-              {s.startTime}–{endTime(s)} · {t("minutes", { n: s.durationMinutes })}
-            </dd>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="size-4" />
-            <dt className="sr-only">{t("cal.room")}</dt>
-            <dd>
-              {room ?? t("room.tbc")}
-              {floor ? ` · ${t(`floor.${floor}`)}` : ""}
-            </dd>
-          </div>
-        </dl>
 
         <CalendarButtons session={s} date={data.event.date} />
 

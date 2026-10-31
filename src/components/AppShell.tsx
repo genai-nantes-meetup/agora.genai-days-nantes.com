@@ -3,11 +3,12 @@ import { CalendarDays, Map, MessageCircle, User, Users, WifiOff } from "lucide-r
 import { useEffect, useState, type ReactNode } from "react";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { InstallPrompt } from "./InstallPrompt";
+import { Wordmark } from "./common";
 
 const tabs: { to: "/networking" | "/messages" | "/" | "/plan" | "/profil"; key: TKey; icon: typeof Users; match: (p: string) => boolean }[] = [
   { to: "/networking", key: "nav.networking", icon: Users, match: (p) => p.startsWith("/networking") },
   { to: "/messages", key: "nav.messages", icon: MessageCircle, match: (p) => p.startsWith("/messages") },
-  { to: "/", key: "nav.program", icon: CalendarDays, match: (p) => p === "/" || p.startsWith("/sessions") || p.startsWith("/speakers") },
+  { to: "/", key: "nav.program", icon: CalendarDays, match: (p) => p === "/" || p.startsWith("/sessions") || p.startsWith("/speakers") || p.startsWith("/sponsors") },
   { to: "/plan", key: "nav.plan", icon: Map, match: (p) => p.startsWith("/plan") },
   { to: "/profil", key: "nav.profile", icon: User, match: (p) => p.startsWith("/profil") },
 ];
@@ -34,12 +35,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col">
-      <header className="pt-safe sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
+      <header className="grain pt-safe sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
         <div className="flex h-14 items-center justify-between px-4">
           <Link to="/" className="flex items-baseline gap-1.5">
-            <span className="font-label text-xs text-muted-foreground">Hey</span>
-            <span className="font-display text-xl font-semibold leading-none">GenAI Days</span>
-            <span aria-hidden className="ml-0.5 inline-block size-2 rounded-full bg-accent" />
+            <span className="font-display text-sm italic text-muted-foreground">Hey</span>
+            <Wordmark className="text-2xl leading-none" />
           </Link>
           <button
             type="button"

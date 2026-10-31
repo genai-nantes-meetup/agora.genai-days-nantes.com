@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useSpeakers } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
-import { ErrorView, LoadingView, ProgramTabs } from "@/components/common";
+import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/components/common";
 
 export const Route = createFileRoute("/speakers/")({
   head: () => ({
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/speakers/")({
 
 function SpeakersPage() {
   const { t, lang } = useI18n();
-  const { data, isPending, isError, refetch } = useSpeakers();
+  const { data, offlineAt, isPending, isError, refetch } = useSpeakers();
   const list = useMemo(
     () => [...(data?.speakers ?? [])].sort((a, b) => a.name.localeCompare(b.name, lang)),
     [data, lang],
@@ -27,9 +27,10 @@ function SpeakersPage() {
   return (
     <div>
       <ProgramTabs active="speakers" />
+      <OfflineDataNote at={offlineAt} />
       <div className="px-4 pt-5">
         <p className="font-label text-xs uppercase text-muted-foreground">{list.length || ""} speakers</p>
-        <h1 className="mt-1 text-4xl font-medium">{t("speakers")}</h1>
+        <h1 className="mt-1 text-4xl font-extrabold">{t("speakers")}</h1>
       </div>
       {isPending ? (
         <LoadingView />

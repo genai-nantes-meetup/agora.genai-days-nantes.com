@@ -4,7 +4,7 @@ import { currentOrNext, parisNow, toMinutes, type Session } from "@/lib/event";
 import { useSessions } from "@/lib/data";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { useLikes } from "@/lib/likes";
-import { ErrorView, LoadingView, ProgramTabs } from "@/components/common";
+import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/components/common";
 import { SessionCard } from "@/components/SessionCard";
 
 export const Route = createFileRoute("/")({
@@ -34,7 +34,7 @@ function useParisClock() {
 
 function ProgramPage() {
   const { t } = useI18n();
-  const { data, isPending, isError, refetch } = useSessions();
+  const { data, offlineAt, isPending, isError, refetch } = useSessions();
   const { likes, toggle } = useLikes();
   const [filter, setFilter] = useState<Filter>("all");
   const clock = useParisClock();
@@ -88,9 +88,10 @@ function ProgramPage() {
   return (
     <div>
       <ProgramTabs active="program" />
+      <OfflineDataNote at={offlineAt} />
       <div className="px-4 pt-5">
         <p className="font-label text-xs uppercase text-muted-foreground">{t("nav.program")} · 17.11.2026 · Nantes</p>
-        <h1 className="mt-1 text-4xl font-medium leading-tight">GenAI Days</h1>
+        <h1 className="mt-1 text-4xl font-extrabold leading-tight">GenAI Days</h1>
       </div>
 
       <div className="sticky top-14 z-20 -mt-1 bg-background/95 px-4 py-3 backdrop-blur">
