@@ -44,8 +44,8 @@ function SponsorCard({ s, tier }: { s: Sponsor; tier: SponsorTier }) {
       <div className={big ? "p-4" : "p-3"}>
         <SponsorLogo sponsor={s} className={big ? "h-28" : mid ? "h-20" : "h-14"} />
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <p className={`font-bold ${big ? "text-lg" : "text-sm"}`}>{s.name}</p>
           {s.coOrganizer && <CoOrgBadge />}
+          <p className={`font-bold ${big ? "text-lg" : "text-sm"}`}>{s.name}</p>
         </div>
         {s.description && tier !== "silver" && (
           <p className={`mt-1 text-sm text-muted-foreground ${big ? "line-clamp-3" : "line-clamp-2"}`}>{s.description}</p>
