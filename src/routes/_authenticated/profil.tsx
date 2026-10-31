@@ -1,14 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/common";
-
-export const Route = createFileRoute("/_authenticated/profil")({
-  head: () => ({
-    meta: [
-      { title: "Profil · Hey GenAI Days" },
-      { name: "description", content: "Profil — bientôt disponible dans Hey GenAI Days." },
-      { property: "og:title", content: "Profil · Hey GenAI Days" },
-      { property: "og:description", content: "Profil — bientôt disponible dans l'app des GenAI Days." },
-    ],
-  }),
-  component: ComingSoon,
-});
+import {createFileRoute,Link,useNavigate} from '@tanstack/react-router';
+import {useState} from 'react';
+import {useQuery,useQueryClient} from '@tanstack/react-query';
+import {useServerFn} from '@tanstack/react-start';
+import {toast} from 'sonner';
+import {LogOut,Trash2,Pencil} from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {Dialog,DialogContent,DialogTitle} from '@/components/ui/dialog';
+import {LoadingView,ErrorView} from '@/components/common';
+import {ProfileForm} from '@/components/ProfileForm';
+import {MemberCard} from '@/components/MemberCard';
+import {useAuth} from '@/lib/auth';
+import {useI18n} from '@/lib/i18n';
+import {myProfileOptions} from '@/lib/member-queries';
+import {saveProfile,deleteAccount,listBlocked} from '@/lib/members.functions';
+import {supabase} from '@/integrations/supabase/client';
+export const Route=createFileRoute('/_authenticated/profil')({head:()=>({meta:[{title:'Mon profil · Hey GenAI Days'},{name:'description',content:'Gérez votre profil participant aux GenAI Days.'},{property:'og:title',content:'Mon profil · Hey GenAI Days'},{property:'og:description',content:'Identité, activité et intentions professionnelles.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:Profile});
+function Profile(){const {user}=useAuth();const {t,lang,setLang}=useI18n();const [editing,setEditing]=useState(false);const [busy,setBusy]=useState(false);const [remove,setRemove]=useState(false);const client=useQueryClient();const navigate=useNavigate();const save=useServerFn(saveProfile);const destroy=useServerFn(deleteAccount);const blocked=useServerFn(listBlocked);const q=useQuery(myProfileOptions(user?.id??''));const blocks=useQuery({queryKey:['blocked'],queryFn:()=>blocked(),enabled:!!user});if(q.isPending)return <LoadingView/>;if(q.isError)return <ErrorView onRetry={()=>q.refetch()}/>;const p=q.data;if(!p)return null;
+ async function signOut(){await client.cancelQueries();client.clear();await supabase.auth.signOut();await navigate({to:'/login',replace:true});}
+ return <section className="space-y-6 px-5 py-6"><div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3"><h1 className="text-3xl">{t('profile.title')}</h1><Button variant="outline" size="icon" aria-label={t('form.edit')} title={t('form.edit')} onClick={()=>setEditing(!editing)}><Pencil className="size-4"/></Button></div>{editing?<ProfileForm initial={{...p,consent:true}} avatar={p.avatar??null} editing busy={busy} onSubmit={async(value,photo)=>{setBusy(true);try{const result=await save({data:value});if(photo&&user){const path=`${user.id}/avatar.jpg`;const {error}=await supabase.storage.from('avatars').upload(path,photo,{upsert:true,contentType:'image/jpeg'});if(error)throw error;const {error:updateError}=await supabase.from('profiles').update({photo_url:path}).eq('user_id',user.id);if(updateError)throw updateError;}await client.invalidateQueries();setEditing(false);toast.success(t(result.emailPending?'form.emailPending':'form.saved'));}catch{toast.error(t('action.error'));}finally{setBusy(false);}}}/>:<><MemberCard member={p}/><p className="text-sm text-muted-foreground">{p.email}</p><p className="text-sm italic">{p.pitch}</p></>}<section><h2 className="text-xl">{t('profile.language')}</h2><div className="mt-3 flex gap-2">{(['fr','en'] as const).map(l=><Button key={l} variant={lang===l?'secondary':'outline'} onClick={()=>{setLang(l);if(user)void supabase.from('profiles').update({lang:l}).eq('user_id',user.id);}}>{l.toUpperCase()}</Button>)}</div></section><section className="border-t pt-5"><h2 className="text-xl">{t('profile.blocked')}</h2>{blocks.data?.length?<ul className="mt-3 divide-y">{blocks.data.map(b=><li key={b.user_id} className="flex items-center justify-between gap-3 py-3 text-sm"><span>{b.first_name} {b.last_name}</span><Button variant="outline" size="sm" onClick={async()=>{if(!user)return;const {error}=await supabase.from('blocks').delete().eq('blocker_id',user.id).eq('blocked_id',b.user_id);if(error)toast.error(t('action.error'));else{await blocks.refetch();await client.invalidateQueries({queryKey:['members']});}}>{t('profile.unblock')}</Button></li>)}</ul>:<p className="mt-2 text-sm text-muted-foreground">{t('profile.noBlocks')}</p>}</section><Button asChild variant="link" className="px-0"><Link to="/donnees">{t('legal.link')}</Link></Button><div className="flex flex-wrap gap-3 border-t pt-5"><Button variant="outline" onClick={()=>void signOut()}><LogOut className="size-4"/>{t('auth.logout')}</Button><Button variant="ghost" className="text-destructive" onClick={()=>setRemove(true)}><Trash2 className="size-4"/>{t('profile.delete')}</Button></div><Dialog open={remove} onOpenChange={setRemove}><DialogContent><DialogTitle>{t('profile.deleteConfirm')}</DialogTitle><div className="flex gap-3"><Button variant="outline" onClick={()=>setRemove(false)}>{t('action.cancel')}</Button><Button variant="destructive" disabled={busy} onClick={async()=>{setBusy(true);try{await destroy();await signOut();toast.success(t('profile.deleted'));}catch{toast.error(t('action.error'));}finally{setBusy(false);}}>{t('profile.delete')}</Button></div></DialogContent></Dialog></section>;
+}
