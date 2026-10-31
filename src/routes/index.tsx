@@ -72,13 +72,43 @@ function ProgramPage() {
     }));
   }, [filtered]);
 
+  // Event day: follow the clock. Scroll on open, when the current slot changes,
+  // and when the app returns to the foreground, unless the user scrolled recently.
+  const lastTarget = useRef<string | null>(null);
+  const lastUserScroll = useRef(0);
+  const targetId = isEventDay ? (nowInfo.ids[0] ?? null) : null;
+
   useEffect(() => {
-    if (scrolled.current || !isEventDay || !nowInfo.ids.length) return;
-    scrolled.current = true;
-    requestAnimationFrame(() =>
-      document.getElementById(`s-${nowInfo.ids[0]}`)?.scrollIntoView({ block: "start", behavior: "smooth" }),
-    );
-  }, [isEventDay, nowInfo]);
+    const mark = () => (lastUserScroll.current = Date.now());
+    window.addEventListener("wheel", mark, { passive: true });
+    window.addEventListener("touchmove", mark, { passive: true });
+    window.addEventListener("keydown", mark);
+    return () => {
+      window.removeEventListener("wheel", mark);
+      window.removeEventListener("touchmove", mark);
+      window.removeEventListener("keydown", mark);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!targetId) return;
+    const go = (force: boolean) => {
+      if (!force && Date.now() - lastUserScroll.current < 120_000) return;
+      const el = document.getElementById(`s-${targetId}`);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 140;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    };
+    if (lastTarget.current !== targetId) {
+      const first = !scrolled.current;
+      scrolled.current = true;
+      lastTarget.current = targetId;
+      requestAnimationFrame(() => go(first));
+    }
+    const onVisible = () => document.visibilityState === "visible" && go(false);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [targetId]);
 
   const filters: { id: Filter; label: string }[] = [
     { id: "all", label: t("filter.all") },
