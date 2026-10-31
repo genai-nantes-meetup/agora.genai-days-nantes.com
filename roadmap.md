@@ -23,6 +23,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 
 - [x] Show live Platinum sponsor logos on both welcome/sign-in screens; all four logos rendered, mobile overflow check passed.
 - [x] Replace overlapping session likes silently with the newly liked session, without notifications; rule tests and program UI verified.
+- [x] Move Platinum sponsor logos into a site-wide footer on every page, with each logo linking to the sponsor's website and a link to https://genai-days-nantes.com/; label becomes "Avec le soutien de...".
 - [ ] Verify Twilio credentials: saved, but Twilio rejects Roles and Webhooks reads with 401/code 70051; needs an authorized Standard/Main key.
 - [x] Add private connection/conversation/message-event/push-subscription storage, private data-free realtime doorbells and durable block/deletion cleanup.
 - [x] Implement request/accept/decline actions and profile/message inbox states; requests, declines and blocking verified with three temporary accounts.
@@ -35,4 +36,5 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 - [x] Run 29 rule/routing tests, three-account request/decline/block/privacy flows, unsigned-callback rejection and desktop/mobile screenshots.
 - [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
 
-Phase 3 excludes Airscale, AI, feedback and administration.
+Phase 3 excludes Airscale, AI, feedback and administration.- [x] Replace the favicon with the event site favicon (32x32 G mark served at /favicon.png).
+- [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
