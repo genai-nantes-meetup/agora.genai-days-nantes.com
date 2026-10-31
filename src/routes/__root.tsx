@@ -17,6 +17,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { setupServiceWorker } from "@/lib/pwa";
 import { AuthProvider } from "@/lib/auth";
+import { MessagingProvider } from "@/lib/messaging-client";
 
 function NotFoundComponent() {
   return (
@@ -123,10 +124,12 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <AuthProvider>
+        <MessagingProvider>
         <AppShell>
           <Outlet />
         </AppShell>
         <Toaster position="top-center" richColors closeButton />
+        </MessagingProvider>
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>

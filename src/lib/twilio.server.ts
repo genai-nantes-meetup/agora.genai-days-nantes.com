@@ -8,7 +8,7 @@ export function twilioConfig(){
  return {account,key,secret,service};
 }
 export async function twilio<T>(path:string,body?:Record<string,string>):Promise<T>{
- const c=twilioConfig();const response=await fetch(`https://conversations.twilio.com/v1/Services/${c.service}${path}`,{method:body?'POST':'GET',headers:{Authorization:`Basic ${btoa(`${c.key}:${c.secret}`)}`,...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},body:body?new URLSearchParams(body):undefined,signal:AbortSignal.timeout(4000)});
+ const c=twilioConfig();const response=await fetch(`https://conversations.twilio.com/v1/Services/${c.service}${path}`,{method:body?'POST':'GET',headers:{Authorization:`Basic ${btoa(`${c.key}:${c.secret}`)}`,...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},...(body?{body:new URLSearchParams(body)}:{}),signal:AbortSignal.timeout(4000)});
  if(!response.ok){const text=await response.text();let code:string|number='unknown';try{code=JSON.parse(text).code??'unknown';}catch{}console.error('Twilio request failed',response.status,code);throw new Error(`Twilio request failed [${response.status}] code ${code}`);}
  return response.json() as Promise<T>;
 }
