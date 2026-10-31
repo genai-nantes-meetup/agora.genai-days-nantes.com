@@ -1,6 +1,7 @@
 # Phase 2
 
 - [x] Activate Lovable Cloud.
+- [ ] Re-read live sessions API and verify added closing keynote, breaks and lunch appear correctly.
 - [ ] Confirm profile storage before authentication implementation (required authentication setup question).
 - [ ] Confirm immediate signup session with editable invitation email; require email ownership verification before assigning initial admin privileges.
 - [ ] Create invitation/profile/status/domain/block/report schema, private avatar bucket and RLS.
