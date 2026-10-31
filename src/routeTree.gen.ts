@@ -27,6 +27,8 @@ import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
 import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
 import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authenticated/networking.$id'
+import { Route as ApiPublicTwilioEventsRouteImport } from './routes/api/public/twilio/events'
+import { Route as ApiPublicTwilioPreRouteImport } from './routes/api/public/twilio/pre'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -119,6 +121,16 @@ const AuthenticatedNetworkingIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedNetworkingRoute,
   } as any)
+const ApiPublicTwilioEventsRoute = ApiPublicTwilioEventsRouteImport.update({
+  id: '/api/public/twilio/events',
+  path: '/api/public/twilio/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTwilioPreRoute = ApiPublicTwilioPreRouteImport.update({
+  id: '/api/public/twilio/pre',
+  path: '/api/public/twilio/pre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,6 +150,8 @@ export interface FileRoutesByFullPath {
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
+  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
+  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -156,6 +170,8 @@ export interface FileRoutesByTo {
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/networking': typeof AuthenticatedNetworkingIndexRoute
+  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
+  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -177,6 +193,8 @@ export interface FileRoutesById {
   '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/networking/$id': typeof AuthenticatedNetworkingIdRoute
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
+  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
+  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -198,6 +216,8 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/networking/$id'
     | '/networking/'
+    | '/api/public/twilio/events'
+    | '/api/public/twilio/pre'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -216,6 +236,8 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/networking/$id'
     | '/networking'
+    | '/api/public/twilio/events'
+    | '/api/public/twilio/pre'
   id:
     | '__root__'
     | '/'
@@ -236,6 +258,8 @@ export interface FileRouteTypes {
     | '/_authenticated/messages/$id'
     | '/_authenticated/networking/$id'
     | '/_authenticated/networking/'
+    | '/api/public/twilio/events'
+    | '/api/public/twilio/pre'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -251,6 +275,8 @@ export interface RootRouteChildren {
   SponsorsIdRoute: typeof SponsorsIdRoute
   SpeakersIndexRoute: typeof SpeakersIndexRoute
   SponsorsIndexRoute: typeof SponsorsIndexRoute
+  ApiPublicTwilioEventsRoute: typeof ApiPublicTwilioEventsRoute
+  ApiPublicTwilioPreRoute: typeof ApiPublicTwilioPreRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -381,6 +407,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNetworkingIdRouteImport
       parentRoute: typeof AuthenticatedNetworkingRoute
     }
+    '/api/public/twilio/events': {
+      id: '/api/public/twilio/events'
+      path: '/api/public/twilio/events'
+      fullPath: '/api/public/twilio/events'
+      preLoaderRoute: typeof ApiPublicTwilioEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/twilio/pre': {
+      id: '/api/public/twilio/pre'
+      path: '/api/public/twilio/pre'
+      fullPath: '/api/public/twilio/pre'
+      preLoaderRoute: typeof ApiPublicTwilioPreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -441,6 +481,8 @@ const rootRouteChildren: RootRouteChildren = {
   SponsorsIdRoute: SponsorsIdRoute,
   SpeakersIndexRoute: SpeakersIndexRoute,
   SponsorsIndexRoute: SponsorsIndexRoute,
+  ApiPublicTwilioEventsRoute: ApiPublicTwilioEventsRoute,
+  ApiPublicTwilioPreRoute: ApiPublicTwilioPreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
