@@ -36,7 +36,7 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
   <div className="flex items-center justify-between font-label text-xs"><span>{t(step===0?'form.linkedin_url':'form.identity')}</span><span>{step+1}/2</span></div>
   {step===0?field('linkedin_url',true):<div className="space-y-5">
    {field('first_name',true)}{field('last_name',true)}{field('job_title')}{field('company')}
-   <fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>setValue(old=>({...old,intentions:v}))} prefix="intention."/></fieldset>
+   <fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>setValue(old=>({...old,intentions:intentions.filter(item=>v.includes(item))}))} prefix="intention."/></fieldset>
    <div className="flex items-start gap-3"><Checkbox id="onboarding-consent" checked={consent} onCheckedChange={v=>setConsent(v===true)}/><div className="text-sm leading-relaxed"><label htmlFor="onboarding-consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div>
   </div>}
   {error&&<p role="alert" className="text-sm text-destructive">{t('form.onboardingValidation')}</p>}
