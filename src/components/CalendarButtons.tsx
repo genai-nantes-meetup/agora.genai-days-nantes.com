@@ -1,0 +1,41 @@
+import { CalendarPlus } from "lucide-react";
+import { buildIcs, googleCalendarUrl, roomLine, resolveRoom, type Session } from "@/lib/event";
+import { useI18n } from "@/lib/i18n";
+
+export function CalendarButtons({ session, date }: { session: Session; date: string }) {
+  const { t } = useI18n();
+  const { floor } = resolveRoom(session);
+  const roomText = roomLine(session, t("cal.room"), floor ? t(`floor.${floor}`) : null);
+
+  const downloadIcs = () => {
+    const blob = new Blob([buildIcs(session, date, roomText)], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `genai-days-${session.id}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  };
+
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      <button
+        type="button"
+        onClick={downloadIcs}
+        className="flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground"
+      >
+        <CalendarPlus className="size-4" /> {t("cal.add")}
+      </button>
+      <a
+        href={googleCalendarUrl(session, date, roomText)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center rounded-full border-2 border-primary px-3 py-2 text-sm font-semibold"
+      >
+        {t("cal.google")}
+      </a>
+    </div>
+  );
+}
