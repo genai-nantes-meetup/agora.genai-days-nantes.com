@@ -17,3 +17,7 @@
 - Likes are device-local (localStorage, src/lib/likes.ts) until accounts exist.
 - Floor plan images live in public/plans/ (rdc.svg, etage-1.svg); replace files to update the map.
 - Phase 2 uses generated Lovable Cloud clients and TanStack server functions for internal privileged actions; do not create Edge Functions, because this app runs on TanStack Start.
+- Account pages live under the client-only `_authenticated` layout with an inline sign-in invitation; private reads and writes use authenticated RLS clients, and privileged operations validate their authority server-side.
+- Never cache account pages or private responses in the service worker; only public event pages are eligible for navigation caching.
+- Administrative authorization uses protected user_roles rows; profile_status.is_admin is display-only and editable invitation email never grants administrative access.
+- Keep networking validation and sorting browser-independent in src/lib/networking.ts, with concrete rule tests alongside it.
