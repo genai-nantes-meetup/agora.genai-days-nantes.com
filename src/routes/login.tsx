@@ -7,7 +7,6 @@ import {useI18n} from '@/lib/i18n';
 import {requestMagicLink} from '@/lib/members.functions';
 import {supabase} from '@/integrations/supabase/client';
 import {useAuth} from '@/lib/auth';
-import {PlatinumSponsors} from '@/components/PlatinumSponsors';
 export const Route=createFileRoute('/login')({head:()=>({meta:[{title:'Connexion · Hey GenAI Days'},{name:'description',content:'Connexion sur invitation aux GenAI Days.'},{property:'og:title',content:'Connexion · Hey GenAI Days'},{property:'og:description',content:'Retrouvez votre profil participant.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:Login});
 function Login(){const {t}=useI18n();const [email,setEmail]=useState('');const [busy,setBusy]=useState(false);const [message,setMessage]=useState<'auth.sent'|'auth.unknown'|'action.error'|null>(null);const send=useServerFn(requestMagicLink);const navigate=useNavigate();const {user}=useAuth();
  useEffect(()=>{if(user)void navigate({to:'/networking',replace:true});},[user,navigate]);
