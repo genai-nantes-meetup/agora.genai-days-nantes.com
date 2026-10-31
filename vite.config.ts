@@ -20,6 +20,7 @@ export default defineConfig({
         registerType: "autoUpdate",
         injectRegister: null,
         filename: "sw.js",
+        outDir: "dist/client", // TanStack Start serves static assets from dist/client
         manifest: false, // served from public/manifest.webmanifest
         devOptions: { enabled: false },
         workbox: {
