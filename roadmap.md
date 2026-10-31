@@ -23,7 +23,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 
 - [x] Show live Platinum sponsor logos on both welcome/sign-in screens; all four logos rendered, mobile overflow check passed.
 - [x] Replace overlapping session likes silently with the newly liked session, without notifications; rule tests and program UI verified.
-- [ ] Move Platinum sponsor logos into a site-wide footer on every page, with each logo linking to the sponsor's website and a link to https://genai-days-nantes.com/; label becomes "Avec le soutien de...".
+- [x] Move Platinum sponsor logos into a site-wide footer on every page, with each logo linking to the sponsor's website and a link to https://genai-days-nantes.com/; label becomes "Avec le soutien de...".
 - [ ] Verify Twilio credentials: saved, but Twilio rejects Roles and Webhooks reads with 401/code 70051; needs an authorized Standard/Main key.
 - [x] Add private connection/conversation/message-event/push-subscription storage, private data-free realtime doorbells and durable block/deletion cleanup.
 - [x] Implement request/accept/decline actions and profile/message inbox states; requests, declines and blocking verified with three temporary accounts.
