@@ -21,6 +21,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 
 # Phase 3
 
+- [ ] Show Platinum sponsor logos on the welcome/sign-in screen, including the inline networking sign-in invitation.
 - [x] Replace overlapping session likes silently with the newly liked session, without notifications; rule tests and program UI verified.
 - [ ] Verify Twilio credentials: saved, but Twilio rejects Roles and Webhooks reads with 401/code 70051; needs an authorized Standard/Main key.
 - [x] Add private connection/conversation/message-event/push-subscription storage, private data-free realtime doorbells and durable block/deletion cleanup.
