@@ -36,5 +36,6 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 - [x] Run 29 rule/routing tests, three-account request/decline/block/privacy flows, unsigned-callback rejection and desktop/mobile screenshots.
 - [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
 
-Phase 3 excludes Airscale, AI, feedback and administration.- [x] Replace the favicon with the event site favicon (32x32 G mark served at /favicon.png).
+Phase 3 excludes Airscale, AI, feedback and administration.
+- [ ] Replace e-mail sign-in with a "Connect with LinkedIn" button open to all (invitation token dropped per user decision): blocked — LinkedIn is not a supported auth provider on Lovable Cloud (only Google, Apple, Microsoft, Lovable, SSO); awaiting the user's choice of alternative before touching auth code.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
