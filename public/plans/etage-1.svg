@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="Georgia, serif">
+<rect width="1200" height="900" fill="#f2eadf"/>
+<g fill="none" stroke="#09122e" stroke-opacity=".25" stroke-width="4" stroke-dasharray="14 10">
+<rect x="80" y="80" width="1040" height="740" rx="12"/><line x1="80" y1="430" x2="1120" y2="430"/><line x1="560" y1="80" x2="560" y2="430"/><line x1="820" y1="430" x2="820" y2="820"/></g>
+<text x="600" y="430" text-anchor="middle" font-size="84" fill="#09122e">Plan à venir</text>
+<text x="600" y="500" text-anchor="middle" font-size="36" fill="#09122e" fill-opacity=".7">Map coming soon</text>
+<text x="600" y="580" text-anchor="middle" font-family="Courier New, monospace" font-size="30" fill="#09122e" fill-opacity=".7">1er étage · 1st floor</text>
+</svg>

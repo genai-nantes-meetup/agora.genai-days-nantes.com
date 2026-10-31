@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useI18n, type Lang } from "./i18n";
+import { useI18n } from "./i18n";
 import type { SessionsPayload, SpeakersPayload } from "./event";
 
 const BASE = "https://genai-days-nantes.com/api";
@@ -30,7 +30,3 @@ export function useSpeakers() {
   });
 }
 
-export function floorKey(lang: Lang, floor: "rdc" | "f1" | null) {
-  void lang;
-  return floor ? (`floor.${floor}` as const) : null;
-}

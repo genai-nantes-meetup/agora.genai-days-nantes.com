@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Heart, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import type { Track } from "@/lib/event";
@@ -29,14 +29,15 @@ export function ErrorView({ onRetry }: { onRetry: () => void }) {
 
 export function BackLink({ to = "/" }: { to?: "/" | "/speakers" }) {
   const { t } = useI18n();
+  const router = useRouter();
   return (
     <button
       type="button"
-      onClick={() => (window.history.length > 1 ? window.history.back() : undefined)}
+      onClick={() => (window.history.length > 1 ? router.history.back() : router.navigate({ to }))}
       className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground"
     >
       <ArrowLeft className="size-4" />
-      {window.history.length > 1 ? t("back") : <Link to={to}>{t("back")}</Link>}
+      {t("back")}
     </button>
   );
 }
