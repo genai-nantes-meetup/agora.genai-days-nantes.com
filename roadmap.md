@@ -37,5 +37,8 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 - [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
 
 Phase 3 excludes Airscale, AI, feedback and administration.
-- [ ] Replace e-mail sign-in with a "Connect with LinkedIn" button open to all (invitation token dropped per user decision): blocked — LinkedIn is not a supported auth provider on Lovable Cloud (only Google, Apple, Microsoft, Lovable, SSO); awaiting the user's choice of alternative before touching auth code.
+- [x] Remove LinkedIn sign-in; retain email magic links.
+- [ ] Unify email login/signup and skip onboarding for completed profiles.
+- [ ] Add LinkedIn-first onboarding, followed by first name, last name, job title, company and intentions, retaining explicit consent.
+- [ ] Prefill available LinkedIn information with a non-blocking manual fallback and verify the onboarding flow.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
