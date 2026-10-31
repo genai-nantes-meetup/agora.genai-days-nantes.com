@@ -1,6 +1,5 @@
 import { useCallback, useSyncExternalStore } from "react";
-import { toast } from "sonner";
-import { overlaps, type Session } from "./event";
+import { toggleSessionLike, type Session } from "./event";
 
 const KEY = "hey-genai:likes";
 const EMPTY: string[] = [];
@@ -51,15 +50,8 @@ export function useLikes() {
   const likes = useSyncExternalStore(subscribe, read, () => EMPTY);
 
   const toggle = useCallback(
-    (session: Session, all: Session[], overlapMsg: (title: string) => string) => {
-      const current = read();
-      if (current.includes(session.id)) {
-        write(current.filter((id) => id !== session.id));
-        return;
-      }
-      const clash = all.find((o) => o.id !== session.id && current.includes(o.id) && overlaps(o, session));
-      write([...current, session.id]);
-      if (clash) toast.warning(overlapMsg(clash.title));
+    (session: Session, all: Session[]) => {
+      write(toggleSessionLike(read(), session, all));
     },
     [],
   );

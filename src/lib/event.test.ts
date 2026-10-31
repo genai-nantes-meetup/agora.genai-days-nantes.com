@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildIcs, currentOrNext, googleCalendarUrl, overlaps, parisNow, resolveRoom, type Session } from "./event";
+import { buildIcs, currentOrNext, googleCalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
 
 const s = (o: Partial<Session>): Session => ({
   id: "x", title: "T", format: "talk", track: "tech", startTime: "09:40", durationMinutes: 40, room: null, ...o,
@@ -35,6 +35,22 @@ describe("now", () => {
     expect(currentOrNext(list, 9 * 60 + 50)).toEqual({ ids: ["a"], live: true });
     expect(currentOrNext(list, 10 * 60 + 20)).toEqual({ ids: ["b"], live: true });
     expect(currentOrNext(list, 8 * 60)).toEqual({ ids: ["a"], live: false });
+  });
+});
+
+describe("mutually exclusive session likes", () => {
+  const first = s({ id: "first", startTime: "09:40" });
+  const simultaneous = s({ id: "second", startTime: "09:40" });
+  const partial = s({ id: "partial", startTime: "10:00", durationMinutes: 30 });
+  const next = s({ id: "next", startTime: "10:20" });
+  it("replaces the previously liked simultaneous session with the new like", () => {
+    expect(toggleSessionLike(["first"], simultaneous, [first, simultaneous])).toEqual(["second"]);
+  });
+  it("removes all overlapping likes while retaining a back-to-back session", () => {
+    expect(toggleSessionLike(["first", "partial", "next"], simultaneous, [first, partial, next, simultaneous])).toEqual(["next", "second"]);
+  });
+  it("lets the user remove a selected like without changing other slots", () => {
+    expect(toggleSessionLike(["second", "next"], simultaneous, [next, simultaneous])).toEqual(["next"]);
   });
 });
 

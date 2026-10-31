@@ -96,6 +96,13 @@ export function overlaps(
   return as < bs + b.durationMinutes && bs < as + a.durationMinutes;
 }
 
+/** Newly selected sessions replace every overlapping like, without affecting other slots. */
+export function toggleSessionLike(current: string[], session: Session, all: Session[]): string[] {
+  if (current.includes(session.id)) return current.filter((id) => id !== session.id);
+  const conflicting = new Set(all.filter((other) => overlaps(other, session)).map((other) => other.id));
+  return [...current.filter((id) => !conflicting.has(id)), session.id];
+}
+
 /** Current Paris date (YYYY-MM-DD) and minutes since midnight. */
 export function parisNow(d: Date = new Date()): { date: string; minutes: number } {
   const parts = new Intl.DateTimeFormat("en-CA", {
