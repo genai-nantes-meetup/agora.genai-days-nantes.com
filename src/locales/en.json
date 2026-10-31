@@ -217,5 +217,7 @@
   "legal.8.heading": "Usage rules.",
   "legal.8.body": "The application is for professional and respectful exchanges. Harassment, abusive or discriminatory remarks and mass sending of identical messages are prohibited. Each user can block or report an account. The organizing team reviews reports and may suspend an account without notice.",
   "legal.9.heading": "Changes.",
-  "legal.9.body": "NaoMakers may update this page. The date of the last update appears below."
+  "legal.9.body": "NaoMakers may update this page. The date of the last update appears below.",
+  "auth.linkedin": "Sign in with LinkedIn",
+  "auth.or": "or get a link by e-mail"
 }
