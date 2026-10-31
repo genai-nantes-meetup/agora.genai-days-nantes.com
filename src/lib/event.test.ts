@@ -52,3 +52,16 @@ describe("calendar", () => {
     expect(url.searchParams.get("ctz")).toBe("Europe/Paris");
   });
 });
+
+import { groupSponsors } from "./event";
+describe("groupSponsors", () => {
+  it("orders tiers Platinum, Gold, Silver and skips empty tiers", () => {
+    const g = groupSponsors([
+      { id: "a", name: "A", tier: "silver" },
+      { id: "b", name: "B", tier: "platinum" },
+      { id: "c", name: "C", tier: "silver" },
+    ]);
+    expect(g.map((x) => x.tier)).toEqual(["platinum", "silver"]);
+    expect(g[1].sponsors.map((s) => s.id)).toEqual(["a", "c"]);
+  });
+});

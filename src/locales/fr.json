@@ -60,5 +60,15 @@
   "close": "Fermer",
   "offline": "Hors connexion : données enregistrées",
   "lang.switch": "Switch to English",
-  "speakers.empty": "Aucun speaker pour l'instant."
+  "speakers.empty": "Aucun speaker pour l'instant.",
+  "tabs.sponsors": "Sponsors",
+  "sponsors.coorg": "Co-organisatrice",
+  "sponsors.empty": "Aucun sponsor pour l'instant.",
+  "tier.platinum": "Platinum",
+  "tier.gold": "Gold",
+  "tier.silver": "Silver",
+  "sponsors.visit": "Visiter le site",
+  "data.offline": "Données hors ligne, dernière mise à jour à {time}",
+  "date.event": "17 novembre 2026",
+  "nav.sponsors": "Sponsors"
 }

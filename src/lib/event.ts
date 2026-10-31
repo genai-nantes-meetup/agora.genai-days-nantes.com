@@ -193,3 +193,29 @@ export function googleCalendarUrl(s: Session, date: string, roomText: string): s
   });
   return `https://calendar.google.com/calendar/render?${p.toString()}`;
 }
+
+export type SponsorTier = "platinum" | "gold" | "silver";
+export interface Sponsor {
+  id: string;
+  name: string;
+  tier: SponsorTier | string;
+  coOrganizer?: boolean;
+  description?: string | null;
+  website?: string | null;
+  logo?: string | null;
+  pageUrl?: string | null;
+}
+export interface SponsorsPayload {
+  event: EventInfo;
+  count: number;
+  sponsors: Sponsor[];
+}
+
+export const SPONSOR_TIERS: SponsorTier[] = ["platinum", "gold", "silver"];
+
+/** Groups sponsors by tier in Platinum, Gold, Silver order; unknown tiers are dropped. */
+export function groupSponsors(list: Sponsor[]): { tier: SponsorTier; sponsors: Sponsor[] }[] {
+  return SPONSOR_TIERS.map((tier) => ({ tier, sponsors: list.filter((s) => s.tier === tier) })).filter(
+    (g) => g.sponsors.length > 0,
+  );
+}
