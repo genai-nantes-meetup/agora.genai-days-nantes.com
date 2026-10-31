@@ -4,6 +4,19 @@ import {z} from 'zod';
 import {requireSupabaseAuth} from '@/integrations/supabase/auth-middleware';
 import {profileSchema} from './networking';
 const tokenSchema=z.string().min(32).max(128).regex(/^[a-f0-9]+$/);
+export const prefillLinkedIn=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({linkedin_url:profileSchema.shape.linkedin_url,lang:z.enum(['fr','en'])})).handler(async({data})=>{
+ setResponseHeader('Cache-Control','no-store');
+ try{
+  const {normalizeLinkedIn}=await import('./networking');
+  const response=await fetch(`https://genai-days-nantes.com/api/${data.lang}/speakers.json`,{cache:'no-store',signal:AbortSignal.timeout(4000)});
+  if(!response.ok)return {profile:null};
+  const payload=await response.json() as import('./event').SpeakersPayload;
+  const speaker=payload.speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalizeLinkedIn(data.linkedin_url));
+  if(!speaker)return {profile:null};
+  const [first_name,...last]=speaker.name.trim().split(/\s+/);
+  return {profile:{first_name:first_name??'',last_name:last.join(' '),job_title:speaker.role??null,company:speaker.company??null}};
+ }catch{return {profile:null};}
+});
 export const checkInvitation=createServerFn({method:'POST'}).inputValidator(z.object({token:tokenSchema})).handler(async({data})=>{
  setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:row,error}=await supabaseAdmin.from('invitations').select('email,used_at').eq('token',data.token).maybeSingle();if(error)throw new Error('unavailable');return row&&!row.used_at?{valid:true,email:row.email}:{valid:false,email:null};
 });
@@ -20,15 +33,15 @@ export const redeemInvitation=createServerFn({method:'POST'}).inputValidator(z.o
  }catch(e){if(uid){await supabaseAdmin.auth.admin.deleteUser(uid);await supabaseAdmin.from('invitations').update({used_at:null}).eq('token',data.token);}await supabaseAdmin.from('invitations').update({claim_id:null,claimed_at:null}).eq('token',data.token).eq('claim_id',claim);throw e;}
 });
 export const requestMagicLink=createServerFn({method:'POST'}).inputValidator(z.object({email:z.string().trim().email().max(254),origin:z.string().url()})).handler(async({data})=>{
- setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:profile,error}=await supabaseAdmin.from('profiles').select('user_id').eq('email',data.email.toLowerCase()).maybeSingle();if(error)throw new Error('unavailable');if(!profile)return {exists:false};
+ setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
  const {getRequest}=await import('@tanstack/react-start/server');const origin=new URL(getRequest().url).origin;if(data.origin!==origin)throw new Error('invalidOrigin');
- const {error:sendError}=await supabaseAdmin.auth.signInWithOtp({email:data.email.toLowerCase(),options:{shouldCreateUser:false,emailRedirectTo:`${origin}/login`}});if(sendError)throw new Error('unavailable');return {exists:true};
+ const {error:sendError}=await supabaseAdmin.auth.signInWithOtp({email:data.email.toLowerCase(),options:{shouldCreateUser:true,emailRedirectTo:`${origin}/login`}});if(sendError)throw new Error('unavailable');return {exists:true};
 });
 export const saveProfile=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(profileSchema).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:current,error}=await context.supabase.from('profiles').select('email').eq('user_id',context.userId).single();if(error)throw error;
+ setResponseHeader('Cache-Control','no-store');const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:current,error}=await context.supabase.from('profiles').select('email,consent_at').eq('user_id',context.userId).single();if(error)throw error;
  const {consent,email,...fields}=data;
  if(email!==current.email){const {error:emailError}=await context.supabase.auth.updateUser({email});if(emailError)throw new Error('unavailable');}
- const {error:saveError}=await context.supabase.from('profiles').update(fields).eq('user_id',context.userId);if(saveError)throw saveError;
+ const {error:saveError}=await context.supabase.from('profiles').update({...fields,consent_at:current.consent_at??new Date().toISOString()}).eq('user_id',context.userId);if(saveError)throw saveError;
  const {recalculateStatus}=await import('./members.server');await recalculateStatus(context.userId,current.email,data.linkedin_url);return {emailPending:email!==current.email};
 });
 export const deleteAccount=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{

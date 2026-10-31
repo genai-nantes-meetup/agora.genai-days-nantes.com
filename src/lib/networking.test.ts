@@ -1,13 +1,20 @@
 import {describe,it,expect} from 'vitest';
-import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,emptyProfile} from './networking';
+import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX} from './networking';
 describe('phase 2 rules',()=>{
+ it('uses the requested fixed LinkedIn prefix',()=>expect(LINKEDIN_PREFIX).toBe('https://www.linkedin.com/in/'));
+ it('strips the prefix of a pasted full LinkedIn URL',()=>expect(linkedInSuffix('https://www.linkedin.com/in/camille-test')).toBe('camille-test'));
+ it('keeps only the profile suffix without tracking parameters',()=>expect(linkedInSuffix('https://linkedin.com/in/camille-test/?trk=hello')).toBe('camille-test'));
+ it('keeps a typed profile suffix',()=>expect(linkedInSuffix('camille-test')).toBe('camille-test'));
  it('normalizes protocol, www, case, parameters and trailing slash',()=>expect(normalizeLinkedIn('HTTPS://WWW.LinkedIn.com/in/Maxime/?trk=hello#x')).toBe('linkedin.com/in/maxime'));
  it('rejects impersonating domains',()=>expect(normalizeLinkedIn('https://linkedin.com.evil.test/in/maxime')).toBe(''));
  it('finds exact lowercase sponsor domain',()=>expect(emailDomain(' Maxime@ExploreTheVault.ai ')).toBe('explorethevault.ai'));
  it('orders Platinum, Gold, Silver, standard then surname',()=>{const rows=[['Z','platinum'],['A',null],['B','gold'],['C','silver'],['A','platinum']].map(([last_name,tier])=>({last_name:last_name??'',first_name:'X',profile_status:{sponsor_tier:tier??null}}));expect(sortDirectory(rows).map(x=>x.last_name)).toEqual(['A','Z','B','C','A']);});
  const valid={...emptyProfile,email:'test@example.com',first_name:'A',last_name:'B',linkedin_url:'https://linkedin.com/in/test',job_tags:['tech_data'],intentions:['recruit']};
  it('limits pitch to 160 characters',()=>{expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(160)}).success).toBe(true);expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(161)}).success).toBe(false);});
- it('requires at least one job tag',()=>expect(profileSchema.safeParse({...valid,job_tags:[]}).success).toBe(false));
+ it('allows onboarding without job tags',()=>expect(profileSchema.safeParse({...valid,job_tags:[]}).success).toBe(true));
+ it('skips onboarding for a completed profile',()=>expect(profileComplete({...valid,job_tags:[],consent_at:'2026-10-31T18:06:00Z'} as Parameters<typeof profileComplete>[0])).toBe(true));
+ it('keeps onboarding for missing identity information',()=>expect(profileComplete({...valid,first_name:'',consent_at:'2026-10-31T18:06:00Z'} as Parameters<typeof profileComplete>[0])).toBe(false));
+ it('keeps onboarding until explicit consent',()=>expect(profileComplete({...valid,consent_at:null} as Parameters<typeof profileComplete>[0])).toBe(false));
  it('requires at least one intention',()=>expect(profileSchema.safeParse({...valid,intentions:[]}).success).toBe(false));
  it('does not require AI level or pitch',()=>expect(profileSchema.safeParse(valid).success).toBe(true));
  it('requires explicit consent',()=>expect(profileSchema.safeParse({...valid,consent:false}).success).toBe(false));
