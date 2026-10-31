@@ -6,7 +6,7 @@ const uuid=z.object({id:z.string().uuid()});
 export const inbox=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
  setResponseHeader('Cache-Control','no-store');
  const {data:active}=await context.supabase.rpc('is_active_member',{uid:context.userId});if(!active)throw new Error('Forbidden');
- const [requests,conversations]=await Promise.all([context.supabase.from('connection_requests').select('id,requester_id,recipient_id,status,created_at,cancelled_at'),context.supabase.from('conversations').select('*')]);
+ const [requests,conversations]=await Promise.all([context.supabase.rpc('member_connections'),context.supabase.from('conversations').select('*')]);
  if(requests.error||conversations.error)throw new Error('Unavailable');
  // A declined response is deliberately indistinguishable from pending for the sender.
  return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data};
@@ -18,7 +18,7 @@ export const declineConnection=createServerFn({method:'POST'}).middleware([requi
  setResponseHeader('Cache-Control','no-store');const {error}=await context.supabase.rpc('decline_connection',{request:data.id});if(error)throw new Error('Forbidden');return {ok:true};
 });
 export const acceptConnection=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {data:r,error}=await context.supabase.from('connection_requests').select('*').eq('id',data.id).single();if(error||r.recipient_id!==context.userId||r.cancelled_at)throw new Error('Forbidden');
+ setResponseHeader('Cache-Control','no-store');const {data:visible,error}=await context.supabase.rpc('member_connections');const r=visible?.find(x=>x.id===data.id);if(error||!r||r.recipient_id!==context.userId||r.cancelled_at)throw new Error('Forbidden');
  if(r.status==='accepted'){const {data:c}=await context.supabase.from('conversations').select('id').eq('request_id',r.id).single();if(c)return {id:c.id};}
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const claim=crypto.randomUUID();const {data:reserved,error:reserveError}=await supabaseAdmin.rpc('claim_connection_accept',{request:r.id,actor:context.userId,claim});if(reserveError||!reserved)throw new Error('Unavailable');
  const {provisionConversation,closeTwilioConversation}=await import('./twilio.server');let sid:string|null=null;

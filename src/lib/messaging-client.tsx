@@ -12,7 +12,7 @@ export function MessagingProvider({children}:{children:ReactNode}){
  const {user}=useAuth();const qc=useQueryClient();const getToken=useServerFn(twilioToken);const [client,setClient]=useState<Client|null>(null);const [error,setError]=useState(false);const [unread,setUnread]=useState(0);const ref=useRef<Client|null>(null);
  const q=useQuery({...inboxOptions(user?.id??''),enabled:!!user});
  const refresh=()=>{void qc.invalidateQueries({queryKey:['inbox']});};
- useEffect(()=>{if(!user)return;const channel=supabase.channel(`inbox-${user.id}-${crypto.randomUUID()}`).on('postgres_changes',{event:'*',schema:'public',table:'connection_requests'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'conversations'},refresh).subscribe();return()=>{void supabase.removeChannel(channel);};},[user?.id,qc]);
+ useEffect(()=>{if(!user)return;const channel=supabase.channel(`inbox:${user.id}`,{config:{private:true}}).on('broadcast',{event:'changed'},()=>{refresh();void qc.invalidateQueries({queryKey:['members']});}).subscribe();return()=>{void supabase.removeChannel(channel);};},[user?.id,qc]);
  useEffect(()=>{
   if(!user||!q.data?.conversations.some(c=>!c.closed_at&&c.conversation_sid))return;
   let stopped=false;let current:Client|null=null;
