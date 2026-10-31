@@ -62,6 +62,6 @@ describe("groupSponsors", () => {
       { id: "c", name: "C", tier: "silver" },
     ]);
     expect(g.map((x) => x.tier)).toEqual(["platinum", "silver"]);
-    expect(g[1].sponsors.map((s) => s.id)).toEqual(["a", "c"]);
+    expect(g[1]?.sponsors.map((s: { id: string }) => s.id)).toEqual(["a", "c"]);
   });
 });
