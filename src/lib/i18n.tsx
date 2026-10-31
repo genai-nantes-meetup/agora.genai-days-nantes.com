@@ -55,6 +55,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
 export function useI18n() {
   const ctx = useContext(I18nContext);
-  if (!ctx) throw new Error("useI18n must be used inside I18nProvider");
-  return ctx;
+  // Fallback instead of throwing: a hot-reload can briefly re-evaluate this
+  // module before the provider re-renders, and a crash would blank the screen.
+  return ctx ?? { lang: "fr" as Lang, setLang: () => {}, t: (k: TKey, vars?: Record<string, string | number>) => {
+    let s = dicts.fr[k] ?? String(k);
+    if (vars) for (const [v, val] of Object.entries(vars)) s = s.replaceAll(`{${v}}`, String(val));
+    return s;
+  } };
 }
