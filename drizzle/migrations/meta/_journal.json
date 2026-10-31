@@ -29,6 +29,13 @@
       "when": 1793466108904,
       "tag": "0003_phase3_private_states_and_realtime",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793470072389,
+      "tag": "0004_simplified_onboarding_validation",
+      "breakpoints": true
     }
   ]
 }
