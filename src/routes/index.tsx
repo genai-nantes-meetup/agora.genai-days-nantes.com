@@ -120,7 +120,7 @@ function ProgramPage() {
           {slots.map(({ time, list }) => (
             <li key={time} className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3">
               <div className="font-label pt-3 text-sm">{time}</div>
-              <div className={`grid min-w-0 gap-3 ${list.length > 1 ? "sm:grid-cols-2" : ""}`}>
+              <div className={`grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 ${list.length > 1 ? "sm:grid-cols-[repeat(2,minmax(0,1fr))]" : ""}`}>
                 {list.map((s) => (
                   <SessionCard
                     key={s.id}
