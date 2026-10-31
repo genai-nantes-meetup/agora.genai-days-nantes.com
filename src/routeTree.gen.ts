@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as NetworkingRouteImport } from './routes/networking'
+import { Route as PlanRouteImport } from './routes/plan'
+import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as SessionsIdRouteImport } from './routes/sessions.$id'
+import { Route as SpeakersIndexRouteImport } from './routes/speakers.index'
+import { Route as SpeakersIdRouteImport } from './routes/speakers.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NetworkingRoute = NetworkingRouteImport.update({
+  id: '/networking',
+  path: '/networking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionsIdRoute = SessionsIdRouteImport.update({
+  id: '/sessions/$id',
+  path: '/sessions/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpeakersIndexRoute = SpeakersIndexRouteImport.update({
+  id: '/speakers/',
+  path: '/speakers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpeakersIdRoute = SpeakersIdRouteImport.update({
+  id: '/speakers/$id',
+  path: '/speakers/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/networking': typeof NetworkingRoute
+  '/plan': typeof PlanRoute
+  '/profil': typeof ProfilRoute
+  '/sessions/$id': typeof SessionsIdRoute
+  '/speakers/$id': typeof SpeakersIdRoute
+  '/speakers/': typeof SpeakersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/networking': typeof NetworkingRoute
+  '/plan': typeof PlanRoute
+  '/profil': typeof ProfilRoute
+  '/sessions/$id': typeof SessionsIdRoute
+  '/speakers/$id': typeof SpeakersIdRoute
+  '/speakers': typeof SpeakersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/messages': typeof MessagesRoute
+  '/networking': typeof NetworkingRoute
+  '/plan': typeof PlanRoute
+  '/profil': typeof ProfilRoute
+  '/sessions/$id': typeof SessionsIdRoute
+  '/speakers/$id': typeof SpeakersIdRoute
+  '/speakers/': typeof SpeakersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/messages'
+    | '/networking'
+    | '/plan'
+    | '/profil'
+    | '/sessions/$id'
+    | '/speakers/$id'
+    | '/speakers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/messages'
+    | '/networking'
+    | '/plan'
+    | '/profil'
+    | '/sessions/$id'
+    | '/speakers/$id'
+    | '/speakers'
+  id:
+    | '__root__'
+    | '/'
+    | '/messages'
+    | '/networking'
+    | '/plan'
+    | '/profil'
+    | '/sessions/$id'
+    | '/speakers/$id'
+    | '/speakers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MessagesRoute: typeof MessagesRoute
+  NetworkingRoute: typeof NetworkingRoute
+  PlanRoute: typeof PlanRoute
+  ProfilRoute: typeof ProfilRoute
+  SessionsIdRoute: typeof SessionsIdRoute
+  SpeakersIdRoute: typeof SpeakersIdRoute
+  SpeakersIndexRoute: typeof SpeakersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/networking': {
+      id: '/networking'
+      path: '/networking'
+      fullPath: '/networking'
+      preLoaderRoute: typeof NetworkingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sessions/$id': {
+      id: '/sessions/$id'
+      path: '/sessions/$id'
+      fullPath: '/sessions/$id'
+      preLoaderRoute: typeof SessionsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/speakers/': {
+      id: '/speakers/'
+      path: '/speakers'
+      fullPath: '/speakers/'
+      preLoaderRoute: typeof SpeakersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/speakers/$id': {
+      id: '/speakers/$id'
+      path: '/speakers/$id'
+      fullPath: '/speakers/$id'
+      preLoaderRoute: typeof SpeakersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MessagesRoute: MessagesRoute,
+  NetworkingRoute: NetworkingRoute,
+  PlanRoute: PlanRoute,
+  ProfilRoute: ProfilRoute,
+  SessionsIdRoute: SessionsIdRoute,
+  SpeakersIdRoute: SpeakersIdRoute,
+  SpeakersIndexRoute: SpeakersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
