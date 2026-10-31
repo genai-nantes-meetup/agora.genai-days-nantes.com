@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
+import { MapPin, Coffee, Utensils } from "lucide-react";
 import { endTime, resolveRoom, type Session } from "@/lib/event";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { LikeButton, TrackTag, trackBorder } from "./common";
@@ -18,6 +18,11 @@ export function SessionCard({
   const { t } = useI18n();
   const { room, floor } = resolveRoom(session);
   const speakers = session.speakers ?? [];
+
+  if (session.kind === "break" || session.kind === "lunch") {
+    const Icon = session.kind === "lunch" ? Utensils : Coffee;
+    return <div id={`s-${session.id}`} className={`flex scroll-mt-32 items-center gap-3 rounded-md border border-dashed bg-surface px-4 py-3 ${now === "live" ? "ring-2 ring-accent" : ""}`}><Icon className="size-5 shrink-0 text-muted-foreground"/><div className="min-w-0"><h3 className="text-lg font-semibold">{session.title}</h3><p className="font-label text-xs text-muted-foreground">{session.startTime}–{endTime(session)}{now ? ` · ${t(now === "live" ? "now" : "next")}` : ""}</p></div></div>;
+  }
 
   return (
     <Link

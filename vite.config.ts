@@ -31,7 +31,7 @@ export default defineConfig({
           skipWaiting: true,
           runtimeCaching: [
             {
-              urlPattern: ({ request, url }) => request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),
+              urlPattern: ({ request, url }) => request.mode === "navigate" && (url.pathname === "/" || url.pathname === "/plan" || url.pathname === "/donnees" || /^\/(sessions|speakers|sponsors)(\/|$)/.test(url.pathname)),
               handler: "NetworkFirst",
               options: { cacheName: "pages", networkTimeoutSeconds: 4, expiration: { maxEntries: 50 } },
             },

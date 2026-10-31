@@ -11,10 +11,11 @@ export interface SessionSpeakerRef {
 
 export interface Session {
   id: string;
+  kind?: "session" | "break" | "lunch";
   title: string;
   subtitle?: string | null;
   description?: string | null;
-  format: Format | string;
+  format: Format | string | null;
   track: Track | string;
   startTime: string;
   durationMinutes: number;
