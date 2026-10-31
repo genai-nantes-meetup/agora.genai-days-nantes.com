@@ -43,15 +43,32 @@ Phase 3 excludes Airscale, AI, feedback and administration.
 - [x] Add fixed LinkedIn URL prefix with suffix-only input and automatic stripping of pasted full URLs.
 - [x] Add LinkedIn-first onboarding, followed by first name, last name, job title, company and intentions, retaining explicit consent; authenticated save/read-back verified.
 - [x] Prefill available public speaker information with a non-blocking manual fallback; arbitrary LinkedIn enrichment still requires Airscale credentials.
-- [ ] Enable general LinkedIn enrichment: blocked on a connected enrichment provider or its credentials.
+- [x] General LinkedIn enrichment implemented and verified in Phase 4 using the existing Airscale secret.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.
 
 # Phase 4
-- [ ] Airscale: verified API contract, secret, cached enrichment, five-call limit, private avatar copy and manual fallback.
-- [ ] AI: tags, pitch, natural-language filters and icebreakers with validated output, per-account limits and content-free logs.
-- [ ] Session feedback: server-timed access, editable contribution, aggregates, comments and block/suspension privacy.
-- [ ] Admin: protected roles, verified Maxime grant, Samuel grant, CSV preview/import/export, reports, suspension, speaker overrides, sponsor domains and metrics.
-- [ ] n8n: secret-protected idempotent invitation endpoint and exact request format.
-- [ ] App emails: inspect sender domain; only implement when configured.
-- [ ] Purge: dated paused/simulation controls, safe batches, two preserved admins and managed schedule; no real purge during tests.
-- [ ] Verify phase 4 blocks with temporary accounts, clean up fixtures and keep existing tests green.
+- [x] Airscale official contract verified: POST /v1/profile and /v1/company with linkedin_profile_url; private server key already present.
+- [x] Enrichment: eight-second provider deadline, durable one-account/URL reservation, five-call lifetime limit, editable prefill, no overwrite of manual fields, safe manual fallback. Verified real public-profile prefill and timeout/failure fallback with temporary accounts.
+- [x] Staff sizes tested at 9/10/249/250/4999/5000 boundaries. Private avatar copying implemented with image-host/type/size validation; no remote photo URL stored.
+- [ ] Verify every Airscale field and successful private avatar rendering/copy with multiple real profiles; exact company-size enrichment may fall back when the eight-second deadline expires.
+- [x] AI tags, pitch, natural-language filters and icebreaker functions implemented through server-only Gateway SDK with strict JSON schema plus closed-list validation and content-free database logs.
+- [x] Verified live tag generation, editable <=160-character pitch saved/read back, natural-language search chips and chip removal, failure/quota fallback.
+- [x] Verified database reservations: five enrichments/account, one URL once, 20 lifetime pitches, 60 searches/hour and 10 icebreakers/hour; client cannot invoke reservation RPCs.
+- [ ] Verify real icebreaker suggestions/send/edit in an empty Twilio conversation: blocked on existing Twilio credentials; key unchanged.
+- [x] Feedback: server checks actual session start from fresh official JSON, six stable keys, <=500-character comments, one editable entry/account/session. Verified uniqueness, direct-write denial, aggregates, block-hidden comments, suspended-author hiding and signed-in UI display using temporary fixtures.
+- [ ] Verify actual post-start feedback submission end-to-end on event day; time boundary unit tests pass, current real sessions are not open.
+- [x] Admin: server-protected roles, CSV parsing/preview/import/export preserving tokens, reports handled, suspension/reactivation, manual speaker override, sponsor-domain add/remove and metrics. Verified these actions plus verified-account admin addition using temporary accounts, then removed fixtures and restored purge controls.
+- [ ] Assign Maxime as initial admin: blocked because verified ownership is not yet established. Add Samuel through /admin after he has a verified account; his email remains to be supplied. Purge retains exactly two designated admins and stays paused until then.
+- [x] n8n endpoint implemented: POST https://hey.genai-days-nantes.com/api/public/invitations; JSON email, first_name, last_name, billetweb_ref; Authorization Bearer shared secret; idempotent email upsert preserves token and returns {url: joinLink}. Missing-secret request safely returns 503.
+- [ ] Activate/test signed n8n requests: blocked on N8N_INVITE_SECRET and publishing the endpoint. Secure secret form tool is unavailable; user must enter it in Project Settings -> Secrets. Use the same strong random value in n8n.
+- [ ] App emails intentionally not created: no sender domain configured. Connection/request/accepted/unread emails await sender-domain setup.
+- [x] Purge: dated 2026-12-17 00:00 Paris guard, paused control, simulation, atomic retained-admin settings, lease and bounded deletion stages; checks pause before destructive stages. Simulation and pre-date rejection verified. No actual purge run in tests.
+- [x] Managed purge schedule created: December, twice hourly (00/30 UTC), /api/public/jobs/purge; may start within ~30 seconds of scheduled minute, then processes batches. Handler needs publication. Purge is currently paused.
+- [ ] Verify destructive Twilio/avatar/auth purge in production after credentials recovery and two retained-admin designation; never tested destructively. Existing Twilio denial safely leaves purge blocked for later recovery.
+- [x] 50 pure-rule/routing tests passed, including all existing phases 1–3 suites and silent overlapping-like replacement. Latest preview build OK. Temporary test users, feedback, reports, invites and uploaded test avatars removed.
+
+## n8n request
+POST https://hey.genai-days-nantes.com/api/public/invitations
+Headers: Content-Type: application/json; Authorization: Bearer <N8N_INVITE_SECRET configured securely in n8n>
+Body: {"email":"participant@example.com","first_name":"Camille","last_name":"Martin","billetweb_ref":"12345"}
+Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
