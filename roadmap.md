@@ -38,9 +38,10 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 
 Phase 3 excludes Airscale, AI, feedback and administration.
 - [x] Remove LinkedIn sign-in; retain email magic links.
-- [ ] Unify email login/signup and skip onboarding for completed profiles.
-- [ ] Show the same email form directly on signed-out Profile and login pages, without an extra welcome step.
-- [ ] Add fixed LinkedIn URL prefix with suffix-only input and automatic stripping of pasted full URLs.
-- [ ] Add LinkedIn-first onboarding, followed by first name, last name, job title, company and intentions, retaining explicit consent.
-- [ ] Prefill available LinkedIn information with a non-blocking manual fallback and verify the onboarding flow.
+- [x] Unify email login/signup and skip onboarding for completed profiles; hosted signup enabled and email confirmation on.
+- [x] Show the same email form directly on signed-out Profile and login pages, without an extra welcome step.
+- [x] Add fixed LinkedIn URL prefix with suffix-only input and automatic stripping of pasted full URLs.
+- [x] Add LinkedIn-first onboarding, followed by first name, last name, job title, company and intentions, retaining explicit consent; authenticated save/read-back verified.
+- [x] Prefill available public speaker information with a non-blocking manual fallback; arbitrary LinkedIn enrichment still requires Airscale credentials.
+- [ ] Enable general LinkedIn enrichment: blocked on a connected enrichment provider or its credentials.
 - [x] Remove "Hey" from the header; wordmark only shows GenAI Days.

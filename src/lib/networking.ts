@@ -9,7 +9,7 @@ export function normalizeLinkedIn(value: string) {
 export function emailDomain(email: string) { return email.trim().toLowerCase().split('@')[1] ?? ''; }
 export const LINKEDIN_PREFIX='https://www.linkedin.com/in/';
 export function linkedInSuffix(value:string){
- return value.trim().replace(/^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\//i,'').replace(/^[/?#]+/,'').split(/[?#]/)[0].replace(/\/+$/,'');
+ return (value.trim().replace(/^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\//i,'').replace(/^[/?#]+/,'').split(/[?#]/)[0]??'').replace(/\/+$/,'');
 }
 export const profileSchema = z.object({
   email:z.string().trim().email().max(254).transform(x=>x.toLowerCase()), first_name:z.string().trim().min(1).max(100),last_name:z.string().trim().min(1).max(100),
