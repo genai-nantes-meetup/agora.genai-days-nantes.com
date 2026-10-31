@@ -27,7 +27,9 @@ import { Route as SponsorsIdRouteImport } from './routes/sponsors.$id'
 import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedNetworkingIndexRouteImport } from './routes/_authenticated/networking.index'
 import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authenticated/networking.$id'
+import { Route as ApiPublicInvitationsRouteImport } from './routes/api/public/invitations'
 import { Route as ApiPublicJobsMessagingRouteImport } from './routes/api/public/jobs/messaging'
+import { Route as ApiPublicJobsPurgeRouteImport } from './routes/api/public/jobs/purge'
 import { Route as ApiPublicTwilioEventsRouteImport } from './routes/api/public/twilio/events'
 import { Route as ApiPublicTwilioPreRouteImport } from './routes/api/public/twilio/pre'
 
@@ -122,9 +124,19 @@ const AuthenticatedNetworkingIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedNetworkingRoute,
   } as any)
+const ApiPublicInvitationsRoute = ApiPublicInvitationsRouteImport.update({
+  id: '/api/public/invitations',
+  path: '/api/public/invitations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJobsMessagingRoute = ApiPublicJobsMessagingRouteImport.update({
   id: '/api/public/jobs/messaging',
   path: '/api/public/jobs/messaging',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicJobsPurgeRoute = ApiPublicJobsPurgeRouteImport.update({
+  id: '/api/public/jobs/purge',
+  path: '/api/public/jobs/purge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicTwilioEventsRoute = ApiPublicTwilioEventsRouteImport.update({
@@ -155,8 +167,10 @@ export interface FileRoutesByFullPath {
   '/sponsors/': typeof SponsorsIndexRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/api/public/invitations': typeof ApiPublicInvitationsRoute
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
+  '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
   '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
   '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
@@ -176,8 +190,10 @@ export interface FileRoutesByTo {
   '/sponsors': typeof SponsorsIndexRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/api/public/invitations': typeof ApiPublicInvitationsRoute
   '/networking': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
+  '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
   '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
   '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
@@ -200,8 +216,10 @@ export interface FileRoutesById {
   '/sponsors/': typeof SponsorsIndexRoute
   '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/networking/$id': typeof AuthenticatedNetworkingIdRoute
+  '/api/public/invitations': typeof ApiPublicInvitationsRoute
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
+  '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
   '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
   '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
 }
@@ -224,8 +242,10 @@ export interface FileRouteTypes {
     | '/sponsors/'
     | '/messages/$id'
     | '/networking/$id'
+    | '/api/public/invitations'
     | '/networking/'
     | '/api/public/jobs/messaging'
+    | '/api/public/jobs/purge'
     | '/api/public/twilio/events'
     | '/api/public/twilio/pre'
   fileRoutesByTo: FileRoutesByTo
@@ -245,8 +265,10 @@ export interface FileRouteTypes {
     | '/sponsors'
     | '/messages/$id'
     | '/networking/$id'
+    | '/api/public/invitations'
     | '/networking'
     | '/api/public/jobs/messaging'
+    | '/api/public/jobs/purge'
     | '/api/public/twilio/events'
     | '/api/public/twilio/pre'
   id:
@@ -268,8 +290,10 @@ export interface FileRouteTypes {
     | '/sponsors/'
     | '/_authenticated/messages/$id'
     | '/_authenticated/networking/$id'
+    | '/api/public/invitations'
     | '/_authenticated/networking/'
     | '/api/public/jobs/messaging'
+    | '/api/public/jobs/purge'
     | '/api/public/twilio/events'
     | '/api/public/twilio/pre'
   fileRoutesById: FileRoutesById
@@ -287,7 +311,9 @@ export interface RootRouteChildren {
   SponsorsIdRoute: typeof SponsorsIdRoute
   SpeakersIndexRoute: typeof SpeakersIndexRoute
   SponsorsIndexRoute: typeof SponsorsIndexRoute
+  ApiPublicInvitationsRoute: typeof ApiPublicInvitationsRoute
   ApiPublicJobsMessagingRoute: typeof ApiPublicJobsMessagingRoute
+  ApiPublicJobsPurgeRoute: typeof ApiPublicJobsPurgeRoute
   ApiPublicTwilioEventsRoute: typeof ApiPublicTwilioEventsRoute
   ApiPublicTwilioPreRoute: typeof ApiPublicTwilioPreRoute
 }
@@ -420,11 +446,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNetworkingIdRouteImport
       parentRoute: typeof AuthenticatedNetworkingRoute
     }
+    '/api/public/invitations': {
+      id: '/api/public/invitations'
+      path: '/api/public/invitations'
+      fullPath: '/api/public/invitations'
+      preLoaderRoute: typeof ApiPublicInvitationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jobs/messaging': {
       id: '/api/public/jobs/messaging'
       path: '/api/public/jobs/messaging'
       fullPath: '/api/public/jobs/messaging'
       preLoaderRoute: typeof ApiPublicJobsMessagingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/jobs/purge': {
+      id: '/api/public/jobs/purge'
+      path: '/api/public/jobs/purge'
+      fullPath: '/api/public/jobs/purge'
+      preLoaderRoute: typeof ApiPublicJobsPurgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/twilio/events': {
@@ -501,7 +541,9 @@ const rootRouteChildren: RootRouteChildren = {
   SponsorsIdRoute: SponsorsIdRoute,
   SpeakersIndexRoute: SpeakersIndexRoute,
   SponsorsIndexRoute: SponsorsIndexRoute,
+  ApiPublicInvitationsRoute: ApiPublicInvitationsRoute,
   ApiPublicJobsMessagingRoute: ApiPublicJobsMessagingRoute,
+  ApiPublicJobsPurgeRoute: ApiPublicJobsPurgeRoute,
   ApiPublicTwilioEventsRoute: ApiPublicTwilioEventsRoute,
   ApiPublicTwilioPreRoute: ApiPublicTwilioPreRoute,
 }
