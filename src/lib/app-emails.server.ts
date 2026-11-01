@@ -1,5 +1,6 @@
 // Server-only app email triggers. Every send is claimed in the database first so it happens once.
-import { APP_URL, appEmailsAllowed, emailLang, reminderDue } from './emails';
+import { APP_URL, appEmailsAllowed, emailLang } from './emails';
+import { selectDigests, type DigestCandidate } from './messaging';
 
 async function admin() {
   return (await import('@/integrations/supabase/client.server')).supabaseAdmin;
@@ -90,42 +91,32 @@ export async function emailConnectionAccepted(requestId: string, conversationId:
 }
 
 /**
- * Unread reminders: needs Twilio read horizons. If Twilio is unavailable, the conversation is skipped
- * (never emailed blindly) and retried on the next run.
+ * Unread digest: one email per recipient at most every 30 minutes, listing conversations with messages
+ * unread for 30 minutes (sender names and counts only). Claimed atomically in the database first.
  */
-export async function runUnreadReminders(limit = 50) {
+export async function runUnreadDigests(limit = 50) {
   if (!appEmailsAllowed()) return { sent: 0, skipped: 0 };
   const db = await admin();
-  const cutoff = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  const { data: events } = await db.from('message_events').select('conversation_id,recipient_id,sender_id,message_index,created_at').lte('created_at', cutoff).gte('created_at', new Date(Date.now() - 48 * 3600 * 1000).toISOString()).order('message_index', { ascending: false }).limit(500);
-  const latest = new Map<string, NonNullable<typeof events>[number]>();
-  for (const e of events ?? []) { const k = `${e.conversation_id}:${e.recipient_id}`; if (!latest.has(k)) latest.set(k, e); }
+  const { data, error } = await db.rpc('digest_candidates');
+  if (error) throw new Error('Unavailable');
+  const due = selectDigests((data ?? []) as DigestCandidate[]);
   let sent = 0, skipped = 0;
-  for (const e of [...latest.values()].slice(0, limit)) {
-    const { data: c } = await db.from('conversations').select('*').eq('id', e.conversation_id).maybeSingle();
-    const { data: rc } = await db.from('conversation_receipts').select('*').eq('conversation_id', e.conversation_id).eq('user_id', e.recipient_id).maybeSingle();
-    if (!c || c.closed_at || !c.conversation_sid || !rc) { skipped++; continue; }
-    let readIndex = rc.read_index;
+  for (const [recipientId, rows] of [...due.entries()].slice(0, limit)) {
+    const ids = rows.map(r => r.conversation_id);
+    const { data: previous, error: claimError } = await db.rpc('claim_digest', { p_user: recipientId, p_conversations: ids });
+    if (claimError) { skipped++; continue; } // NotDue: another run already sent it.
+    const get = await names([recipientId, ...rows.map(r => r.sender_id)]);
+    const recipient = get(recipientId);
+    if (!recipient) { skipped++; continue; }
+    const items = rows.map(r => { const s = get(r.sender_id); return { senderName: s ? `${s.first_name} ${s.last_name}`.trim() : undefined, unread: r.unread }; });
     try {
-      const participant = c.user_a === e.recipient_id ? c.participant_a_sid : c.participant_b_sid;
-      if (!participant) throw new Error('NoParticipant');
-      const { readHorizon } = await import('./twilio.server');
-      readIndex = await readHorizon(c.conversation_sid, participant);
-      if (readIndex !== rc.read_index) await db.from('conversation_receipts').update({ read_index: readIndex }).eq('conversation_id', c.id).eq('user_id', e.recipient_id);
-    } catch { skipped++; continue; }
-    if (!reminderDue({ latestIndex: e.message_index, latestAt: e.created_at, readIndex, lastReminderIndex: rc.last_reminder_index })) continue;
-    let claim = db.from('conversation_receipts').update({ last_reminder_index: e.message_index }).eq('conversation_id', c.id).eq('user_id', e.recipient_id);
-    claim = rc.last_reminder_index === null ? claim.is('last_reminder_index', null) : claim.eq('last_reminder_index', rc.last_reminder_index);
-    const { data: won } = await claim.select('conversation_id').maybeSingle();
-    if (!won) continue;
-    const get = await names([e.sender_id, e.recipient_id]);
-    const sender = get(e.sender_id), recipient = get(e.recipient_id);
-    if (!sender || !recipient) continue;
-    try {
-      await send('unread-reminder', recipient.email, { lang: emailLang(recipient.lang), senderName: `${sender.first_name} ${sender.last_name}`.trim(), url: `${APP_URL}/messages/${c.id}` }, `unread-reminder-${c.id}-${e.recipient_id}-${e.message_index}`);
+      await send('unread-digest', recipient.email, { lang: emailLang(recipient.lang), items, url: `${APP_URL}/messages` }, `unread-digest-${recipientId}-${new Date().toISOString().slice(0, 16)}`);
       sent++;
     } catch {
-      await db.from('conversation_receipts').update({ last_reminder_index: rc.last_reminder_index }).eq('conversation_id', c.id).eq('user_id', e.recipient_id).eq('last_reminder_index', e.message_index);
+      // Release the claim so the next run retries.
+      await db.from('message_digests').update({ last_sent_at: previous }).eq('user_id', recipientId);
+      await db.from('conversation_receipts').update({ digested_at: null }).eq('user_id', recipientId).in('conversation_id', ids);
+      skipped++;
     }
   }
   return { sent, skipped };
