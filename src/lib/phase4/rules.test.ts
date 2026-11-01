@@ -26,3 +26,10 @@ describe('parseAirscalePerson',()=>{
  it('falls back to the first group when none is marked current',()=>{expect(parseAirscalePerson({positionGroups:{contents:[{date:{end:'2019-01'},company:{name:'Solo',url:'https://www.linkedin.com/company/solo'},profilePositions:[{title:'Dev',date:{end:'2019-01'}}]}]}})).toMatchObject({job_title:'Dev',company:'Solo'});});
  it('returns nulls when no position exists',()=>{expect(parseAirscalePerson({firstname:'A'})).toMatchObject({job_title:null,company:null});});
 });
+
+import {parseAirscalePerson as parseLenient} from './rules';
+import {test as t2,expect as e2} from 'vitest';
+t2('LinkedIn prefill survives past positions without a company URL',()=>{
+ const p=parseLenient({firstname:'Maxime',positionGroups:{contents:[{date:{end:null},company:{name:'Vault',url:'https://www.linkedin.com/company/vault'},profilePositions:[{title:'Co-founder',date:{end:null}}]},{date:{end:'2020'},company:{name:'Old'}}]}});
+ e2(p.company).toBe('Vault');e2(p.job_title).toBe('Co-founder');
+});
