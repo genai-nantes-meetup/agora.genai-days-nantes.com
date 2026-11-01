@@ -40,9 +40,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const {unread}=useMessaging();
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-2xl flex-col lg:max-w-6xl lg:px-6">
+    <div className="flex min-h-dvh flex-col">
       <header className="grain pt-safe sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
-        <div className="grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
+        <div className="mx-auto grid h-16 w-full max-w-2xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 lg:max-w-6xl lg:px-6">
           <Link to="/" className="flex min-w-0 items-baseline">
             <Wordmark className="text-2xl leading-none" />
           </Link>
