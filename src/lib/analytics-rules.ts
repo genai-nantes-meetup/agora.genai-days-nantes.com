@@ -22,9 +22,9 @@ export function personProperties(p: Record<string, unknown> | null | undefined, 
   const arr = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
   const str = (v: unknown) => (typeof v === 'string' && v ? v : null);
   return {
-    email: str(p?.email), first_name: str(p?.first_name), last_name: str(p?.last_name), status,
-    job_tags: arr(p?.job_tags), intentions: arr(p?.intentions), ai_level: str(p?.ai_level),
-    company_size: str(p?.company_size), sector: str(p?.sector), city: str(p?.city), lang: str(p?.lang),
+    email: str(p?.['email']), first_name: str(p?.['first_name']), last_name: str(p?.['last_name']), status,
+    job_tags: arr(p?.['job_tags']), intentions: arr(p?.['intentions']), ai_level: str(p?.['ai_level']),
+    company_size: str(p?.['company_size']), sector: str(p?.['sector']), city: str(p?.['city']), lang: str(p?.['lang']),
   };
 }
 

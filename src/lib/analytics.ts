@@ -20,10 +20,10 @@ export type AnalyticsEvents = {
   directory_filter_changed: { filter: string; value: string };
   directory_ai_search_used: { fallback_used: YesNo; result_count: number };
   member_profile_viewed: { target_user_id: Id; target_status: string };
-  linkedin_link_clicked: { target_user_id?: Id };
+  linkedin_link_clicked: { target_user_id?: Id | undefined };
   connection_requested: { target_user_id: Id };
-  connection_accepted: { request_id?: Id };
-  connection_declined: { request_id?: Id };
+  connection_accepted: { request_id?: Id | undefined };
+  connection_declined: { request_id?: Id | undefined };
   member_blocked: { target_user_id: Id };
   member_reported: { target_user_id: Id; reason?: string };
   conversation_opened: { conversation_id: Id };
@@ -42,8 +42,8 @@ export type AnalyticsEvents = {
   my_sessions_viewed: Record<string, never>;
   calendar_add_clicked: { session_id: Id; provider: 'ics' | 'google' | 'office365' };
   speaker_viewed: { speaker_id: Id };
-  sponsor_viewed: { sponsor_id: Id; tier?: string };
-  sponsor_link_clicked: { sponsor_id: Id; tier?: string };
+  sponsor_viewed: { sponsor_id: Id; tier?: string | undefined };
+  sponsor_link_clicked: { sponsor_id: Id; tier?: string | undefined };
   map_viewed: { floor: string };
   map_zoomed: { floor: string };
   session_feedback_submitted: { session_id: Id; checkboxes: string[]; has_text: YesNo };
@@ -95,7 +95,7 @@ export function initAnalytics(lang: string): Promise<PostHog | null> {
         mask_all_text: false,
         mask_all_element_attributes: false,
       });
-      posthog.register({ lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env.VITE_APP_VERSION ?? 'web' });
+      posthog.register({ lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env['VITE_APP_VERSION'] ?? 'web' });
       ph = posthog;
       for (const fn of queue.splice(0)) { try { fn(posthog); } catch { /* silent */ } }
       return posthog;
