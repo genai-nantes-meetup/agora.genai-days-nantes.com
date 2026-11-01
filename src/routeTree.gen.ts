@@ -31,6 +31,7 @@ import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authent
 import { Route as ApiPublicInvitationsRouteImport } from './routes/api/public/invitations'
 import { Route as ApiPublicJobsMessagingRouteImport } from './routes/api/public/jobs/messaging'
 import { Route as ApiPublicJobsPurgeRouteImport } from './routes/api/public/jobs/purge'
+import { Route as ApiPublicJobsSessionFeedbackRouteImport } from './routes/api/public/jobs/session-feedback'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -146,6 +147,12 @@ const ApiPublicJobsPurgeRoute = ApiPublicJobsPurgeRouteImport.update({
   path: '/api/public/jobs/purge',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicJobsSessionFeedbackRoute =
+  ApiPublicJobsSessionFeedbackRouteImport.update({
+    id: '/api/public/jobs/session-feedback',
+    path: '/api/public/jobs/session-feedback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   id: '/lovable/email/auth/preview',
   path: '/lovable/email/auth/preview',
@@ -185,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
+  '/api/public/jobs/session-feedback': typeof ApiPublicJobsSessionFeedbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByTo {
   '/networking': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
+  '/api/public/jobs/session-feedback': typeof ApiPublicJobsSessionFeedbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -238,6 +247,7 @@ export interface FileRoutesById {
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
+  '/api/public/jobs/session-feedback': typeof ApiPublicJobsSessionFeedbackRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/networking/'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
+    | '/api/public/jobs/session-feedback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/networking'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
+    | '/api/public/jobs/session-feedback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -318,6 +330,7 @@ export interface FileRouteTypes {
     | '/_authenticated/networking/'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
+    | '/api/public/jobs/session-feedback'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -339,6 +352,7 @@ export interface RootRouteChildren {
   ApiPublicInvitationsRoute: typeof ApiPublicInvitationsRoute
   ApiPublicJobsMessagingRoute: typeof ApiPublicJobsMessagingRoute
   ApiPublicJobsPurgeRoute: typeof ApiPublicJobsPurgeRoute
+  ApiPublicJobsSessionFeedbackRoute: typeof ApiPublicJobsSessionFeedbackRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -500,6 +514,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicJobsPurgeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/session-feedback': {
+      id: '/api/public/jobs/session-feedback'
+      path: '/api/public/jobs/session-feedback'
+      fullPath: '/api/public/jobs/session-feedback'
+      preLoaderRoute: typeof ApiPublicJobsSessionFeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/auth/preview': {
       id: '/lovable/email/auth/preview'
       path: '/lovable/email/auth/preview'
@@ -586,6 +607,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInvitationsRoute: ApiPublicInvitationsRoute,
   ApiPublicJobsMessagingRoute: ApiPublicJobsMessagingRoute,
   ApiPublicJobsPurgeRoute: ApiPublicJobsPurgeRoute,
+  ApiPublicJobsSessionFeedbackRoute: ApiPublicJobsSessionFeedbackRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

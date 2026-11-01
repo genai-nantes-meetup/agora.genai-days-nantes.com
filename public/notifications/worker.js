@@ -1,9 +1,9 @@
-self.addEventListener('push',event=>{let data;try{data=event.data.json();}catch{return;}if(!data||typeof data.title!=='string')return;const path=typeof data.url==='string'&&/^\/(messages|networking)(\/|\?|$)/.test(data.url)?data.url:'/messages';event.waitUntil(self.registration.showNotification(data.title,{body:data.body||'',icon:'/icons/icon-192.png',badge:'/icons/icon-192.png',tag:data.tag||'genai-message',data:{url:path}}));});
+self.addEventListener('push',event=>{let data;try{data=event.data.json();}catch{return;}if(!data||typeof data.title!=='string')return;const path=typeof data.url==='string'&&/^\/(messages|networking|sessions)(\/|\?|$)/.test(data.url)?data.url:'/messages';event.waitUntil(self.registration.showNotification(data.title,{body:data.body||'',icon:'/icons/icon-192.png',badge:'/icons/icon-192.png',tag:data.tag||'genai-message',data:{url:path}}));});
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   event.waitUntil((async () => {
     const path = event.notification.data?.url;
-    const url = new URL(typeof path === 'string' && /^\/(messages|networking)(\/|\?|$)/.test(path) ? path : '/messages', self.location.origin).href;
+    const url = new URL(typeof path === 'string' && /^\/(messages|networking|sessions)(\/|\?|$)/.test(path) ? path : '/messages', self.location.origin).href;
     let windows = [];
     try {
       windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });

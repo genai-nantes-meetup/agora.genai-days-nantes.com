@@ -247,3 +247,16 @@ export function groupSponsors(list: Sponsor[]): { tier: SponsorTier; sponsors: S
     (g) => g.sponsors.length > 0,
   );
 }
+
+/** Rating pushes: talks, round tables and the contest only (no keynotes, meals, breaks, podcast). */
+export const FEEDBACK_PUSH_FORMATS = ["talk", "table-ronde", "concours"];
+/** Sessions whose rating push is due: 5 min after the end, within a 30 min catch-up window, on the event day (Paris time HH:MM and YYYY-MM-DD given). */
+export function feedbackPushDue(sessions: Session[], eventDate: string, today: string, nowHHMM: string): Session[] {
+  if (today !== eventDate) return [];
+  const now = toMinutes(nowHHMM);
+  return sessions.filter((s) => {
+    if (!s.format || !FEEDBACK_PUSH_FORMATS.includes(s.format)) return false;
+    const due = toMinutes(s.startTime) + (s.durationMinutes || 0) + 5;
+    return now >= due && now < due + 30;
+  });
+}
