@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Coffee, Utensils } from "lucide-react";
-import { endTime, resolveRoom, type Session } from "@/lib/event";
+import { displayTitle, endTime, resolveRoom, type Session } from "@/lib/event";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { LikeButton, TrackTag, trackBorder } from "./common";
 
@@ -44,7 +44,7 @@ export function SessionCard({
               {t(`format.${session.format}` as TKey) || session.format}
             </span>
           </div>
-          <h3 className="mt-1.5 text-lg font-semibold leading-snug">« {session.title} »</h3>
+          <h3 className="mt-1.5 text-lg font-semibold leading-snug">{displayTitle(session)}</h3>
           <p className="mt-1 truncate text-sm text-muted-foreground">
             {speakers.length ? speakers.map((s) => s.name).join(", ") : t("speakers.tbc")}
           </p>
