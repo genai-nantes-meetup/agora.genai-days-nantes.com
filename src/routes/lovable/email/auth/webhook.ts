@@ -10,7 +10,7 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "GenAI Days Agora"
-const SENDER_DOMAIN = "notify.hey.genai-days-nantes.com"
+const SENDER_DOMAIN = "notify.agora.genai-days-nantes.com"
 const ROOT_DOMAIN = "hey.genai-days-nantes.com"
 const FROM_DOMAIN = "hey.genai-days-nantes.com"
 const SITE_URL = `https://${ROOT_DOMAIN}`
