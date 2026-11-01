@@ -107,6 +107,7 @@ export function initAnalytics(lang: string): Promise<PostHog | null> {
 }
 
 export function track<E extends keyof AnalyticsEvents>(event: E, ...props: AnalyticsEvents[E] extends Record<string, never> ? [] : [AnalyticsEvents[E]]) {
+  if (event === 'map_viewed') console.log('TRACKDBG', new Error().stack?.split('\n').slice(1,5).join(' / '));
   run(p => p.capture(event, props[0] ?? {}));
 }
 export function identify(userId: string, props: Record<string, unknown>) {
