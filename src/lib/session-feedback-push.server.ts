@@ -1,7 +1,7 @@
 import fr from '@/locales/fr.json';
 import {feedbackPushDue,displayTitle,type SessionsPayload} from './event';
 const EVENT_DATE='2026-11-17';
-function parisNow(){const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));return {day:`${p.year}-${p.month}-${p.day}`,time:`${p.hour}:${p.minute}`};}
+function parisNow(){const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));return {day:`${p['year']}-${p['month']}-${p['day']}`,time:`${p['hour']}:${p['minute']}`};}
 /** Sends one rating push per eligible session to every active member with notifications on at send time; each session is claimed once in session_feedback_pushes. */
 export async function runSessionFeedbackPushes(){
  const {day,time}=parisNow();if(day!==EVENT_DATE)return {sent:[] as string[]};
