@@ -25,7 +25,10 @@ export const profileSchema = z.object({
 });
 export const onboardingSchema=profileSchema.extend({job_tags:profileSchema.shape.job_tags.min(1)});
 export type ProfileInput = z.infer<typeof profileSchema>;
-export type Status = {is_speaker:boolean;speaker_id:string|null;sponsor_id:string|null;sponsor_tier:string|null;suspended:boolean;manual_override:boolean;is_admin:boolean};
+export type Status = {is_organizer:boolean;is_speaker:boolean;speaker_id:string|null;sponsor_id:string|null;sponsor_tier:string|null;suspended:boolean;manual_override:boolean;is_admin:boolean};
+export function participantBadges(status:Pick<Status,'is_organizer'|'is_speaker'>|null|undefined) {
+  return [status?.is_organizer?'organizer':null,status?.is_speaker?'speaker':null].filter((badge):badge is 'organizer'|'speaker'=>badge!==null);
+}
 export type Member = Omit<ProfileInput,'consent'> & {user_id:string;photo_url:string|null;consent_at:string|null;profile_status:Status|null;avatar?:string|null};
 export function profileComplete(profile: Partial<Member> | null | undefined) {
   return !!profile?.consent_at && profileSchema.safeParse({...emptyProfile,...profile,consent:true}).success;

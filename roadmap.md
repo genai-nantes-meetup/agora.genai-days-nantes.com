@@ -2,7 +2,7 @@
 
 Current tasks:
 
-- [ ] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges
+- [ ] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; update matching current users
 
 - [ ] Accepter dans Messages : erreur reproduite avec le compte connecté, Twilio refuse la clé configurée (401, code 70051), y compris sur les lectures du service, configuration et rôles. Bloqué : remplacer les accès Twilio valides pour Conversations, puis vérifier l’acceptation de bout en bout.
 

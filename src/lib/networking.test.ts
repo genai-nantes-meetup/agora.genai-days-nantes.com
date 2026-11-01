@@ -1,6 +1,11 @@
 import {describe,it,expect} from 'vitest';
-import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,onboardingSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX,findSpeakerProfile} from './networking';
+import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,onboardingSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX,findSpeakerProfile,participantBadges} from './networking';
 describe('phase 2 rules',()=>{
+ it('shows Organizer independently of Speaker without replacing it',()=>{
+  expect(participantBadges({is_organizer:true,is_speaker:false})).toEqual(['organizer']);
+  expect(participantBadges({is_organizer:true,is_speaker:true})).toEqual(['organizer','speaker']);
+  expect(participantBadges({is_organizer:false,is_speaker:false})).toEqual([]);
+ });
  it('uses the requested fixed LinkedIn prefix',()=>expect(LINKEDIN_PREFIX).toBe('https://www.linkedin.com/in/'));
  it('strips the prefix of a pasted full LinkedIn URL',()=>expect(linkedInSuffix('https://www.linkedin.com/in/camille-test')).toBe('camille-test'));
  it('keeps only the profile suffix without tracking parameters',()=>expect(linkedInSuffix('https://linkedin.com/in/camille-test/?trk=hello')).toBe('camille-test'));
