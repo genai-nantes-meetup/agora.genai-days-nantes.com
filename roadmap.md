@@ -88,3 +88,5 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 - [x] Programme : heure et lieu du talk sur deux lignes (vérifié sur capture).
 - [x] Titres des conférences affichés entre guillemets « » (vérifié sur capture).
 - [x] Favoris : table session_likes, copie local -> base à la connexion, lecture/écriture en base. Vérifié connecté : ajout (POST), rechargement depuis la base, retrait (DELETE); compte de test nettoyé.
+- [ ] Profil : enregistrement automatique (champ quitté ou 10 s d'inactivité, cases à cocher incluses) — test e2e en cours, nettoyage du compte de test à faire.
+- [ ] Footer : ajouter un lien vers l'asso NaoMakers (https://naomakers.com/).
