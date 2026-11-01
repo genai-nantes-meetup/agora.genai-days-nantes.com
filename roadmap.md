@@ -5,3 +5,5 @@
 - [ ] Profile edit page: remove "Personnes bloquées" section and "My data" link
 - [ ] Remove user-blocking feature from UI (block menu on member page, blocked list); keep backend tables/policies
 - [ ] Profile edit page: remove interface language editor (already in header)
+- [ ] Profile edit page: show all fields on one page without "Continuer" steps (single scroll, keep Save)
+
