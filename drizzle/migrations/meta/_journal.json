@@ -99,6 +99,13 @@
       "when": 1793560729247,
       "tag": "0013_organizer_display_badges",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793562462937,
+      "tag": "0014_inhouse_messaging",
+      "breakpoints": true
     }
   ]
 }

@@ -136,9 +136,45 @@ export type Database = {
           },
         ]
       }
+      conversation_presence: {
+        Row: {
+          conversation_id: string
+          last_seen_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          last_seen_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          last_seen_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_presence_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_presence_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       conversation_receipts: {
         Row: {
           conversation_id: string
+          digested_at: string | null
+          last_read_at: string | null
+          last_read_message_id: string | null
           last_reminder_index: number | null
           read_index: number
           reminder_claim: string | null
@@ -147,6 +183,9 @@ export type Database = {
         }
         Insert: {
           conversation_id: string
+          digested_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
           last_reminder_index?: number | null
           read_index?: number
           reminder_claim?: string | null
@@ -155,6 +194,9 @@ export type Database = {
         }
         Update: {
           conversation_id?: string
+          digested_at?: string | null
+          last_read_at?: string | null
+          last_read_message_id?: string | null
           last_reminder_index?: number | null
           read_index?: number
           reminder_claim?: string | null
@@ -167,6 +209,13 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_receipts_last_read_message_id_fkey"
+            columns: ["last_read_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
           {
@@ -331,6 +380,29 @@ export type Database = {
         }
         Relationships: []
       }
+      message_digests: {
+        Row: {
+          last_sent_at: string | null
+          user_id: string
+        }
+        Insert: {
+          last_sent_at?: string | null
+          user_id: string
+        }
+        Update: {
+          last_sent_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_digests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       message_events: {
         Row: {
           conversation_id: string
@@ -379,6 +451,97 @@ export type Database = {
           },
           {
             foreignKeyName: "message_events_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      message_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          deleted_at: string | null
+          edited_at: string | null
+          id: string
+          reply_to_id: string | null
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          id: string
+          reply_to_id?: string | null
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          id?: string
+          reply_to_id?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
             columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -732,6 +895,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assert_can_write: { Args: { cid: string }; Returns: undefined }
+      can_read_conversation: { Args: { cid: string }; Returns: boolean }
       can_view_profile: { Args: { target: string }; Returns: boolean }
       claim_connection_accept: {
         Args: { actor: string; claim: string; request: string }
@@ -755,6 +920,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_digest: {
+        Args: { p_conversations: string[]; p_user: string }
+        Returns: string
+      }
       claim_invitation: {
         Args: { claim: string; invite_token: string }
         Returns: string
@@ -764,7 +933,62 @@ export type Database = {
         Args: { claim: string; fields: Json; invite_token: string; uid: string }
         Returns: undefined
       }
+      conversation_heartbeat: {
+        Args: { p_conversation_id: string }
+        Returns: undefined
+      }
       decline_connection: { Args: { request: string }; Returns: undefined }
+      delete_message: {
+        Args: { p_id: string }
+        Returns: {
+          body: string
+          conversation_id: string
+          created_at: string
+          deleted_at: string | null
+          edited_at: string | null
+          id: string
+          reply_to_id: string | null
+          sender_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "messages"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      digest_candidates: {
+        Args: never
+        Returns: {
+          conversation_id: string
+          digested_at: string
+          last_digest_at: string
+          last_read_at: string
+          oldest_unread_at: string
+          recipient_id: string
+          sender_id: string
+          unread: number
+        }[]
+      }
+      edit_message: {
+        Args: { p_body: string; p_id: string }
+        Returns: {
+          body: string
+          conversation_id: string
+          created_at: string
+          deleted_at: string | null
+          edited_at: string | null
+          id: string
+          reply_to_id: string | null
+          sender_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "messages"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       feedback_comments: {
         Args: { sid: string }
         Returns: {
@@ -777,21 +1001,38 @@ export type Database = {
         }[]
       }
       feedback_counts: { Args: { sid: string }; Returns: Json }
-      finish_connection_accept: {
-        Args: {
-          claim: string
-          pa: string
-          pb: string
-          request: string
-          sid: string
-        }
-        Returns: string
-      }
+      finish_connection_accept:
+        | { Args: { claim: string; request: string }; Returns: string }
+        | {
+            Args: {
+              claim: string
+              pa: string
+              pb: string
+              request: string
+              sid: string
+            }
+            Returns: string
+          }
       grant_retained_admin: {
         Args: { actor: string; target: string }
         Returns: undefined
       }
+      inbox_summaries: {
+        Args: never
+        Returns: {
+          conversation_id: string
+          last_at: string
+          last_body: string
+          last_deleted: boolean
+          last_sender: string
+          unread: number
+        }[]
+      }
       is_active_member: { Args: { uid: string }; Returns: boolean }
+      mark_read: {
+        Args: { p_conversation_id: string; p_message_id: string }
+        Returns: undefined
+      }
       member_connections: {
         Args: never
         Returns: {
@@ -803,13 +1044,27 @@ export type Database = {
           status: string
         }[]
       }
+      messaging_closed: { Args: never; Returns: boolean }
       request_connection: { Args: { target: string }; Returns: string }
       reserve_ai_call: { Args: { kind: string; uid: string }; Returns: string }
       reserve_enrichment: {
         Args: { uid: string; url: string }
         Returns: boolean
       }
+      send_message: {
+        Args: {
+          p_body: string
+          p_conversation_id: string
+          p_id: string
+          p_reply_to_id?: string
+        }
+        Returns: Json
+      }
       set_purge_paused: { Args: { value: boolean }; Returns: undefined }
+      toggle_reaction: {
+        Args: { p_emoji: string; p_message_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
