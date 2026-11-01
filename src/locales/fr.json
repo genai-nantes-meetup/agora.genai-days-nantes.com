@@ -266,5 +266,15 @@
   "admin.metric.accepted": "Demandes acceptées",
   "admin.metric.conversations": "Conversations",
   "admin.metric.message_events": "Messages",
-  "admin.metric.session_feedback": "Feedbacks"
+  "admin.metric.session_feedback": "Feedbacks",
+  "admin.emails": "Envoi des invitations",
+  "admin.sendUnsent": "Envoyer les invitations non envoyées",
+  "admin.sendConfirm": "{n} invitation(s) vont partir par e-mail. Confirmer l’envoi ?",
+  "admin.confirmSend": "Envoyer",
+  "admin.cancel": "Annuler",
+  "admin.sendResult": "Envoyées : {sent} · Non envoyées : {failed}",
+  "admin.autoLate": "Envoi automatique des invitations tardives",
+  "admin.sentAt": "Envoyée le {date}",
+  "admin.notSent": "Non envoyée",
+  "admin.resend": "Renvoyer"
 }
