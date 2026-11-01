@@ -1,4 +1,4 @@
-import {useState,useEffect,useRef} from 'react';
+import {useState,useEffect,useRef,type FocusEvent} from 'react';
 import {Link} from '@tanstack/react-router';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -27,7 +27,7 @@ export function ProfileForm({initial,editing=false,busy,onSubmit,onAutoSave,avat
  const activity=<div className="space-y-5">{text('job_title')}{text('company')}{select('company_size',companySizes,'size.')}{text('sector')}<AiProfileFields value={value} onChange={patch}/></div>;
  const goals=<div className="space-y-5"><fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>set('intentions',v)} prefix="intention."/></fieldset>{select('ai_level',aiLevels,'level.')}<div className="flex items-start gap-3"><Checkbox id="consent" checked={consent} onCheckedChange={v=>{setConsent(v===true);scheduler.current?.changed();}}/><div className="text-sm leading-relaxed"><label htmlFor="consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div></div>;
  const errorLine=error&&<p role="alert" className="text-sm text-destructive">{t('form.validation')}</p>;
- const blur=e=>{const rt=e.relatedTarget as HTMLElement|null;if(rt&&rt.closest('button'))return;scheduler.current?.focusLeft();};
+ const blur=(e:FocusEvent<HTMLFormElement>)=>{const rt=e.relatedTarget as HTMLElement|null;if(rt&&rt.closest('button'))return;scheduler.current?.focusLeft();};
  if(editing)return <form className="space-y-8" onBlur={blur} onSubmit={e=>{e.preventDefault();void submit();}}>
   <section className="space-y-5"><h2 className="font-label text-xs uppercase">{t('form.identity')}</h2>{identity}</section>
   <section className="space-y-5"><h2 className="font-label text-xs uppercase">{t('form.activity')}</h2>{activity}</section>
