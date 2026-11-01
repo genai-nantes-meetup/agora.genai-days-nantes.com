@@ -51,6 +51,7 @@ export type AnalyticsEvents = {
   language_switched: { from: string; to: string };
   push_prompt_shown: Record<string, never>;
   push_permission_result: { result: 'granted' | 'denied' | 'dismissed' };
+  push_activated: Record<string, never>;
   pwa_install_prompt_shown: Record<string, never>;
   pwa_installed: Record<string, never>;
   offline_mode_entered: Record<string, never>;
