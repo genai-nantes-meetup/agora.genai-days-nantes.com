@@ -6,7 +6,11 @@ export const pushConfiguration=createServerFn({method:'POST'}).middleware([requi
 export const subscribePush=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({endpoint:z.string().url().max(2048),keys:z.object({p256dh:z.string().regex(/^[A-Za-z0-9_-]+$/).min(80).max(300),auth:z.string().regex(/^[A-Za-z0-9_-]+$/).min(16).max(100)})})).handler(async({data,context})=>{
  setResponseHeader('Cache-Control','no-store');
  const {validPushEndpoint}=await import('./notifications.server');
- if(!validPushEndpoint(data.endpoint))return {ok:false,error:'push.endpointFailed'} as const;
+ if(!validPushEndpoint(data.endpoint)){
+  // Only expose the service hostname, never the subscription token or keys.
+  const host=new URL(data.endpoint).hostname;
+  return {ok:false,error:'push.endpointFailed',host} as const;
+ }
  const {data:active,error:membershipError}=await context.supabase.rpc('is_active_member',{uid:context.userId});
  if(membershipError){console.error('[push-registration] membership check failed',membershipError.code);return {ok:false,error:'push.saveFailed'} as const;}
  if(!active)return {ok:false,error:'push.inactiveAccount'} as const;
