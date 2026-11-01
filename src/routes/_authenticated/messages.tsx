@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/messages")({
   }),
   component: MessagesLayout,
 });
-function MessagesLayout(){const path=useRouterState({select:s=>s.location.pathname});return <><PushInvitation/>{path==='/messages'?<InboxPage/>:<Outlet/>}</>;}
+function MessagesLayout(){const path=useRouterState({select:s=>s.location.pathname});return <><PushInvitation showTrigger={path==='/messages'}/>{path==='/messages'?<InboxPage/>:<Outlet/>}</>;}
 function InboxPage(){
  const {user}=useAuth();const {t,lang}=useI18n();const q=useQuery(inboxOptions(user?.id??''));const members=useQuery(membersOptions());const {client,error}=useMessaging();const [details,setDetails]=useState<Record<string,{last:string;date:Date|null;unread:number}>>({});
  useEffect(()=>{if(!client||!q.data)return;let live=true;void Promise.all(q.data.conversations.filter(c=>c.conversation_sid&&!c.closed_at).map(async c=>{try{const conversation=await client.getConversationBySid(c.conversation_sid as string);const [messages,unread]=await Promise.all([conversation.getMessages(1),conversation.getUnreadMessagesCount()]);const m=messages.items.at(-1);return [c.id,{last:m?.body??'',date:m?.dateCreated??null,unread:unread??0}] as const;}catch{return null;}})).then(rows=>{if(live)setDetails(Object.fromEntries(rows.filter(x=>x!==null)));});return()=>{live=false;};},[client,q.data]);

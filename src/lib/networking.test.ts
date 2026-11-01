@@ -10,6 +10,8 @@ describe('phase 2 rules',()=>{
  it('finds exact lowercase sponsor domain',()=>expect(emailDomain(' Maxime@ExploreTheVault.ai ')).toBe('explorethevault.ai'));
  it('orders Platinum, Gold, Silver, standard then surname',()=>{const rows=[['Z','platinum'],['A',null],['B','gold'],['C','silver'],['A','platinum']].map(([last_name,tier])=>({last_name:last_name??'',first_name:'X',profile_status:{sponsor_tier:tier??null}}));expect(sortDirectory(rows).map(x=>x.last_name)).toEqual(['A','Z','B','C','A']);});
  const valid={...emptyProfile,email:'test@example.com',first_name:'A',last_name:'B',linkedin_url:'https://linkedin.com/in/test',job_tags:['tech_data'],intentions:['recruit']};
+ it('keeps the editable city when validating a profile',()=>expect(profileSchema.parse({...valid,city:' Nantes '}).city).toBe('Nantes'));
+ it('allows signup without a city',()=>expect(profileSchema.parse({...valid,city:null}).city).toBeNull());
  it('limits pitch to 160 characters',()=>{expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(160)}).success).toBe(true);expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(161)}).success).toBe(false);});
  it('allows onboarding without job tags',()=>expect(profileSchema.safeParse({...valid,job_tags:[]}).success).toBe(true));
  it('skips onboarding for a completed profile',()=>expect(profileComplete({...valid,job_tags:[],consent_at:'2026-10-31T18:06:00Z'} as Parameters<typeof profileComplete>[0])).toBe(true));
