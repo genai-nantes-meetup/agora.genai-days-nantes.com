@@ -1,0 +1,14 @@
+CREATE TABLE public.organizer_emails (email text PRIMARY KEY CHECK (email = lower(btrim(email))));
+GRANT ALL ON public.organizer_emails TO service_role;
+ALTER TABLE public.organizer_emails ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profile_status ADD COLUMN is_organizer boolean NOT NULL DEFAULT false;
+CREATE SCHEMA IF NOT EXISTS private;
+CREATE FUNCTION private.organizer_email_matches(account_email text) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$ SELECT EXISTS (SELECT 1 FROM public.organizer_emails WHERE email = lower(btrim(account_email))); $$;
+REVOKE ALL ON FUNCTION private.organizer_email_matches(text) FROM PUBLIC, anon, authenticated;
+CREATE FUNCTION public.assign_organizer_badge() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$ BEGIN NEW.is_organizer := private.organizer_email_matches((SELECT email FROM public.profiles WHERE user_id = NEW.user_id)); RETURN NEW; END; $$;
+CREATE TRIGGER organizer_badge_on_status BEFORE INSERT OR UPDATE OF is_organizer ON public.profile_status FOR EACH ROW EXECUTE FUNCTION public.assign_organizer_badge();
+CREATE FUNCTION public.sync_organizer_badge() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$ BEGIN UPDATE public.profile_status SET is_organizer = private.organizer_email_matches(NEW.email) WHERE user_id = NEW.user_id; RETURN NEW; END; $$;
+CREATE TRIGGER organizer_badge_on_email AFTER UPDATE OF email ON public.profiles FOR EACH ROW WHEN (NEW.email IS DISTINCT FROM OLD.email) EXECUTE FUNCTION public.sync_organizer_badge();
+REVOKE ALL ON FUNCTION public.assign_organizer_badge() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.sync_organizer_badge() FROM PUBLIC, anon, authenticated;
+COMMENT ON COLUMN public.profile_status.is_organizer IS 'Display-only organizer badge; grants no administrative access.';

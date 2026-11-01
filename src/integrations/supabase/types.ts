@@ -386,9 +386,22 @@ export type Database = {
           },
         ]
       }
+      organizer_emails: {
+        Row: {
+          email: string
+        }
+        Insert: {
+          email: string
+        }
+        Update: {
+          email?: string
+        }
+        Relationships: []
+      }
       profile_status: {
         Row: {
           is_admin: boolean
+          is_organizer: boolean
           is_speaker: boolean
           manual_override: boolean
           speaker_id: string | null
@@ -399,6 +412,7 @@ export type Database = {
         }
         Insert: {
           is_admin?: boolean
+          is_organizer?: boolean
           is_speaker?: boolean
           manual_override?: boolean
           speaker_id?: string | null
@@ -409,6 +423,7 @@ export type Database = {
         }
         Update: {
           is_admin?: boolean
+          is_organizer?: boolean
           is_speaker?: boolean
           manual_override?: boolean
           speaker_id?: string | null
