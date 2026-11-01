@@ -42,7 +42,7 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
  const field=(key:'linkedin_url'|'first_name'|'last_name'|'job_title'|'company'|'sector',required=false)=><label className="block space-y-2 text-sm font-bold" key={key}>{t(`form.${key}`)}<Input required={required} value={value[key]??''} maxLength={key==='linkedin_url'?300:160} autoComplete={key==='first_name'?'given-name':key==='last_name'?'family-name':key==='company'?'organization':key==='job_title'?'organization-title':'url'} onChange={e=>setValue(old=>({...old,[key]:e.target.value}))}/></label>;
  return <form className="space-y-6" onSubmit={e=>{e.preventDefault();void submit();}}>
   <div className="flex items-center justify-between font-label text-xs"><span>{t(step===0?'form.linkedin_url':'form.identity')}</span><span>{step+1}/2</span></div>
-  {step===0?<LinkedInInput value={value.linkedin_url} onChange={v=>setValue(old=>({...old,linkedin_url:v}))}/>:<div className="space-y-5">
+  {step===0?<LinkedInInput showLabel={false} showPrefix={false} value={value.linkedin_url} onChange={v=>setValue(old=>({...old,linkedin_url:v}))}/>:<div className="space-y-5">
    {avatar&&<img src={avatar} alt={t('form.photo')} className="size-24 rounded-md object-cover"/>}{field('first_name',true)}{field('last_name',true)}{field('job_title')}{field('company')}{field('sector')}<label className="block space-y-2 text-sm font-bold">{t('form.company_size')}<select className="h-10 w-full rounded-md border bg-card px-3" value={value.company_size??''} onChange={e=>setValue(old=>({...old,company_size:e.target.value as ProfileInput['company_size']||null}))}><option value="">{t('form.none')}</option>{(['tpe','pme','eti','grand_groupe'] as const).map(v=><option key={v} value={v}>{t(`size.${v}`)}</option>)}</select></label>
    <fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>setValue(old=>({...old,intentions:intentions.filter(item=>v.includes(item))}))} prefix="intention."/></fieldset>
    <AiProfileFields value={value} onChange={patch=>setValue(old=>({...old,...patch}))}/>
@@ -50,6 +50,6 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
   </div>}
   {prefillFailed&&<p role="status" className="text-sm text-muted-foreground">{t('enrichment.unavailable')}</p>}
   {error&&<p role="alert" className="text-sm text-destructive">{t('form.onboardingValidation')}</p>}
-  <div className="flex gap-3">{step===1&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>setStep(0)}>{t('form.previous')}</Button>}<Button type="submit" className="flex-1" disabled={busy||loading}>{t(busy||loading?'loading':step===0?'form.next':'form.finish')}</Button></div>
+  <div className="flex gap-3">{step===1&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>setStep(0)}>{t('form.previous')}</Button>}{step===0&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>{pending.current=null;setLoading(false);setStep(1);}}>{t('form.skip')}</Button>}<Button type="submit" className="flex-1" disabled={busy||loading}>{t(busy||loading?'loading':step===0?'form.next':'form.finish')}</Button></div>
  </form>;
 }

@@ -112,6 +112,8 @@
   "form.goals": "Ce que vous venez chercher",
   "form.next": "Continuer",
   "form.previous": "Précédent",
+  "form.skip": "Passer",
+  "form.linkedinHandle": "prenom-nom",
   "form.finish": "Créer mon profil",
   "form.save": "Enregistrer",
   "form.edit": "Modifier",
