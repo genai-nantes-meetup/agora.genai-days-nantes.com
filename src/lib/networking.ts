@@ -7,6 +7,12 @@ export function normalizeLinkedIn(value: string) {
   try { const u = new URL(value.includes('://') ? value : `https://${value}`); if(u.hostname.toLowerCase().replace(/^www\./,'') !== 'linkedin.com') return ''; return `${u.hostname.toLowerCase().replace(/^www\./,'')}${u.pathname.toLowerCase().replace(/\/+$/,'')}`; } catch { return ''; }
 }
 export function emailDomain(email: string) { return email.trim().toLowerCase().split('@')[1] ?? ''; }
+export type SpeakerLike={links?:{linkedin?:string|null}|null};
+export function findSpeakerProfile<T extends SpeakerLike>(linkedinUrl:string,speakers:ReadonlyArray<T>):T|undefined {
+  const normalized=normalizeLinkedIn(linkedinUrl);
+  if(!normalized)return undefined; // an empty or non-standard profile URL can never claim a speaker badge
+  return speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalized);
+}
 export const LINKEDIN_PREFIX='https://www.linkedin.com/in/';
 export function linkedInSuffix(value:string){
  return (value.trim().replace(/^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\//i,'').replace(/^[/?#]+/,'').split(/[?#]/)[0]??'').replace(/\/+$/,'');
