@@ -138,7 +138,7 @@
   "form.optional": "Optionnel",
   "form.none": "Non renseigné",
   "form.validation": "Vérifiez les champs obligatoires, votre URL LinkedIn et au moins une intention.",
-  "form.onboardingValidation": "Vérifiez votre URL LinkedIn, votre prénom, votre nom, une intention et votre consentement.",
+  "form.onboardingValidation": "Vérifiez votre URL LinkedIn, votre prénom, votre nom, au moins un tag métier, une intention et votre consentement.",
   "form.consent": "J’accepte que mon profil apparaisse dans l’annuaire des participant·es de GenAI Days 2026 et que NaoMakers traite mes données pour faire fonctionner l’application.",
   "form.consentLink": "En savoir plus sur mes données",
   "form.saved": "Profil enregistré.",
