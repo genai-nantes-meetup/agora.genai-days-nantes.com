@@ -86,3 +86,4 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 # En cours
 - [ ] Feedback de session sans connexion : token appareil anonyme, user_id enregistré si connecté
 - [ ] Programme : heure et lieu du talk sur deux lignes
+- [ ] Titres des conférences affichés entre guillemets
