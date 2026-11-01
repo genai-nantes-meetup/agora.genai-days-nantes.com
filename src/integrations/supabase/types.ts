@@ -816,6 +816,24 @@ export type Database = {
           },
         ]
       }
+      session_feedback_pushes: {
+        Row: {
+          recipients: number
+          sent_at: string
+          session_id: string
+        }
+        Insert: {
+          recipients?: number
+          sent_at?: string
+          session_id: string
+        }
+        Update: {
+          recipients?: number
+          sent_at?: string
+          session_id?: string
+        }
+        Relationships: []
+      }
       session_likes: {
         Row: {
           created_at: string
