@@ -1,3 +1,4 @@
+import { useTrackView } from '@/hooks/use-track-view';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Clock, ExternalLink, MapPin } from "lucide-react";
 import { endTime, resolveRoom } from "@/lib/event";
@@ -28,6 +29,7 @@ function SessionPage() {
   const { data, isPending, isError, refetch } = useSessions();
   const { data: sp } = useSpeakers();
   const { likes, toggle } = useLikes();
+  useTrackView('session_viewed', { session_id: id });
 
   if (isPending) return <LoadingView />;
   if (isError || !data) return <ErrorView onRetry={() => refetch()} />;

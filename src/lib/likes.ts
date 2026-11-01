@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
@@ -87,6 +88,7 @@ export function useLikes() {
       const prev = read();
       const next = toggleSessionLike(prev, session, all);
       write(next);
+      track(next.includes(session.id) ? 'session_liked' : 'session_unliked', { session_id: session.id });
       const removed = prev.filter((x) => !next.includes(x));
       const added = next.filter((x) => !prev.includes(x));
       void (async () => {

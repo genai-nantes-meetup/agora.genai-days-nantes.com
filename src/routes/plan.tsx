@@ -1,6 +1,8 @@
+import { useTrackView } from '@/hooks/use-track-view';
+import {track} from '@/lib/analytics';
 import { createFileRoute } from "@tanstack/react-router";
 import { RotateCcw } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { useI18n } from "@/lib/i18n";
 
@@ -28,6 +30,8 @@ function PlanPage() {
   const { t } = useI18n();
   const [floor, setFloor] = useState<(typeof FLOORS)[number]["id"]>("rdc");
   const current = FLOORS.find((f) => f.id === floor)!;
+  useTrackView('map_viewed', { floor });
+  const zoomed = useRef<string | null>(null);
 
   return (
     <div className="px-4 pt-5">
@@ -46,7 +50,7 @@ function PlanPage() {
         ))}
       </div>
       <div className="relative mt-4 overflow-hidden rounded-xl border bg-card shadow-card">
-        <TransformWrapper key={floor} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
+        <TransformWrapper key={floor} onZoomStop={(ref) => { if (ref.state.scale > 1 && zoomed.current !== floor) { zoomed.current = floor; track('map_zoomed', { floor }); } }} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
           {({ resetTransform }) => (
             <>
               <TransformComponent wrapperClass="!w-full touch-none" contentClass="!w-full">

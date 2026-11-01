@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { CalendarPlus } from "lucide-react";
 import { buildIcs, googleCalendarUrl, office365CalendarUrl, roomLine, resolveRoom, type Session } from "@/lib/event";
 import { useI18n } from "@/lib/i18n";
@@ -8,6 +9,7 @@ export function CalendarButtons({ session, date }: { session: Session; date: str
   const roomText = roomLine(session, t("cal.room"), floor ? t(`floor.${floor}`) : null);
 
   const downloadIcs = () => {
+    track('calendar_add_clicked', { session_id: session.id, provider: 'ics' });
     const blob = new Blob([buildIcs(session, date, roomText)], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -31,10 +33,11 @@ export function CalendarButtons({ session, date }: { session: Session; date: str
       >
         <CalendarPlus className="size-4" /> {t("cal.add")}
       </button>
-      <a href={googleCalendarUrl(session, date, roomText)} target="_blank" rel="noopener noreferrer" className={linkClass}>
+      <a onClick={() => track('calendar_add_clicked', { session_id: session.id, provider: 'google' })} href={googleCalendarUrl(session, date, roomText)} target="_blank" rel="noopener noreferrer" className={linkClass}>
         {t("cal.google")}
       </a>
       <a
+        onClick={() => track('calendar_add_clicked', { session_id: session.id, provider: 'office365' })}
         href={office365CalendarUrl(session, date, roomText)}
         target="_blank"
         rel="noopener noreferrer"

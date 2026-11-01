@@ -40,7 +40,7 @@ export type AnalyticsEvents = {
   session_unliked: { session_id: Id };
   program_filter_changed: { track: string };
   my_sessions_viewed: Record<string, never>;
-  calendar_add_clicked: { session_id: Id; provider: 'ics' | 'google' };
+  calendar_add_clicked: { session_id: Id; provider: 'ics' | 'google' | 'office365' };
   speaker_viewed: { speaker_id: Id };
   sponsor_viewed: { sponsor_id: Id; tier?: string };
   sponsor_link_clicked: { sponsor_id: Id; tier?: string };
