@@ -105,9 +105,6 @@ export async function runUnreadReminders(limit = 50) {
     const { data: c } = await db.from('conversations').select('*').eq('id', e.conversation_id).maybeSingle();
     const { data: rc } = await db.from('conversation_receipts').select('*').eq('conversation_id', e.conversation_id).eq('user_id', e.recipient_id).maybeSingle();
     if (!c || c.closed_at || !c.conversation_sid || !rc) { skipped++; continue; }
-    if (rc.last_reminder_index !== null && rc.read_index < rc.last_reminder_index) {
-      // Pending reminder: refresh the read horizon only.
-    }
     let readIndex = rc.read_index;
     try {
       const participant = c.user_a === e.recipient_id ? c.participant_a_sid : c.participant_b_sid;
