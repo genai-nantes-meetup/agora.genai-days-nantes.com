@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {staffSize,feedbackOpen,purgeAllowed,feedbackInput,tagsSchema,pitchSchema,iceSchema,filtersSchema,fillEmpty} from './rules';
+import {staffSize,feedbackOpen,purgeAllowed,feedbackInput,tagsSchema,pitchSchema,iceSchema,filtersSchema,fillEmpty,parseAirscalePerson} from './rules';
 import {parseInvites,exportCsv} from './csv';
 describe('Phase 4 concrete rules',()=>{
  it('maps exact staff boundaries',()=>{expect([0,9,10,249,250,4999,5000].map(staffSize)).toEqual(['tpe','tpe','pme','pme','eti','eti','grand_groupe']);expect(staffSize(null)).toBeNull();});
@@ -16,4 +16,10 @@ describe('Phase 4 concrete rules',()=>{
  it('requires two retained admins',()=>{expect(purgeAllowed(new Date('2026-12-17T00:00:00Z'),false,1)).toBe(false);});
  it('CSV import deduplicates normalized email and parses quoted names',()=>{expect(parseInvites('E-mail;Prénom;Nom;Identifiant\nA@example.com;"Camille; A";Test;42\na@example.com;Camille;Test;42')).toEqual([{email:'a@example.com',first_name:'Camille',last_name:'Test',billetweb_ref:'42'}]);});
  it('CSV export neutralizes spreadsheet formula injection',()=>{expect(exportCsv([{email:'a@example.com',first_name:'=IMPORTDATA("evil")'}])).toContain('"\'=IMPORTDATA(""evil"")"');});
+});
+describe('parseAirscalePerson',()=>{
+ it('reads job title and company from the current position group without a date',()=>{expect(parseAirscalePerson({firstname:'Camille',lastname:'Martin',industry:'Tech',positionGroups:{contents:[{company:{name:'Acme',url:'https://www.linkedin.com/company/acme'},profilePositions:[{title:'CTO'}]}]}})).toMatchObject({first_name:'Camille',last_name:'Martin',job_title:'CTO',company:'Acme',sector:'Tech'});});
+ it('prefers the open-ended position over past ones',()=>{expect(parseAirscalePerson({positionGroups:{contents:[{date:{end:'2020-01'},company:{name:'OldCo',url:'https://www.linkedin.com/company/old'},profilePositions:[{title:'Junior',date:{end:'2020-01'}}]},{date:{end:null},company:{name:'NewCo',url:'https://www.linkedin.com/company/new'},profilePositions:[{title:'Lead',date:{end:null}}]}]}})).toMatchObject({job_title:'Lead',company:'NewCo'});});
+ it('falls back to the first group when none is marked current',()=>{expect(parseAirscalePerson({positionGroups:{contents:[{date:{end:'2019-01'},company:{name:'Solo',url:'https://www.linkedin.com/company/solo'},profilePositions:[{title:'Dev',date:{end:'2019-01'}}]}]}})).toMatchObject({job_title:'Dev',company:'Solo'});});
+ it('returns nulls when no position exists',()=>{expect(parseAirscalePerson({firstname:'A'})).toMatchObject({job_title:null,company:null});});
 });
