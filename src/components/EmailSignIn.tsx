@@ -1,4 +1,3 @@
-// ============= Full file contents =============
 import {track} from '@/lib/analytics';
 import {useEffect,useState} from 'react';
 import {useNavigate} from '@tanstack/react-router';
