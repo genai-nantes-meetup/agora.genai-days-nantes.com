@@ -1,12 +1,10 @@
 import { Share, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { getCapturedInstallEvent, subscribeInstallEvent } from "@/lib/pwa";
+import { getCapturedInstallEvent, subscribeInstallEvent, type BeforeInstallPromptEvent } from "@/lib/pwa";
 
 const IOS_KEY = "hey-genai:ios-hint-seen";
 const ANDROID_KEY = "hey-genai:android-hint-seen";
-
-type BeforeInstallPromptEvent = Parameters<typeof subscribeInstallEvent>[0];
 
 export function InstallPrompt() {
   const { t } = useI18n();

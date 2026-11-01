@@ -1,7 +1,7 @@
 // Single service-worker registration wrapper. Never registers in dev, iframes or Lovable previews.
 const PREVIEW_LABEL = /^(?:id-preview|preview)(?:-[a-z0-9]+)?--.+$/;
 
-interface BeforeInstallPromptEvent extends Event {
+export interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
@@ -14,8 +14,9 @@ if (typeof window !== "undefined" && typeof navigator !== "undefined" && /androi
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault(); // we propose our own banner instead of the native mini-infobar
     if (capturedInstallEvent) return;
-    capturedInstallEvent = e as BeforeInstallPromptEvent;
-    installEventListeners.forEach((l) => l(capturedInstallEvent));
+    const event = e as BeforeInstallPromptEvent;
+    capturedInstallEvent = event;
+    installEventListeners.forEach((l) => l(event));
   });
 }
 
