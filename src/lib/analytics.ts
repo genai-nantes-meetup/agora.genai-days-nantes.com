@@ -33,7 +33,7 @@ export type AnalyticsEvents = {
   message_edited: { conversation_id: Id };
   message_deleted: { conversation_id: Id };
   reaction_toggled: { conversation_id: Id; emoji: string; action: 'added' | 'removed' };
-  icebreaker_shown: { conversation_id: Id; source: 'ai' | 'fallback' };
+  icebreaker_shown: { conversation_id: Id; count: number };
   icebreaker_used: { conversation_id: Id };
   session_viewed: { session_id: Id };
   session_liked: { session_id: Id };
