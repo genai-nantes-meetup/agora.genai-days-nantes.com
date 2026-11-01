@@ -94,9 +94,6 @@ export function initAnalytics(lang: string): Promise<PostHog | null> {
         capture_exceptions: true,
         mask_all_text: false,
         mask_all_element_attributes: false,
-        // Never record typed values; ph-no-capture marks private text areas.
-        session_recording: { maskAllInputs: true },
-        property_denylist: [],
       });
       posthog.register({ lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env.VITE_APP_VERSION ?? 'web' });
       ph = posthog;
