@@ -57,6 +57,13 @@
       "when": 1793542805353,
       "tag": "0007_app_emails",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793550044324,
+      "tag": "0008_anonymous_session_feedback",
+      "breakpoints": true
     }
   ]
 }
