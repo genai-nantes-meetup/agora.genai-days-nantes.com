@@ -8,7 +8,7 @@ export const MagicLinkEmail = ({ confirmationUrl }: MagicLinkEmailProps) => (
       <H1>Votre lien de connexion</H1>
       <P>Cliquez sur le bouton pour vous connecter à l'app GenAI Days. Ce lien expire rapidement.</P>
       <Cta href={confirmationUrl}>Me connecter</Cta>
-      <P small>Vous n'avez rien demandé ? Ignorez simplement cet e-mail.</P>
+      <P small>Si vous n'avez pas demandé ce lien, ignorez cet e-mail.</P>
       <Divider />
       <H2>Your login link</H2>
       <P>Click the button to sign in to the GenAI Days app. This link expires shortly.</P>
