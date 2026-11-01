@@ -14,7 +14,7 @@ export function linkedInSuffix(value:string){
 export const profileSchema = z.object({
   email:z.string().trim().email().max(254).transform(x=>x.toLowerCase()), first_name:z.string().trim().min(1).max(100),last_name:z.string().trim().min(1).max(100),
   linkedin_url:z.string().trim().max(300).refine(x=>/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(x))).transform(x=>`https://${normalizeLinkedIn(x)}`),
-  job_title:z.string().trim().max(160).nullable(),company:z.string().trim().max(160).nullable(),company_size:z.enum(companySizes).nullable(),sector:z.string().trim().max(120).nullable(),
+  job_title:z.string().trim().max(160).nullable(),company:z.string().trim().max(160).nullable(),city:z.string().trim().max(160).nullable().default(null),company_size:z.enum(companySizes).nullable(),sector:z.string().trim().max(120).nullable(),
   job_tags:z.array(z.enum(jobTags)).max(9),intentions:z.array(z.enum(intentions)).min(1).max(10),pitch:z.string().max(160).nullable(),ai_level:z.enum(aiLevels).nullable(),lang:z.enum(['fr','en']),consent:z.literal(true)
 });
 export type ProfileInput = z.infer<typeof profileSchema>;
@@ -27,4 +27,4 @@ export function sortDirectory<T extends {last_name:string;first_name:string;prof
   const rank:Record<string,number>={platinum:0,gold:1,silver:2};
   return [...rows].sort((a,b)=>(rank[a.profile_status?.sponsor_tier??'']??3)-(rank[b.profile_status?.sponsor_tier??'']??3)||a.last_name.localeCompare(b.last_name,'fr',{sensitivity:'base'})||a.first_name.localeCompare(b.first_name,'fr',{sensitivity:'base'}));
 }
-export const emptyProfile:ProfileInput={email:'',first_name:'',last_name:'',linkedin_url:'',job_title:null,company:null,company_size:null,sector:null,job_tags:[],intentions:[],pitch:null,ai_level:null,lang:'fr',consent:true};
+export const emptyProfile:ProfileInput={email:'',first_name:'',last_name:'',linkedin_url:'',job_title:null,company:null,city:null,company_size:null,sector:null,job_tags:[],intentions:[],pitch:null,ai_level:null,lang:'fr',consent:true};

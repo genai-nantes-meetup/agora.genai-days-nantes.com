@@ -18,6 +18,9 @@ describe('Phase 4 concrete rules',()=>{
  it('CSV export neutralizes spreadsheet formula injection',()=>{expect(exportCsv([{email:'a@example.com',first_name:'=IMPORTDATA("evil")'}])).toContain('"\'=IMPORTDATA(""evil"")"');});
 });
 describe('parseAirscalePerson',()=>{
+ it('prefills city from LinkedIn location',()=>expect(parseAirscalePerson({location:{city:'Nantes',country:'France'}}).city).toBe('Nantes'));
+ it('allows missing LinkedIn city without blocking prefill',()=>expect(parseAirscalePerson({location:{city:null}}).city).toBeNull());
+ it('never overwrites a manually entered city during prefill',()=>expect(fillEmpty({city:'Rennes'},{city:'Nantes'}).city).toBe('Rennes'));
  it('reads job title and company from the current position group without a date',()=>{expect(parseAirscalePerson({firstname:'Camille',lastname:'Martin',industry:'Tech',positionGroups:{contents:[{company:{name:'Acme',url:'https://www.linkedin.com/company/acme'},profilePositions:[{title:'CTO'}]}]}})).toMatchObject({first_name:'Camille',last_name:'Martin',job_title:'CTO',company:'Acme',sector:'Tech'});});
  it('prefers the open-ended position over past ones',()=>{expect(parseAirscalePerson({positionGroups:{contents:[{date:{end:'2020-01'},company:{name:'OldCo',url:'https://www.linkedin.com/company/old'},profilePositions:[{title:'Junior',date:{end:'2020-01'}}]},{date:{end:null},company:{name:'NewCo',url:'https://www.linkedin.com/company/new'},profilePositions:[{title:'Lead',date:{end:null}}]}]}})).toMatchObject({job_title:'Lead',company:'NewCo'});});
  it('falls back to the first group when none is marked current',()=>{expect(parseAirscalePerson({positionGroups:{contents:[{date:{end:'2019-01'},company:{name:'Solo',url:'https://www.linkedin.com/company/solo'},profilePositions:[{title:'Dev',date:{end:'2019-01'}}]}]}})).toMatchObject({job_title:'Dev',company:'Solo'});});

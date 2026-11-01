@@ -125,6 +125,7 @@
   "form.photo": "Photo",
   "form.job_title": "Job title",
   "form.company": "Company",
+  "form.city": "City",
   "form.company_size": "Company size",
   "form.sector": "Sector",
   "form.job_tags": "Professional tags",

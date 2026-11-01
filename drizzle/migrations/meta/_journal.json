@@ -78,6 +78,13 @@
       "when": 1793556799251,
       "tag": "0010_add_profile_city",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793556841687,
+      "tag": "0011_persist_city_on_invitation_signup",
+      "breakpoints": true
     }
   ]
 }
