@@ -37,3 +37,6 @@ Current tasks:
 
 - [x] Analytics: PostHog (proxy hogpost.naomakers.com, no session replay, identify/reset, named events, ph-no-capture on private text) and GA4 (default page views only); /donnees updated; SW never intercepts analytics hosts.
 - [ ] User: replace the [adresse e-mail RGPD] placeholders on /donnees (now also used for analytics objections).
+
+- [ ] Rename display name to GenAI Days Agora / Agora
+- [ ] Conversation opens scrolled to the latest message

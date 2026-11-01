@@ -130,3 +130,13 @@ export function Wordmark({ className = "" }: { className?: string }) {
     </span>
   );
 }
+
+/** Header lockup: GENAI DAYS wordmark with the short app name stacked below. */
+export function AppLockup({ shortName, label }: { shortName: string; label: string }) {
+  return (
+    <span aria-label={label} className="flex flex-col leading-none">
+      <Wordmark className="text-2xl leading-none" />
+      <span aria-hidden="true" className="font-display -mt-0.5 text-sm font-extrabold italic text-primary">{shortName}</span>
+    </span>
+  );
+}

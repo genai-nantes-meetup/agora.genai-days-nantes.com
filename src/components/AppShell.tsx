@@ -5,7 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { InstallPrompt } from "./InstallPrompt";
 import { SiteFooter } from "./SiteFooter";
-import { Wordmark } from "./common";
+import { AppLockup } from "./common";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import {useMessaging} from '@/lib/messaging-client';
@@ -44,8 +44,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-dvh flex-col">
       <header className="grain pt-safe sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto grid h-16 w-full max-w-2xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 lg:max-w-6xl lg:px-6">
-          <Link to="/" className="flex min-w-0 items-baseline">
-            <Wordmark className="text-2xl leading-none" />
+          <Link to="/" className="flex min-w-0 items-center">
+            <AppLockup shortName={t("appShortName")} label={t("appName")} />
           </Link>
           <div className="flex shrink-0 items-center gap-2"><Button asChild variant="ghost" size="icon" aria-label={t(user ? "nav.profile" : "auth.login")} title={t(user ? "nav.profile" : "auth.login")}><Link to={user ? "/profil" : "/login"}><User className="size-4" /></Link></Button><Button
             type="button"
