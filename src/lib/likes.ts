@@ -1,5 +1,6 @@
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { toggleSessionLike, type Session } from "./event";
 import { useAuth } from "./auth";
 
@@ -47,22 +48,61 @@ function subscribe(l: () => void) {
   };
 }
 
-/** Likes are private, and require a signed-in account. */
+/** Likes are private, and require a signed-in account. Signed-in likes live in the database; localStorage is the signed-out store and local cache. */
 export function useLikes() {
   const likes = useSyncExternalStore(subscribe, read, () => EMPTY);
   const { user, ready } = useAuth();
   const navigate = useNavigate();
+  const userId = user?.id ?? null;
+
+  // On sign-in (including right after signup): push local likes to the DB, then load the DB list as source of truth.
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    void (async () => {
+      const local = read();
+      if (local.length) {
+        await supabase
+          .from("session_likes")
+          .upsert(local.map((session_id) => ({ user_id: userId, session_id })), {
+            onConflict: "user_id,session_id",
+            ignoreDuplicates: true,
+          });
+      }
+      const { data } = await supabase.from("session_likes").select("session_id").eq("user_id", userId);
+      if (!cancelled && data) write(data.map((r) => r.session_id));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
 
   const toggle = useCallback(
     (session: Session, all: Session[]) => {
       if (!ready) return;
-      if (!user) {
+      if (!userId) {
         void navigate({ to: "/login" });
         return;
       }
-      write(toggleSessionLike(read(), session, all));
+      const prev = read();
+      const next = toggleSessionLike(prev, session, all);
+      write(next);
+      const removed = prev.filter((x) => !next.includes(x));
+      const added = next.filter((x) => !prev.includes(x));
+      void (async () => {
+        try {
+          if (removed.length) {
+            await supabase.from("session_likes").delete().eq("user_id", userId).in("session_id", removed);
+          }
+          if (added.length) {
+            await supabase.from("session_likes").insert(added.map((session_id) => ({ user_id: userId, session_id })));
+          }
+        } catch {
+          /* offline or transient failure: local copy already updated */
+        }
+      })();
     },
-    [user, ready, navigate],
+    [userId, ready, navigate],
   );
 
   return { likes, toggle };

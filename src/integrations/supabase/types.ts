@@ -599,29 +599,61 @@ export type Database = {
       }
       session_feedback: {
         Row: {
+          anon_token: string | null
           choices: string[]
           comment: string
+          id: string
           session_id: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
+          anon_token?: string | null
           choices?: string[]
           comment?: string
+          id?: string
           session_id: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
+          anon_token?: string | null
           choices?: string[]
           comment?: string
+          id?: string
           session_id?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "session_feedback_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      session_likes: {
+        Row: {
+          created_at: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_likes_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"

@@ -238,6 +238,7 @@
   "feedback.too_salesy": "Too salesy",
   "feedback.comment": "Comment (optional)",
   "feedback.closed": "Contributions open when the session starts.",
+  "feedback.anonymous": "Anonymous",
   "admin.title": "Administration",
   "admin.denied": "Administrators only.",
   "admin.invites": "Invitations",

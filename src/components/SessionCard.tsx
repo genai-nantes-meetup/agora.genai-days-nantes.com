@@ -44,17 +44,18 @@ export function SessionCard({
               {t(`format.${session.format}` as TKey) || session.format}
             </span>
           </div>
-          <h3 className="mt-1.5 text-lg font-semibold leading-snug">{session.title}</h3>
+          <h3 className="mt-1.5 text-lg font-semibold leading-snug">« {session.title} »</h3>
           <p className="mt-1 truncate text-sm text-muted-foreground">
             {speakers.length ? speakers.map((s) => s.name).join(", ") : t("speakers.tbc")}
           </p>
-          <p className="font-label mt-2 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs text-muted-foreground">
-            <span className="whitespace-nowrap">{session.startTime}–{endTime(session)}</span>
-            <span aria-hidden>·</span>
-            <MapPin className="size-3" />
-            <span className="min-w-0">
-              {room ?? t("room.tbc")}
-              {floor ? ` · ${t(`floor.${floor}`)}` : ""}
+          <p className="font-label mt-2 text-xs text-muted-foreground">
+            <span className="block whitespace-nowrap">{session.startTime}–{endTime(session)}</span>
+            <span className="mt-0.5 flex items-center gap-1">
+              <MapPin className="size-3 shrink-0" />
+              <span className="min-w-0">
+                {room ?? t("room.tbc")}
+                {floor ? ` · ${t(`floor.${floor}`)}` : ""}
+              </span>
             </span>
           </p>
         </div>

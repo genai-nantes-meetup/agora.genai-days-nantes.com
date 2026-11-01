@@ -84,6 +84,7 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 - [ ] User proofreading of email copy.
 
 # En cours
-- [ ] Feedback de session sans connexion : token appareil anonyme, user_id enregistré si connecté
-- [ ] Programme : heure et lieu du talk sur deux lignes
-- [ ] Titres des conférences affichés entre guillemets
+- [x] Feedback sans connexion : token appareil anonyme, user_id enregistré si connecté, lectures publiques. Vérifié sans compte (compteurs affichés, pas d'erreur); envoi réel testable le jour J (sessions fermées avant le début).
+- [x] Programme : heure et lieu du talk sur deux lignes (vérifié sur capture).
+- [x] Titres des conférences affichés entre guillemets « » (vérifié sur capture).
+- [x] Favoris : table session_likes, copie local -> base à la connexion, lecture/écriture en base. Vérifié connecté : ajout (POST), rechargement depuis la base, retrait (DELETE); compte de test nettoyé.
