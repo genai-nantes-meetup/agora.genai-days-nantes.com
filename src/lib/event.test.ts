@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildIcs, currentOrNext, googleCalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
+import { buildIcs, currentOrNext, googleCalendarUrl, office365CalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
 
 const s = (o: Partial<Session>): Session => ({
   id: "x", title: "T", format: "talk", track: "tech", startTime: "09:40", durationMinutes: 40, room: null, ...o,
@@ -66,6 +66,13 @@ describe("calendar", () => {
     const url = new URL(googleCalendarUrl(s({}), "2026-11-17", "Salle : Salle Loire"));
     expect(url.searchParams.get("dates")).toBe("20261117T094000/20261117T102000");
     expect(url.searchParams.get("ctz")).toBe("Europe/Paris");
+  });
+  it("office 365 link is prefilled with Paris offset", () => {
+    const url = new URL(office365CalendarUrl(s({}), "2026-11-17", "Salle : Salle Loire"));
+    expect(url.origin + url.pathname).toBe("https://outlook.office.com/calendar/0/deeplink/compose");
+    expect(url.searchParams.get("rru")).toBe("addevent");
+    expect(url.searchParams.get("startdt")).toBe("2026-11-17T09:40:00+01:00");
+    expect(url.searchParams.get("enddt")).toBe("2026-11-17T10:20:00+01:00");
   });
 });
 

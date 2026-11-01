@@ -82,3 +82,8 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 - [x] No app emails from 24 Nov 2026 00:00 Paris (tested); auth emails unaffected.
 - [x] Auth emails bilingual FR then EN, same branding. Rendering checked; live delivery of the new version needs publishing.
 - [ ] User proofreading of email copy.
+
+# En cours
+- [ ] Feedback de session sans connexion : token appareil anonyme, user_id enregistré si connecté
+- [ ] Programme : heure et lieu du talk sur deux lignes
+- [ ] Titres des conférences affichés entre guillemets
