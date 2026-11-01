@@ -89,12 +89,18 @@ export function useLikes() {
       write(next);
       const removed = prev.filter((x) => !next.includes(x));
       const added = next.filter((x) => !prev.includes(x));
-      if (removed.length) {
-        void supabase.from("session_likes").delete().eq("user_id", userId).in("session_id", removed);
-      }
-      if (added.length) {
-        void supabase.from("session_likes").insert(added.map((session_id) => ({ user_id: userId, session_id })));
-      }
+      void (async () => {
+        try {
+          if (removed.length) {
+            await supabase.from("session_likes").delete().eq("user_id", userId).in("session_id", removed);
+          }
+          if (added.length) {
+            await supabase.from("session_likes").insert(added.map((session_id) => ({ user_id: userId, session_id })));
+          }
+        } catch {
+          /* offline or transient failure: local copy already updated */
+        }
+      })();
     },
     [userId, ready, navigate],
   );
