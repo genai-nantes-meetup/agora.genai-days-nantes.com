@@ -5,7 +5,7 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Checkbox} from '@/components/ui/checkbox';
 import {useI18n} from '@/lib/i18n';
-import {emptyProfile,normalizeLinkedIn,profileSchema,intentions,type ProfileInput} from '@/lib/networking';
+import {emptyProfile,normalizeLinkedIn,profileSchema,onboardingSchema,intentions,type ProfileInput} from '@/lib/networking';
 import {enrichLinkedIn} from '@/lib/phase4/enrichment.functions';
 import {fillEmpty} from '@/lib/phase4/rules';
 import {AiProfileFields} from './AiProfileFields';
@@ -33,7 +33,7 @@ export function OnboardingForm({initial,initialAvatar=null,busy,onSubmit}:{initi
    setStep(1);
    return;
   }
-  const parsed=profileSchema.safeParse({...value,lang,consent});
+  const parsed=onboardingSchema.safeParse({...value,lang,consent});
   if(!parsed.success){setError(true);return;}
   await onSubmit(parsed.data,photo);
  }
@@ -41,7 +41,7 @@ export function OnboardingForm({initial,initialAvatar=null,busy,onSubmit}:{initi
  return <form className="space-y-6" onSubmit={e=>{e.preventDefault();void submit();}}>
   <div className="flex items-center justify-between font-label text-xs"><span>{t(step===0?'form.linkedin_url':'form.identity')}</span><span>{step+1}/2</span></div>
   {step===0?<LinkedInInput showLabel={false} showPrefix={false} value={value.linkedin_url} onChange={v=>setValue(old=>({...old,linkedin_url:v}))}/>:<div className="space-y-5">
-   <PhotoCrop preview={avatar} onChange={setPhoto}/>{field('first_name',true)}{field('last_name',true)}{field('city')}{field('job_title')}{field('company')}{field('sector')}<label className="block space-y-2 text-sm font-bold">{t('form.company_size')}<select className="h-10 w-full rounded-md border bg-card px-3" value={value.company_size??''} onChange={e=>setValue(old=>({...old,company_size:e.target.value as ProfileInput['company_size']||null}))}><option value="">{t('form.none')}</option>{(['tpe','pme','eti','grand_groupe'] as const).map(v=><option key={v} value={v}>{t(`size.${v}`)}</option>)}</select></label>
+   <PhotoCrop preview={avatar} onChange={setPhoto}/>{field('first_name',true)}{field('last_name',true)}{field('city')}{field('job_title')}{field('company')}{field('sector')}<LinkedInInput required={false} showPrefix={false} value={value.linkedin_url} onChange={v=>setValue(old=>({...old,linkedin_url:v}))}/><label className="block space-y-2 text-sm font-bold">{t('form.company_size')}<select className="h-10 w-full rounded-md border bg-card px-3" value={value.company_size??''} onChange={e=>setValue(old=>({...old,company_size:e.target.value as ProfileInput['company_size']||null}))}><option value="">{t('form.none')}</option>{(['tpe','pme','eti','grand_groupe'] as const).map(v=><option key={v} value={v}>{t(`size.${v}`)}</option>)}</select></label>
    <fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>setValue(old=>({...old,intentions:intentions.filter(item=>v.includes(item))}))} prefix="intention." cols={2}/></fieldset>
    <AiProfileFields value={value} onChange={patch=>setValue(old=>({...old,...patch}))}/>
    <div className="flex items-start gap-3"><Checkbox id="onboarding-consent" checked={consent} onCheckedChange={v=>setConsent(v===true)}/><div className="text-sm leading-relaxed"><label htmlFor="onboarding-consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div>

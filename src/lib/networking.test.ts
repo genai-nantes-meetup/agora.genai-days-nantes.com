@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX} from './networking';
+import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,onboardingSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX} from './networking';
 describe('phase 2 rules',()=>{
  it('uses the requested fixed LinkedIn prefix',()=>expect(LINKEDIN_PREFIX).toBe('https://www.linkedin.com/in/'));
  it('strips the prefix of a pasted full LinkedIn URL',()=>expect(linkedInSuffix('https://www.linkedin.com/in/camille-test')).toBe('camille-test'));
@@ -13,6 +13,10 @@ describe('phase 2 rules',()=>{
  it('keeps the editable city when validating a profile',()=>expect(profileSchema.parse({...valid,city:' Nantes '}).city).toBe('Nantes'));
  it('allows signup without a city',()=>expect(profileSchema.parse({...valid,city:null}).city).toBeNull());
  it('limits pitch to 160 characters',()=>{expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(160)}).success).toBe(true);expect(profileSchema.safeParse({...valid,pitch:'x'.repeat(161)}).success).toBe(false);});
+ it('allows onboarding without a LinkedIn URL',()=>expect(profileSchema.safeParse({...valid,linkedin_url:''}).success).toBe(true));
+ it('still rejects a malformed LinkedIn URL',()=>expect(profileSchema.safeParse({...valid,linkedin_url:'https://example.com/in/x'}).success).toBe(false));
+ it('requires a job tag at onboarding',()=>expect(onboardingSchema.safeParse({...valid,job_tags:[]}).success).toBe(false));
+ it('accepts one job tag at onboarding',()=>expect(onboardingSchema.safeParse({...valid,job_tags:['tech_data']}).success).toBe(true));
  it('allows onboarding without job tags',()=>expect(profileSchema.safeParse({...valid,job_tags:[]}).success).toBe(true));
  it('skips onboarding for a completed profile',()=>expect(profileComplete({...valid,job_tags:[],consent_at:'2026-10-31T18:06:00Z'} as Parameters<typeof profileComplete>[0])).toBe(true));
  it('keeps onboarding for missing identity information',()=>expect(profileComplete({...valid,first_name:'',consent_at:'2026-10-31T18:06:00Z'} as Parameters<typeof profileComplete>[0])).toBe(false));

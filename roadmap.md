@@ -5,7 +5,9 @@ Current tasks:
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field
 - [x] Participant page: visible contact request button below the profile header
 - [x] Messages: discreet notification activation button
-- [ ] Signed-in end-to-end verification of these additions: waiting for the requesting user to sign in to the preview (no matching account for session minting); 73 tests pass and signed-out routes have no runtime errors
+- [x] Onboarding step 2: optional LinkedIn URL field added (empty accepted by schema and DB trigger)
+- [x] Onboarding: at least one professional job tag required before finishing (onboarding schema + updated validation message)
+- [x] Signed-in end-to-end verification of the onboarding additions (real session, step 2 screenshot, submission blocked without a tag)
 
 - [x] Back buttons: link pointer cursor
 - [x] Profile edit page: single page, all fields editable without steps; Save button removed (autosave only)

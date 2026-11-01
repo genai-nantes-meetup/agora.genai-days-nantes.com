@@ -85,6 +85,13 @@
       "when": 1793556841687,
       "tag": "0011_persist_city_on_invitation_signup",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793558310280,
+      "tag": "0012_allow_empty_linkedin_url",
+      "breakpoints": true
     }
   ]
 }

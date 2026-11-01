@@ -13,10 +13,11 @@ export function linkedInSuffix(value:string){
 }
 export const profileSchema = z.object({
   email:z.string().trim().email().max(254).transform(x=>x.toLowerCase()), first_name:z.string().trim().min(1).max(100),last_name:z.string().trim().min(1).max(100),
-  linkedin_url:z.string().trim().max(300).refine(x=>/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(x))).transform(x=>`https://${normalizeLinkedIn(x)}`),
+  linkedin_url:z.string().trim().max(300).refine(x=>x===''||/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(x))).transform(x=>x?`https://${normalizeLinkedIn(x)}`:''),
   job_title:z.string().trim().max(160).nullable(),company:z.string().trim().max(160).nullable(),city:z.string().trim().max(160).nullable().default(null),company_size:z.enum(companySizes).nullable(),sector:z.string().trim().max(120).nullable(),
   job_tags:z.array(z.enum(jobTags)).max(9),intentions:z.array(z.enum(intentions)).min(1).max(10),pitch:z.string().max(160).nullable(),ai_level:z.enum(aiLevels).nullable(),lang:z.enum(['fr','en']),consent:z.literal(true)
 });
+export const onboardingSchema=profileSchema.extend({job_tags:profileSchema.shape.job_tags.min(1)});
 export type ProfileInput = z.infer<typeof profileSchema>;
 export type Status = {is_speaker:boolean;speaker_id:string|null;sponsor_id:string|null;sponsor_tier:string|null;suspended:boolean;manual_override:boolean;is_admin:boolean};
 export type Member = Omit<ProfileInput,'consent'> & {user_id:string;photo_url:string|null;consent_at:string|null;profile_status:Status|null;avatar?:string|null};
