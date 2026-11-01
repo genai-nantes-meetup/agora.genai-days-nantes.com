@@ -2,7 +2,7 @@
 
 Current tasks:
 
-- [ ] Corriger l’erreur au clic sur Accepter dans Messages et vérifier le parcours connecté
+- [ ] Accepter dans Messages : erreur reproduite avec le compte connecté, Twilio refuse la clé configurée (401, code 70051), y compris sur les lectures du service, configuration et rôles. Bloqué : remplacer les accès Twilio valides pour Conversations, puis vérifier l’acceptation de bout en bout.
 
 - [x] Retirer le badge speaker de Maxime Pitussi en base, et corriger l'attribution automatique (LinkedIn vides considérés comme identiques) pour que le badge ne revienne pas
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field
