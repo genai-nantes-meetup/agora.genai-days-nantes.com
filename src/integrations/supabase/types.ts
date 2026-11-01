@@ -430,6 +430,7 @@ export type Database = {
       profiles: {
         Row: {
           ai_level: string | null
+          city: string | null
           company: string | null
           company_size: string | null
           consent_at: string | null
@@ -450,6 +451,7 @@ export type Database = {
         }
         Insert: {
           ai_level?: string | null
+          city?: string | null
           company?: string | null
           company_size?: string | null
           consent_at?: string | null
@@ -470,6 +472,7 @@ export type Database = {
         }
         Update: {
           ai_level?: string | null
+          city?: string | null
           company?: string | null
           company_size?: string | null
           consent_at?: string | null
