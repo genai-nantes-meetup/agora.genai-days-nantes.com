@@ -10,7 +10,7 @@ export function SiteFooter(){
       {sponsors.length>0&&(
         <section aria-label={t('sponsors.support')}>
           <p className="mb-5 text-xs font-bold text-muted-foreground">{t('sponsors.support')}</p>
-          <ul className="mx-auto grid w-full max-w-80 grid-cols-2 items-center justify-items-center gap-x-7 gap-y-5">
+          <ul className="mx-auto grid w-full max-w-80 grid-cols-2 items-center justify-items-center gap-x-7 gap-y-5 md:max-w-2xl md:grid-cols-4">
             {sponsors.map(s=>(
               <li key={s.id} className="flex h-14 w-full min-w-0 items-center justify-center">
                 <a href={s.website??''} target="_blank" rel="noreferrer" className="flex h-full w-full items-center justify-center" aria-label={s.name}>
