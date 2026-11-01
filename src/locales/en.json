@@ -275,7 +275,7 @@
   "admin.metric.connection_requests": "Requests sent",
   "admin.metric.accepted": "Requests accepted",
   "admin.metric.conversations": "Conversations",
-  "admin.metric.message_events": "Messages",
+  "admin.metric.messages": "Messages",
   "admin.metric.session_feedback": "Feedback entries",
   "admin.emails": "Invitation emails",
   "admin.sendUnsent": "Send unsent invitations",
