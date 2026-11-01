@@ -23,6 +23,8 @@ export function SiteFooter(){
       )}
       <p className={sponsors.length>0?'mt-8':'mt-2'}>
         <a href="https://genai-days-nantes.com/" target="_blank" rel="noreferrer" className="text-xs font-bold text-muted-foreground underline underline-offset-4 hover:text-foreground">{t('footer.eventSite')}</a>
+        {' · '}
+        <a href="https://naomakers.com/" target="_blank" rel="noreferrer" className="text-xs font-bold text-muted-foreground underline underline-offset-4 hover:text-foreground">{t('footer.organizer')}</a>
       </p>
     </footer>
   );
