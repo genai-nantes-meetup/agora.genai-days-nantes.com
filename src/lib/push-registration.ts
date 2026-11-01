@@ -20,6 +20,16 @@ export async function activePushRegistration(registration: ServiceWorkerRegistra
   return registration;
 }
 
-export function pushErrorKey(error: unknown): 'push.denied' | 'push.failed' {
-  return error !== null && typeof error === 'object' && 'name' in error && error.name === 'NotAllowedError' ? 'push.denied' : 'push.failed';
+export type PushActivationStage = 'permission' | 'configuration' | 'worker' | 'subscription' | 'save';
+
+export function pushErrorKey(error: unknown, stage?: PushActivationStage): 'push.denied' | 'push.failed' | 'push.browserDenied' | 'push.serviceFailed' | 'push.saveFailed' | 'push.workerFailed' {
+  const name = error !== null && typeof error === 'object' && 'name' in error ? error.name : '';
+  const message = error !== null && typeof error === 'object' && 'message' in error && typeof error.message === 'string' ? error.message : '';
+  // Chrome can return AbortError even when Notification.permission is granted.
+  if (name === 'AbortError' && /permission denied/i.test(message)) return 'push.browserDenied';
+  if (name === 'NotAllowedError') return 'push.denied';
+  if (stage === 'subscription' && (name === 'AbortError' || name === 'NetworkError')) return 'push.serviceFailed';
+  if (stage === 'save') return 'push.saveFailed';
+  if (stage === 'worker') return 'push.workerFailed';
+  return 'push.failed';
 }

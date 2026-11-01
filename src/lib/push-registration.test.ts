@@ -32,4 +32,12 @@ describe('push worker activation',()=>{
     expect(pushErrorKey(new DOMException('','NotAllowedError'))).toBe('push.denied');
     expect(pushErrorKey(new Error('network'))).toBe('push.failed');
   });
+  it('recognizes Chrome permission-denied AbortError rather than suggesting a different browser context',()=>{
+    expect(pushErrorKey(new DOMException('Registration failed - permission denied','AbortError'),'subscription')).toBe('push.browserDenied');
+  });
+  it('distinguishes unavailable browser push service from registration saving failure',()=>{
+    expect(pushErrorKey(new DOMException('Registration failed - push service error','AbortError'),'subscription')).toBe('push.serviceFailed');
+    expect(pushErrorKey(new Error('Failed'),'save')).toBe('push.saveFailed');
+    expect(pushErrorKey(new Error('PushWorkerUnavailable'),'worker')).toBe('push.workerFailed');
+  });
 });
