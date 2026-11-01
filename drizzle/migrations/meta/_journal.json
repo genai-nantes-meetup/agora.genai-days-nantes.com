@@ -92,6 +92,13 @@
       "when": 1793558310280,
       "tag": "0012_allow_empty_linkedin_url",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793560729247,
+      "tag": "0013_organizer_display_badges",
+      "breakpoints": true
     }
   ]
 }
