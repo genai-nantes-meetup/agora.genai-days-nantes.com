@@ -15,7 +15,6 @@ import {useAuth} from '@/lib/auth';
 import {useI18n,type TKey} from '@/lib/i18n';
 import {supabase} from '@/integrations/supabase/client';
 import {useServerFn} from '@tanstack/react-start';
-import {blockMember} from '@/lib/messaging.functions';
 import {ConnectionAction} from '@/components/ConnectionAction';
 export const Route=createFileRoute('/_authenticated/networking/$id')({head:()=>({meta:[{title:'Participant·e · GenAI Days Nantes'},{name:'description',content:'Profil d’un·e participant·e des GenAI Days.'},{property:'og:title',content:'Participant·e · GenAI Days Nantes'},{property:'og:description',content:'Profil et intentions professionnelles.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:MemberPage});
 function MemberPage(){const {id}=Route.useParams();const {t}=useI18n();const {user}=useAuth();const q=useQuery(membersOptions());const inbox=useQuery({...inboxOptions(user?.id??''),enabled:!!user});const sessions=useSessions();const client=useQueryClient();const navigate=useNavigate();const [action,setAction]=useState<'block'|'report'|null>(null);const [reason,setReason]=useState('');const [busy,setBusy]=useState(false);const block=useServerFn(blockMember);if(q.isPending)return <LoadingView/>;if(q.isError)return <ErrorView onRetry={()=>q.refetch()}/>;const p=q.data.find(x=>x.user_id===id);if(!p)return <p className="p-6">{t('notFound')}</p>;const conversation=user?.id!==id?inbox.data?.conversations.find(c=>[c.user_a,c.user_b].includes(id)):undefined;
