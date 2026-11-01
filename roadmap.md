@@ -87,3 +87,4 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 - [ ] Feedback de session sans connexion : token appareil anonyme, user_id enregistré si connecté
 - [ ] Programme : heure et lieu du talk sur deux lignes
 - [ ] Titres des conférences affichés entre guillemets
+- [ ] Favoris : migration localStorage -> base à l inscription, puis lecture/écriture en base une fois connecté
