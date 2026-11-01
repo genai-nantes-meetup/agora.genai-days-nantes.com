@@ -5,7 +5,7 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Checkbox} from '@/components/ui/checkbox';
 import {useI18n} from '@/lib/i18n';
-import {emptyProfile,normalizeLinkedIn,profileSchema,intentions,type ProfileInput} from '@/lib/networking';
+import {emptyProfile,normalizeLinkedIn,profileSchema,onboardingSchema,intentions,type ProfileInput} from '@/lib/networking';
 import {enrichLinkedIn} from '@/lib/phase4/enrichment.functions';
 import {fillEmpty} from '@/lib/phase4/rules';
 import {AiProfileFields} from './AiProfileFields';
