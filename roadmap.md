@@ -2,6 +2,8 @@
 
 Current tasks:
 
+- [ ] Corriger l’erreur au clic sur Accepter dans Messages et vérifier le parcours connecté
+
 - [x] Retirer le badge speaker de Maxime Pitussi en base, et corriger l'attribution automatique (LinkedIn vides considérés comme identiques) pour que le badge ne revienne pas
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field
 - [x] Participant page: visible contact request button below the profile header
