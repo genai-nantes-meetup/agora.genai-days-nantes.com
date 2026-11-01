@@ -112,6 +112,8 @@
   "form.goals": "What brings you here",
   "form.next": "Continue",
   "form.previous": "Previous",
+  "form.skip": "Skip",
+  "form.linkedinHandle": "first-last",
   "form.finish": "Create my profile",
   "form.save": "Save",
   "form.edit": "Edit",
