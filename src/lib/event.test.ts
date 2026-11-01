@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildIcs, currentOrNext, googleCalendarUrl, office365CalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
+import { buildIcs, currentOrNext, displayTitle, googleCalendarUrl, office365CalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
 
 const s = (o: Partial<Session>): Session => ({
   id: "x", title: "T", format: "talk", track: "tech", startTime: "09:40", durationMinutes: 40, room: null, ...o,
