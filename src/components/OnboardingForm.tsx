@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import {useState,useRef,useEffect} from 'react';
 import {Link} from '@tanstack/react-router';
 import {useServerFn} from '@tanstack/react-start';
@@ -30,7 +31,7 @@ export function OnboardingForm({initial,initialAvatar=null,busy,onSubmit}:{initi
   if(step===0){
    if(!/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(value.linkedin_url))){setError(true);return;}
    setLoading(true);try{const result=await prefill({data:{linkedin_url:value.linkedin_url}});if(result.success&&result.profile&&typeof result.profile==='object'&&!Array.isArray(result.profile))setValue(old=>fillEmpty(old,result.profile as Partial<ProfileInput>));if(result.success&&result.avatar&&!photo)setAvatar(result.avatar);}catch{/* skip silently */}finally{setLoading(false);}
-   setStep(1);
+   setStep(1);track('onboarding_step_completed',{step:1});
    return;
   }
   const parsed=onboardingSchema.safeParse({...value,lang,consent});

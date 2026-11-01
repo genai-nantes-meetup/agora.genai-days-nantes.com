@@ -229,6 +229,8 @@
   "legal.8.body": "The application is for professional and respectful exchanges. Harassment, abusive or discriminatory remarks and mass sending of identical messages are prohibited. Each user can block or report an account. The organizing team reviews reports and may suspend an account without notice.",
   "legal.9.heading": "Changes.",
   "legal.9.body": "NaoMakers may update this page. The date of the last update appears below.",
+  "legal.10.heading": "Audience measurement.",
+  "legal.10.body": "We use PostHog (product analytics, through our own relay server hogpost.naomakers.com) and Google Analytics (Google). They receive page views and usage events (for example: session liked, message sent, filter used), with technical identifiers and measurement cookies. For signed-in users, PostHog also receives your account ID, email, first and last name and closed-choice profile details (status, professional tags, intentions, AI experience, company size and sector, city, language). Google Analytics never receives an account ID or email. The content of your messages, your introduction text and your feedback text are never sent. These services are active for everyone as soon as the application opens, without a consent banner. To object, write to [NaoMakers GDPR email address] or block these services in your browser; the application remains fully usable.",
   "ai.tags": "Suggest tags",
   "ai.pitch": "Suggest an introduction",
   "ai.unavailable": "Suggestion unavailable. You can enter the details yourself.",

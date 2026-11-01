@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { groupSponsors, type Sponsor, type SponsorTier } from "@/lib/event";
@@ -20,14 +21,14 @@ export const Route = createFileRoute("/sponsors/")({
   component: SponsorsPage,
 });
 
-function WebsiteLink({ url }: { url: string }) {
+function WebsiteLink({ url, id, tier }: { url: string; id: string; tier: string }) {
   const { t } = useI18n();
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) => { e.stopPropagation(); track('sponsor_link_clicked', { sponsor_id: id, tier }); }}
       className="relative z-10 inline-flex items-center gap-1 text-sm font-bold text-secondary underline-offset-2 hover:underline"
     >
       {t("sponsors.visit")} <ExternalLink className="size-3.5" />
@@ -52,7 +53,7 @@ function SponsorCard({ s, tier }: { s: Sponsor; tier: SponsorTier }) {
         )}
         {s.website && (
           <div className="mt-2">
-            <WebsiteLink url={s.website} />
+            <WebsiteLink url={s.website} id={s.id} tier={tier} />
           </div>
         )}
       </div>

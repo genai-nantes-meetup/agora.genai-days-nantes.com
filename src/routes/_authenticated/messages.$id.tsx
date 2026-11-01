@@ -1,3 +1,6 @@
+import {track} from '@/lib/analytics';
+import {lengthBucket} from '@/lib/analytics-rules';
+import { useTrackView } from '@/hooks/use-track-view';
 import {createFileRoute,Link} from '@tanstack/react-router';
 import {useQuery} from '@tanstack/react-query';
 import {lazy,Suspense,useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
@@ -32,7 +35,7 @@ function ConversationPage(){
  const [messages,setMessages]=useState<Local[]>([]);const [reactions,setReactions]=useState<ReactionRow[]>([]);const [quoted,setQuoted]=useState<Record<string,ChatMessage>>({});
  const [otherRead,setOtherRead]=useState<string|null>(null);const [typing,setTyping]=useState(false);
  const [loaded,setLoaded]=useState(false);const [loadFailed,setLoadFailed]=useState(false);const [hasMore,setHasMore]=useState(false);const [loadingOlder,setLoadingOlder]=useState(false);
- const [text,setText]=useState('');const [replyTo,setReplyTo]=useState<ChatMessage|null>(null);const [editing,setEditing]=useState<ChatMessage|null>(null);
+ const [text,setText]=useState('');const fromIcebreaker=useRef(false);useTrackView('conversation_opened',{conversation_id:id});const [replyTo,setReplyTo]=useState<ChatMessage|null>(null);const [editing,setEditing]=useState<ChatMessage|null>(null);
  const [active,setActive]=useState<string|null>(null);const [closed,setClosed]=useState(messagingReadOnly());const [notice,setNotice]=useState<string|null>(null);
  const [pickerOpen,setPickerOpen]=useState(false);const [finePointer,setFinePointer]=useState(false);const [highlight,setHighlight]=useState<string|null>(null);
  const channelRef=useRef<RealtimeChannel|null>(null);const messagesRef=useRef<Local[]>([]);messagesRef.current=messages;
@@ -87,24 +90,25 @@ function ConversationPage(){
  const attempt=useCallback(async(m:Local)=>{
   try{const r=await sendFn({data:{id:m.id,conversationId:id,body:m.body,replyTo:m.reply_to_id}});
    if(r.ok){merge([r.message]);return;}
-   if(r.code!=='Unavailable'){setMessages(old=>old.map(x=>x.id===m.id?{...x,status:'failed',error:r.code}:x));if(r.code==='ReadOnly')setClosed(true);return;}
+   if(r.code!=='Unavailable'){track('message_send_failed',{conversation_id:id});setMessages(old=>old.map(x=>x.id===m.id?{...x,status:'failed',error:r.code}:x));if(r.code==='ReadOnly')setClosed(true);return;}
   }catch{/* network: retry below */}
   const started=m.firstTry??Date.now();
-  if(Date.now()-started>=SEND_RETRY_GIVE_UP_MS){setMessages(old=>old.map(x=>x.id===m.id?{...x,status:'failed'}:x));return;}
+  if(Date.now()-started>=SEND_RETRY_GIVE_UP_MS){track('message_send_failed',{conversation_id:id});setMessages(old=>old.map(x=>x.id===m.id?{...x,status:'failed'}:x));return;}
   setTimeout(()=>{const current=messagesRef.current.find(x=>x.id===m.id);if(current?.status==='sending')void attempt(current);},Math.min(8000,1000*2**Math.floor((Date.now()-started)/4000)));
  },[id,sendFn,merge]);
 
  function submit(bodyOverride?:string){
   const body=(bodyOverride??text).trim();if(!body||closed||messagingReadOnly())return;
-  if(editing&&bodyOverride===undefined){const target=editing;setEditing(null);setText('');void supabase.rpc('edit_message',{p_id:target.id,p_body:body}).then(({data,error})=>{if(error||!data)setNotice(t('messages.actionFailed'));else merge([data as ChatMessage]);});return;}
+  if(editing&&bodyOverride===undefined){const target=editing;setEditing(null);setText('');void supabase.rpc('edit_message',{p_id:target.id,p_body:body}).then(({data,error})=>{if(error||!data)setNotice(t('messages.actionFailed'));else{track('message_edited',{conversation_id:id});merge([data as ChatMessage]);}});return;}
   const m:Local={id:crypto.randomUUID(),conversation_id:id,sender_id:me,body,reply_to_id:replyTo?.id??null,created_at:new Date().toISOString(),edited_at:null,deleted_at:null,status:'sending',firstTry:Date.now()};
+  track('message_sent',{conversation_id:id,is_reply:!!replyTo,length_bucket:lengthBucket(body.length),from_icebreaker:fromIcebreaker.current||bodyOverride!==undefined?'yes':'no'});fromIcebreaker.current=false;
   if(replyTo)setQuoted(old=>({...old,[replyTo.id]:replyTo}));
   scrollMode.current='bottom';setMessages(old=>[...old,m]);if(bodyOverride===undefined)setText('');setReplyTo(null);setPickerOpen(false);void attempt(m);
  }
- function retry(m:Local){const fresh={...m,status:'sending' as const,firstTry:Date.now(),error:undefined};setMessages(old=>old.map(x=>x.id===m.id?fresh:x));void attempt(fresh);}
+ function retry(m:Local){track('message_retried',{conversation_id:id});const fresh={...m,status:'sending' as const,firstTry:Date.now(),error:undefined};setMessages(old=>old.map(x=>x.id===m.id?fresh:x));void attempt(fresh);}
  function onType(value:string){setText(value);const now=Date.now();if(value&&now-lastTyping.current>2000&&channelRef.current){lastTyping.current=now;void channelRef.current.send({type:'broadcast',event:'typing',payload:{user:me}});}}
- function react(m:ChatMessage,emoji:string){setActive(null);const mine=reactions.some(r=>r.message_id===m.id&&r.user_id===me&&r.emoji===emoji);setReactions(old=>mine?old.filter(r=>!(r.message_id===m.id&&r.user_id===me&&r.emoji===emoji)):[...old,{message_id:m.id,user_id:me,emoji}]);void supabase.rpc('toggle_reaction',{p_message_id:m.id,p_emoji:emoji}).then(({error})=>{if(error){void loadReactions([m.id]);setNotice(t('messages.actionFailed'));}});}
- function remove(m:ChatMessage){setActive(null);if(!window.confirm(t('messages.deleteConfirm')))return;void supabase.rpc('delete_message',{p_id:m.id}).then(({data,error})=>{if(error||!data)setNotice(t('messages.actionFailed'));else merge([data as ChatMessage]);});}
+ function react(m:ChatMessage,emoji:string){setActive(null);const mine=reactions.some(r=>r.message_id===m.id&&r.user_id===me&&r.emoji===emoji);setReactions(old=>mine?old.filter(r=>!(r.message_id===m.id&&r.user_id===me&&r.emoji===emoji)):[...old,{message_id:m.id,user_id:me,emoji}]);track('reaction_toggled',{conversation_id:id,emoji,action:mine?'removed':'added'});void supabase.rpc('toggle_reaction',{p_message_id:m.id,p_emoji:emoji}).then(({error})=>{if(error){void loadReactions([m.id]);setNotice(t('messages.actionFailed'));}});}
+ function remove(m:ChatMessage){setActive(null);if(!window.confirm(t('messages.deleteConfirm')))return;void supabase.rpc('delete_message',{p_id:m.id}).then(({data,error})=>{if(error||!data)setNotice(t('messages.actionFailed'));else{track('message_deleted',{conversation_id:id});merge([data as ChatMessage]);}});}
  function startEdit(m:ChatMessage){setActive(null);setReplyTo(null);setEditing(m);setText(m.body);inputRef.current?.focus();}
  function jumpTo(target:string){const el=document.getElementById(`m-${target}`);if(!el)return;el.scrollIntoView({block:'center',behavior:'smooth'});setHighlight(target);setTimeout(()=>setHighlight(null),1500);}
  const findMessage=(mid:string)=>messages.find(m=>m.id===mid)??quoted[mid];
@@ -121,14 +125,14 @@ function ConversationPage(){
    {loadFailed&&<div className="py-10 text-center"><p className="mb-3 text-sm text-destructive">{t('messages.unavailable')}</p><Button variant="outline" onClick={()=>void catchUp().then(()=>{setLoadFailed(false);setLoaded(true);})}>{t('retry')}</Button></div>}
    {!loaded&&!loadFailed&&<p className="py-16 text-center text-sm text-muted-foreground">{t('loading')}</p>}
    {loaded&&!messages.length&&<p className="py-10 text-center text-sm text-muted-foreground">{t('messages.first')}</p>}
-   {loaded&&!messages.length&&!closed&&<Icebreakers id={id} onChoose={v=>{setText(v);inputRef.current?.focus();}} onSend={body=>submit(body)}/>}
+   {loaded&&!messages.length&&!closed&&<Icebreakers id={id} onChoose={v=>{fromIcebreaker.current=true;setText(v);inputRef.current?.focus();}} onSend={body=>submit(body)}/>}
    {messages.map((m,i)=>{const prev=messages[i-1];const mine=m.sender_id===me;const grouped=sameGroup(prev,m);const newDay=!prev||dayKey(prev.created_at)!==dayKey(m.created_at);const quote=m.reply_to_id?findMessage(m.reply_to_id):undefined;const counts=REACTIONS.map(e=>({e,n:reactions.filter(r=>r.message_id===m.id&&r.emoji===e).length,mineR:reactions.some(r=>r.message_id===m.id&&r.emoji===e&&r.user_id===me)})).filter(x=>x.n>0);const modifiable=!m.status&&canModifyMessage(m,me);const actionable=!m.status&&!m.deleted_at&&!closed;
     return <div key={m.id}>
      {newDay&&<p className="my-4 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground">{day(m.created_at)}</p>}
      <div id={`m-${m.id}`} data-msg className={`group relative flex ${mine?'justify-end':'justify-start'} ${grouped&&!newDay?'mt-1':'mt-3'}`}
       onTouchStart={()=>{if(!actionable)return;longPress.current=setTimeout(()=>setActive(m.id),450);}} onTouchEnd={()=>{if(longPress.current)clearTimeout(longPress.current);}} onTouchMove={()=>{if(longPress.current)clearTimeout(longPress.current);}} onContextMenu={e=>{if(actionable&&!finePointer){e.preventDefault();setActive(m.id);}}}>
       <div className={`max-w-[85%] ${mine?'items-end':'items-start'} flex flex-col`}>
-       <div className={`rounded-md px-4 py-2.5 transition-shadow ${highlight===m.id?'ring-2 ring-primary':''} ${m.deleted_at?'border border-dashed bg-transparent text-muted-foreground':mine?'bg-secondary text-secondary-foreground':'bg-surface'} ${m.status==='sending'?'opacity-70':''}`}>
+       <div className={`ph-no-capture rounded-md px-4 py-2.5 transition-shadow ${highlight===m.id?'ring-2 ring-primary':''} ${m.deleted_at?'border border-dashed bg-transparent text-muted-foreground':mine?'bg-secondary text-secondary-foreground':'bg-surface'} ${m.status==='sending'?'opacity-70':''}`}>
         {quote&&!m.deleted_at&&<button type="button" onClick={()=>jumpTo(quote.id)} className="mb-1.5 block w-full border-l-2 border-current pl-2 text-left text-xs opacity-80"><span className="font-bold">{nameOf(quote.sender_id)}</span><span className="line-clamp-2 break-words">{quote.deleted_at?t('messages.deleted'):quote.body}</span></button>}
         <p className={`whitespace-pre-wrap break-words text-sm [overflow-wrap:anywhere] ${m.deleted_at?'italic':'font-normal'}`}>{m.deleted_at?t('messages.deleted'):m.body}</p>
         <p className="mt-1 text-right text-[10px] opacity-75">{m.edited_at&&!m.deleted_at&&<span>{t('messages.edited')} · </span>}{time(m.created_at)}</p>
@@ -152,10 +156,10 @@ function ConversationPage(){
   {notice&&<p role="alert" className="mb-3 text-sm text-destructive" onClick={()=>setNotice(null)}>{notice}</p>}
   {closed?<p className="border-t pt-4 text-sm text-muted-foreground">{t('messages.closed')}</p>:
   <form className="sticky bottom-16 border-t bg-background py-3 lg:bottom-0" onSubmit={e=>{e.preventDefault();submit();}}>
-   {(replyTo||editing)&&<div className="mb-2 flex items-start gap-2 border-l-2 border-primary pl-2 text-xs"><div className="min-w-0 flex-1"><p className="font-bold">{editing?t('messages.editing'):t('messages.replyingTo',{name:nameOf(replyTo!.sender_id)})}</p><p className="line-clamp-1 break-words text-muted-foreground">{(editing??replyTo)!.body}</p></div><button type="button" aria-label={t('messages.cancel')} onClick={()=>{if(editing)setText('');setEditing(null);setReplyTo(null);}}><X className="size-4"/></button></div>}
+   {(replyTo||editing)&&<div className="ph-no-capture mb-2 flex items-start gap-2 border-l-2 border-primary pl-2 text-xs"><div className="min-w-0 flex-1"><p className="font-bold">{editing?t('messages.editing'):t('messages.replyingTo',{name:nameOf(replyTo!.sender_id)})}</p><p className="line-clamp-1 break-words text-muted-foreground">{(editing??replyTo)!.body}</p></div><button type="button" aria-label={t('messages.cancel')} onClick={()=>{if(editing)setText('');setEditing(null);setReplyTo(null);}}><X className="size-4"/></button></div>}
    <div className="relative flex items-end gap-2">
     {finePointer&&<div className="relative"><Button type="button" variant="ghost" size="icon" className="size-12" aria-label={t('messages.emoji')} aria-expanded={pickerOpen} onClick={()=>setPickerOpen(v=>!v)}><Smile className="size-5"/></Button>{pickerOpen&&<div className="absolute bottom-14 left-0 z-20"><Suspense fallback={null}><EmojiPicker label={t('messages.emoji')} onPick={e=>{setText(v=>v+e);inputRef.current?.focus();}}/></Suspense></div>}</div>}
-    <Textarea ref={inputRef} aria-label={t('messages.compose')} placeholder={t('messages.compose')} value={text} maxLength={1600} className="min-h-12 resize-none" onChange={e=>onType(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();}else if(e.key==='Escape'&&(editing||replyTo)){setEditing(null);setReplyTo(null);}}}/>
+    <Textarea ref={inputRef} aria-label={t('messages.compose')} placeholder={t('messages.compose')} value={text} maxLength={1600} className="ph-no-capture min-h-12 resize-none" onChange={e=>onType(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();}else if(e.key==='Escape'&&(editing||replyTo)){setEditing(null);setReplyTo(null);}}}/>
     <Button type="submit" size="icon" className="size-12 shrink-0" aria-label={editing?t('messages.saveEdit'):t('messages.send')} disabled={!text.trim()}><Send className="size-5"/></Button>
    </div>
   </form>}

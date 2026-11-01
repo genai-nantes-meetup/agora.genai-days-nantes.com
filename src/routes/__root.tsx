@@ -18,6 +18,7 @@ import { AppShell } from "@/components/AppShell";
 import { setupServiceWorker } from "@/lib/pwa";
 import { AuthProvider } from "@/lib/auth";
 import { MessagingProvider } from "@/lib/messaging-client";
+import { Analytics } from "@/components/Analytics";
 
 function NotFoundComponent() {
   return (
@@ -92,6 +93,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,800;1,600;1,800&family=Special+Elite&display=swap",
       },
     ],
+    scripts: [
+      // Google Analytics 4: default page views + enhanced measurement (history changes) only. No custom events, no user id.
+      { src: "https://www.googletagmanager.com/gtag/js?id=G-T72WP9M95S", async: true },
+      {
+        children:
+          "try{window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','G-T72WP9M95S');}catch(e){}",
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -124,6 +133,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <AuthProvider>
+        <Analytics />
         <MessagingProvider>
         <AppShell>
           <Outlet />

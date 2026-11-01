@@ -32,3 +32,4 @@
 - Purge runs in bounded leased batches, checks its dated paused control before destructive stages, preserves two verified designated admins, and is never executed destructively in tests.
 
 - App emails go only through the scaffolded Lovable send helper from src/lib/app-emails.server.ts, each send claimed by a database timestamp first, because this guarantees deduplication and a single provider.
+- Product analytics go only through src/lib/analytics.ts (`track`, typed event map, browser-only, never throws) with pure helpers in src/lib/analytics-rules.ts; event props carry ids and enums only, and private free text is marked `ph-no-capture`, because analytics must never leak user-typed content or break the app.

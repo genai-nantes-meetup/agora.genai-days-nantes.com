@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { currentOrNext, parisNow, toMinutes, type Session } from "@/lib/event";
@@ -133,7 +134,7 @@ function ProgramPage() {
               key={f.id}
               type="button"
               aria-pressed={filter === f.id}
-              onClick={() => setFilter(f.id)}
+              onClick={() => { setFilter(f.id); if (f.id === 'mine') track('my_sessions_viewed'); else track('program_filter_changed', { track: f.id }); }}
               className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${filter === f.id ? "border-primary bg-primary text-primary-foreground" : "bg-card"}`}
             >
               {f.label}

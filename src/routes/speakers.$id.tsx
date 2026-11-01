@@ -1,3 +1,4 @@
+import { useTrackView } from '@/hooks/use-track-view';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
@@ -39,6 +40,7 @@ function SpeakerPage() {
   const { data, isPending, isError, refetch } = useSpeakers();
   const { data: sessionsData } = useSessions();
   const { likes, toggle } = useLikes();
+  useTrackView('speaker_viewed', { speaker_id: id });
   const { user } = useAuth();
   const members = useQuery({ ...membersOptions(), enabled: !!user });
   const member = members.data?.find(p => p.profile_status?.speaker_id === id);

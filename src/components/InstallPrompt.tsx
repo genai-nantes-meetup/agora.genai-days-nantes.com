@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { Share, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
@@ -30,6 +31,7 @@ export function InstallPrompt() {
     try {
       if (!localStorage.getItem(IOS_KEY)) {
         setIos(true);
+        track("pwa_install_prompt_shown");
         localStorage.setItem(IOS_KEY, "1"); // shown only once
       }
     } catch {
@@ -47,6 +49,7 @@ export function InstallPrompt() {
         /* ignore */
       }
       setAndroidEvent(e);
+      track("pwa_install_prompt_shown");
       return true;
     };
 

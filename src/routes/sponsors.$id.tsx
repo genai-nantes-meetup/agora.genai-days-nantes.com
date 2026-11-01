@@ -1,3 +1,5 @@
+import { useTrackView } from '@/hooks/use-track-view';
+import {track} from '@/lib/analytics';
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 import { useSponsors } from "@/lib/data";
@@ -23,6 +25,8 @@ function SponsorPage() {
   const { id } = Route.useParams();
   const { t } = useI18n();
   const { data, offlineAt, isPending, isError, refetch } = useSponsors();
+  const tier = data?.sponsors.find((x) => x.id === id)?.tier ?? undefined;
+  useTrackView('sponsor_viewed', { sponsor_id: id, tier: tier ?? undefined }, !!data);
 
   if (isPending) return <LoadingView />;
   if (isError || !data) return <ErrorView onRetry={() => refetch()} />;
@@ -46,12 +50,12 @@ function SponsorPage() {
       {s.description && <p className="whitespace-pre-line leading-relaxed">{s.description}</p>}
       <div className="flex flex-wrap gap-3">
         {s.website && (
-          <a href={s.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground">
+          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground">
             {t("sponsors.visit")} <ExternalLink className="size-4" />
           </a>
         )}
         {s.pageUrl && (
-          <a href={s.pageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border px-5 py-2.5 text-sm font-bold">
+          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.pageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border px-5 py-2.5 text-sm font-bold">
             {t("moreInfo")} <ExternalLink className="size-4" />
           </a>
         )}

@@ -24,3 +24,6 @@ Current tasks:
 - [x] Participant directory grid: 2 columns on mobile, 3 on tablet, 4 on desktop
 - [x] Directory filters: status filter removed (keyword, tags, intentions, AI level, size, sector remain)
 
+
+- [x] Analytics: PostHog (proxy hogpost.naomakers.com, no session replay, identify/reset, named events, ph-no-capture on private text) and GA4 (default page views only); /donnees updated; SW never intercepts analytics hosts.
+- [ ] User: replace the [adresse e-mail RGPD] placeholders on /donnees (now also used for analytics objections).

@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import {useEffect,useState} from 'react';
 import {useServerFn} from '@tanstack/react-start';
 import {useQuery} from '@tanstack/react-query';
@@ -57,7 +58,7 @@ export function SessionFeedback({id,date,time}:{id:string;date:string;time:strin
     setFailed(false);
     const payload={session_id:id,choices:feedbackKeys.filter(k=>choices.includes(k)),comment};
     const req=user?save({data:payload}):saveAnon({data:{...payload,anon_token:deviceToken()}});
-    void req.then(()=>q.refetch()).catch(()=>setFailed(true)).finally(()=>setBusy(false));
+    void req.then(()=>{track('session_feedback_submitted',{session_id:id,checkboxes:payload.choices,has_text:comment.trim()?'yes':'no'});return q.refetch();}).catch(()=>setFailed(true)).finally(()=>setBusy(false));
   };
   return(
     <section className="space-y-5 border-t pt-6">
@@ -74,7 +75,7 @@ export function SessionFeedback({id,date,time}:{id:string;date:string;time:strin
         </div>
         {open?(
           <form className="space-y-3" onSubmit={submit}>
-            <Textarea aria-label={t('feedback.comment')} placeholder={t('feedback.comment')} value={comment} maxLength={500} onChange={e=>setComment(e.target.value)}/>
+            <Textarea className="ph-no-capture" aria-label={t('feedback.comment')} placeholder={t('feedback.comment')} value={comment} maxLength={500} onChange={e=>setComment(e.target.value)}/>
             <p className="text-right text-xs text-muted-foreground">{comment.length}/500</p>
             <Button disabled={busy}>{t(busy?'loading':'form.save')}</Button>
           </form>
@@ -84,7 +85,7 @@ export function SessionFeedback({id,date,time}:{id:string;date:string;time:strin
           {q.data?.comments.filter(c=>!!c.comment).map(c=>(
             <article key={c.user_id??`${c.updated_at}-${c.comment.slice(0,20)}`} className="py-4">
               <p className="font-display text-xl font-bold">{c.first_name||c.last_name?`${c.first_name} ${c.last_name}`.trim():t('feedback.anonymous')}</p>
-              <p className="mt-1 whitespace-pre-wrap break-words text-sm font-normal">{c.comment}</p>
+              <p className="ph-no-capture mt-1 whitespace-pre-wrap break-words text-sm font-normal">{c.comment}</p>
             </article>
           ))}
         </div>

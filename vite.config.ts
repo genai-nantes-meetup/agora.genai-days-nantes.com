@@ -29,6 +29,9 @@ export default defineConfig({
           cleanupOutdatedCaches: true,
           clientsClaim: true,
           skipWaiting: true,
+          // Analytics hosts (hogpost.naomakers.com, www.googletagmanager.com, www.google-analytics.com and
+          // *.google-analytics.com) deliberately match no route below and are not precached, so the SW
+          // never intercepts them: requests go straight to the network.
           runtimeCaching: [
             {
               urlPattern: ({ request, url }) => request.mode === "navigate" && (url.pathname === "/" || url.pathname === "/plan" || url.pathname === "/donnees" || /^\/(sessions|speakers|sponsors)(\/|$)/.test(url.pathname)),
