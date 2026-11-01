@@ -14,7 +14,7 @@ export async function runSessionFeedbackPushes(){
   const {data:subs}=await supabaseAdmin.from('push_subscriptions').select('user_id');const users=[...new Set((subs??[]).map(r=>r.user_id))];
   const active=(await Promise.all(users.map(async u=>{const {data}=await supabaseAdmin.rpc('is_active_member',{uid:u});return data?u:null;}))).filter(Boolean) as string[];
   const body=fr['push.rateBody'].replace('{title}',displayTitle(s));
-  await Promise.allSettled(active.map(u=>pushToUser(u,{title:fr['push.rateTitle'],body,url:`/sessions/${s.id}?from_push=session_feedback#feedback`,tag:`feedback-${s.id}`})));
+  await Promise.allSettled(active.map(u=>pushToUser(u,{title:fr['push.rateTitle'],body,url:`/sessions/${s.id}?from_push=session_feedback`,tag:`feedback-${s.id}`})));
   await supabaseAdmin.from('session_feedback_pushes').update({recipients:active.length}).eq('session_id',s.id);sent.push(s.id);
  }
  return {sent};
