@@ -2,6 +2,9 @@
 
 Current tasks:
 
+- [ ] Fix notification activation error and verify signed-in activation.
+- [ ] Delete all invitation requests once the requested type is clarified.
+
 - [x] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; matching existing account updated and verified in directory and participant page
 
 - [x] Replace Twilio with in-house messaging (Postgres + Realtime): accept flow, send/edit/delete/reactions/reply/seen/typing, push by sender name with presence suppression, 30-minute unread digest email, purge/delete/block cleaned of Twilio. Twilio no longer blocks acceptance.
