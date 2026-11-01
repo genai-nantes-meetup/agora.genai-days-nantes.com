@@ -2,6 +2,7 @@
 
 Current tasks:
 
+- [ ] Diagnose the new mobile push activation failure: awaiting phone/browser and whether opened from home-screen app or browser; sandbox reproduces only Chromium push-service AbortError, not the user's device failure.
 - [x] Harden mobile notification opening: focus before navigation, recover from stale windows and failed discovery, restrict destination to app messaging/networking paths; worker regression tests added.
 - [ ] Verify notification tap opens the installed app on a physical phone after publishing: sandbox cannot reproduce OS-level notification activation.
 - [x] Harden notification activation: permission requested within click gesture, wait for worker activation, distinguish blocked permission from temporary errors; 19 targeted tests pass and signed-in failure handling verified.
