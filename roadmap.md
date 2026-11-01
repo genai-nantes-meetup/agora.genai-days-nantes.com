@@ -1,9 +1,6 @@
 # Roadmap
 
-- [ ] Back buttons: link pointer cursor (done in BackLink)
-- [ ] Profile edit page: job title and company missing — diagnose why onboarding/edits don't persist them (DB shows sector/tags saved but job_title/company/company_size/pitch/ai_level null)
-- [ ] Profile edit page: remove "Personnes bloquées" section and "My data" link
-- [ ] Remove user-blocking feature from UI (block menu on member page, blocked list); keep backend tables/policies
-- [ ] Profile edit page: remove interface language editor (already in header)
-- [ ] Profile edit page: show all fields on one page without "Continuer" steps (single scroll, keep Save)
-
+- [x] Back buttons: link pointer cursor (BackLink gets cursor-pointer)
+- [x] Profile edit page: single page with all fields, no "Continuer" steps; autosave no longer drops the last edits when a save is already in flight (job title/company now persist)
+- [x] Profile edit page: removed "Personnes bloquées" section, "My data" link and interface language editor
+- [x] Removed user-blocking UI (block menu on participant page); backend tables/policies kept for existing data
