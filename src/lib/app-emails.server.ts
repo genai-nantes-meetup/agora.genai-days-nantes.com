@@ -21,7 +21,7 @@ export async function sendInvitation(id: string, opts: { resend?: boolean } = {}
   if (error) throw new Error('Unavailable');
   if (!inv) return { sent: false as const, reason: 'already_sent' };
   try {
-    const r = await send('invitation', inv.email, { lang: 'fr', firstName: inv.first_name || undefined, url: `${APP_URL}/join?token=${inv.token}` }, `invitation-${inv.id}-${opts.resend ? now : 'first'}`);
+    const r = await send('invitation', inv.email, { lang: 'fr', firstName: inv.first_name || undefined, url: `${APP_URL}/join?token=${inv.token}&utm_source=email&utm_campaign=invitation` }, `invitation-${inv.id}-${opts.resend ? now : 'first'}`);
     return r.sent ? { sent: true as const } : { sent: false as const, reason: r.reason };
   } catch (e) {
     if (!opts.resend) await db.from('invitations').update({ invitation_sent_at: null }).eq('id', id).eq('invitation_sent_at', now);
@@ -66,7 +66,7 @@ export async function emailConnectionRequest(id: string) {
   const sender = get(r.requester_id), recipient = get(r.recipient_id);
   if (!sender || !recipient) return;
   try {
-    await send('connection-request', recipient.email, { lang: emailLang(recipient.lang), senderName: `${sender.first_name} ${sender.last_name}`.trim(), url: `${APP_URL}/messages` }, `connection-request-${r.id}`);
+    await send('connection-request', recipient.email, { lang: emailLang(recipient.lang), senderName: `${sender.first_name} ${sender.last_name}`.trim(), url: `${APP_URL}/messages?utm_source=email&utm_campaign=connection-request` }, `connection-request-${r.id}`);
   } catch (e) {
     await db.from('connection_requests').update({ request_email_sent_at: null }).eq('id', id).eq('request_email_sent_at', now);
     throw e;
@@ -83,7 +83,7 @@ export async function emailConnectionAccepted(requestId: string, conversationId:
   const requester = get(r.requester_id), accepter = get(r.recipient_id);
   if (!requester || !accepter) return;
   try {
-    await send('connection-accepted', requester.email, { lang: emailLang(requester.lang), recipientName: `${accepter.first_name} ${accepter.last_name}`.trim(), url: `${APP_URL}/messages/${conversationId}` }, `connection-accepted-${r.id}`);
+    await send('connection-accepted', requester.email, { lang: emailLang(requester.lang), recipientName: `${accepter.first_name} ${accepter.last_name}`.trim(), url: `${APP_URL}/messages/${conversationId}?utm_source=email&utm_campaign=connection-accepted` }, `connection-accepted-${r.id}`);
   } catch (e) {
     await db.from('connection_requests').update({ accepted_email_sent_at: null }).eq('id', requestId).eq('accepted_email_sent_at', now);
     throw e;
@@ -110,7 +110,7 @@ export async function runUnreadDigests(limit = 50) {
     if (!recipient) { skipped++; continue; }
     const items = rows.map(r => { const s = get(r.sender_id); return { senderName: s ? `${s.first_name} ${s.last_name}`.trim() : undefined, unread: r.unread }; });
     try {
-      await send('unread-digest', recipient.email, { lang: emailLang(recipient.lang), items, url: `${APP_URL}/messages` }, `unread-digest-${recipientId}-${new Date().toISOString().slice(0, 16)}`);
+      await send('unread-digest', recipient.email, { lang: emailLang(recipient.lang), items, url: `${APP_URL}/messages?utm_source=email&utm_campaign=unread-digest` }, `unread-digest-${recipientId}-${new Date().toISOString().slice(0, 16)}`);
       sent++;
     } catch {
       // Release the claim so the next run retries.
