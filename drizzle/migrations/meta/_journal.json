@@ -64,6 +64,13 @@
       "when": 1793550044324,
       "tag": "0008_anonymous_session_feedback",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793550145701,
+      "tag": "0009_create_session_likes",
+      "breakpoints": true
     }
   ]
 }
