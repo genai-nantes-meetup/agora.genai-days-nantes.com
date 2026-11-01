@@ -96,7 +96,7 @@ export function initAnalytics(lang: string): Promise<PostHog | null> {
         mask_all_text: false,
         mask_all_element_attributes: false,
       });
-      superProps = { lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env['VITE_APP_VERSION'] ?? 'web' };
+      superProps = { lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env['VITE_APP_VERSION'] ?? 'web', ...superProps };
       posthog.register(superProps);
       ph = posthog;
       for (const fn of queue.splice(0)) { try { fn(posthog); } catch { /* silent */ } }
