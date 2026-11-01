@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "GenAI Days Nantes"
+const SITE_NAME = "GenAI Days Agora"
 const SENDER_DOMAIN = "notify.hey.genai-days-nantes.com"
 const ROOT_DOMAIN = "hey.genai-days-nantes.com"
 const FROM_DOMAIN = "hey.genai-days-nantes.com"

@@ -7,14 +7,14 @@ const copy = {
   fr: {
     subject: (n: string) => `${n} souhaite se connecter avec vous`,
     title: 'Nouvelle demande de connexion',
-    body: (n: string) => `${n} vous a envoyé une demande de connexion sur l'app GenAI Days.`,
+    body: (n: string) => `${n} vous a envoyé une demande de connexion sur GenAI Days Agora.`,
     hint: 'Acceptez-la pour ouvrir une conversation.',
     cta: 'Voir la demande',
   },
   en: {
     subject: (n: string) => `${n} would like to connect with you`,
     title: 'New connection request',
-    body: (n: string) => `${n} sent you a connection request on the GenAI Days app.`,
+    body: (n: string) => `${n} sent you a connection request on GenAI Days Agora.`,
     hint: 'Accept it to start a conversation.',
     cta: 'View the request',
   },

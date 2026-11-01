@@ -1,7 +1,7 @@
 {
-  "name": "Programme et meetings - GenAI Days Nantes",
-  "short_name": "GenAI Days",
-  "description": "L'app compagnon des GenAI Days, 17 novembre 2026, Nantes.",
+  "name": "GenAI Days Agora",
+  "short_name": "Agora",
+  "description": "L'app compagnon des GenAI Days.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

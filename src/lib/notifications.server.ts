@@ -16,7 +16,7 @@ export async function notifyMessage(messageId:string){
  const {data:presence}=await supabaseAdmin.from('conversation_presence').select('last_seen_at').eq('conversation_id',c.id).eq('user_id',recipientId).maybeSingle();if(pushSuppressed(presence?.last_seen_at))return;
  const {data:profiles}=await supabaseAdmin.from('profiles').select('user_id,first_name,last_name,lang').in('user_id',[m.sender_id,recipientId]);const sender=profiles?.find(p=>p.user_id===m.sender_id);const recipient=profiles?.find(p=>p.user_id===recipientId);if(!sender||!recipient)return;
  const dict=fr;const name=`${sender.first_name} ${sender.last_name}`.trim();
- await pushToUser(recipientId,{title:'GenAI Days',body:dict['messages.pushBody'].replace('{name}',name),url:`/messages/${c.id}?from_push=message`,tag:`conversation-${c.id}`});
+ await pushToUser(recipientId,{title:'Agora',body:dict['messages.pushBody'].replace('{name}',name),url:`/messages/${c.id}?from_push=message`,tag:`conversation-${c.id}`});
 }
 export async function notifyRequest(id:string){
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:r}=await supabaseAdmin.from('connection_requests').select('*').eq('id',id).single();if(!r||r.cancelled_at||r.status!=='pending')return;
