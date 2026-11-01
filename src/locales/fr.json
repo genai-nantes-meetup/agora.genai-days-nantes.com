@@ -1,5 +1,5 @@
 {
-  "appName": "GenAI Days Nantes",
+  "appName": "GenAI Days Agora",
   "nav.networking": "Networking",
   "nav.messages": "Messages",
   "connection.sent": "Demande envoyée",
@@ -89,7 +89,7 @@
   "plan.hint": "Pincez ou double-touchez pour zoomer.",
   "plan.reset": "Réinitialiser le zoom",
   "install.cta": "Installer l'app",
-  "install.body": "Ajoutez GenAI Days Nantes à votre écran d’accueil.",
+  "install.body": "Ajoutez GenAI Days Agora à votre écran d’accueil.",
   "install.ios": "Pour installer l'app : touchez Partager, puis « Sur l'écran d'accueil ».",
   "close": "Fermer",
   "offline": "Hors connexion : données enregistrées",
@@ -219,7 +219,7 @@
   "legal.0.heading": "Qui traite vos données.",
   "legal.0.body": "NaoMakers, organisateur de GenAI Days 2026, est responsable du traitement. Contact : [adresse e-mail RGPD de NaoMakers], [adresse postale].",
   "legal.1.heading": "Pourquoi.",
-  "legal.1.body": "L'application vous permet de consulter le programme, de retrouver les autres participant·es et d'échanger avec elles et eux pendant l'événement du 17 novembre 2026. Vos données servent uniquement à ce service.",
+  "legal.1.body": "L'application GenAI Days Agora, éditée par NaoMakers pour GenAI Days 2026, vous permet de consulter le programme, de retrouver les autres participant·es et d'échanger avec elles et eux pendant l'événement du 17 novembre 2026. Vos données servent uniquement à ce service.",
   "legal.2.heading": "Quelles données.",
   "legal.2.body": "Données issues de votre inscription sur Billetweb : nom, prénom, adresse e-mail. Données que vous saisissez ou validez : URL de votre profil LinkedIn, photo, poste, entreprise, taille et secteur de l'entreprise, tags métier, intentions, phrase de présentation, niveau en IA. Données d'usage : demandes de connexion, messages, sessions likées, feedbacks de session. Les champs de profil peuvent être pré-remplis à partir de votre profil LinkedIn public par notre prestataire d'enrichissement. Vous pouvez tous les modifier.",
   "legal.3.heading": "Qui voit quoi.",
@@ -317,5 +317,6 @@
   "messages.emoji": "Emoji",
   "messages.you": "Vous",
   "messages.actionFailed": "L’action n’a pas abouti. Réessayez.",
-  "messages.pushBody": "Nouveau message de {name}"
+  "messages.pushBody": "Nouveau message de {name}",
+  "appShortName": "Agora"
 }

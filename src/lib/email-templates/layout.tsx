@@ -19,7 +19,7 @@ export function Frame({ lang = 'fr', preview, children }: { lang?: string; previ
             {children}
           </Section>
           <Text style={{ fontSize: '12px', color: '#777777', margin: '16px 0 0', textAlign: 'center' }}>
-            GenAI Days Nantes 2026 · NaoMakers
+            GenAI Days Agora · NaoMakers
           </Text>
         </Container>
       </Body>

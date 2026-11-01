@@ -21,7 +21,7 @@ import {messagingReadOnly,mergeMessages,canModifyMessage,REACTIONS,PAGE_SIZE,EDI
 
 const EmojiPicker=lazy(()=>import('@/components/EmojiPicker'));
 
-export const Route=createFileRoute('/_authenticated/messages/$id')({head:()=>({meta:[{title:'Conversation · GenAI Days Nantes'},{name:'description',content:'Votre conversation privée aux GenAI Days.'},{property:'og:title',content:'Conversation · GenAI Days Nantes'},{property:'og:description',content:'Échanges privés entre participant·es.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:ConversationPage});
+export const Route=createFileRoute('/_authenticated/messages/$id')({head:()=>({meta:[{title:'Conversation · GenAI Days Agora'},{name:'description',content:'Votre conversation privée aux GenAI Days.'},{property:'og:title',content:'Conversation · GenAI Days Agora'},{property:'og:description',content:'Échanges privés entre participant·es.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:ConversationPage});
 
 type Local=ChatMessage&{status?:'sending'|'failed'|undefined;firstTry?:number|undefined;error?:string|undefined};
 type ReactionRow={message_id:string;user_id:string;emoji:string};
@@ -80,6 +80,8 @@ function ConversationPage(){
 
  // Scrolling: stick to bottom for new messages, keep position when older ones load.
  useLayoutEffect(()=>{const mode=scrollMode.current;if(mode==='bottom')end.current?.scrollIntoView({block:'end'});else if(mode)window.scrollBy(0,document.documentElement.scrollHeight-mode.height);scrollMode.current=null;},[messages]);
+ // Open on the latest message: keep pinned to the bottom while reactions, quotes and avatars settle, until the person scrolls.
+ useEffect(()=>{if(!loaded)return;const pin=()=>end.current?.scrollIntoView({block:'end'});pin();const ro=new ResizeObserver(pin);ro.observe(document.body);const stop=()=>ro.disconnect();const timer=setTimeout(stop,2000);window.addEventListener('wheel',stop,{once:true});window.addEventListener('touchmove',stop,{once:true});return()=>{clearTimeout(timer);stop();window.removeEventListener('wheel',stop);window.removeEventListener('touchmove',stop);};},[loaded,id]);
  const nearBottom=()=>window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-200;
  useEffect(()=>{if(nearBottom())scrollMode.current='bottom';});
 

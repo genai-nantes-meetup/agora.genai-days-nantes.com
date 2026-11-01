@@ -7,7 +7,7 @@ interface Item { senderName?: string; unread?: number }
 interface Props { lang?: 'fr' | 'en'; items?: Item[]; url?: string }
 const copy = {
   fr: {
-    subject: 'Des messages vous attendent sur GenAI Days',
+    subject: 'Des messages vous attendent sur GenAI Days Agora',
     title: 'Messages non lus',
     intro: 'Vous avez des messages non lus dans ces conversations :',
     line: (n: string, c: number) => `${n} : ${c} message${c > 1 ? 's' : ''} non lu${c > 1 ? 's' : ''}`,
@@ -15,7 +15,7 @@ const copy = {
     someone: 'Un·e participant·e',
   },
   en: {
-    subject: 'Messages are waiting for you on GenAI Days',
+    subject: 'Messages are waiting for you on GenAI Days Agora',
     title: 'Unread messages',
     intro: 'You have unread messages in these conversations:',
     line: (n: string, c: number) => `${n}: ${c} unread message${c > 1 ? 's' : ''}`,

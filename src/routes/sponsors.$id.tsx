@@ -12,9 +12,9 @@ export const Route = createFileRoute("/sponsors/$id")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Sponsor · GenAI Days Nantes" },
+      { title: "Sponsor · GenAI Days Agora" },
       { name: "description", content: "Présentation d'un sponsor des GenAI Days 2026 à Nantes." },
-      { property: "og:title", content: "Sponsor · GenAI Days Nantes" },
+      { property: "og:title", content: "Sponsor · GenAI Days Agora" },
       { property: "og:description", content: "Un des partenaires qui soutiennent les GenAI Days 2026." },
     ],
   }),

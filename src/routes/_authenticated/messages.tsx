@@ -16,9 +16,9 @@ export const Route = createFileRoute("/_authenticated/messages")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Messages · GenAI Days Nantes" },
+      { title: "Messages · GenAI Days Agora" },
       { name: "description", content: "Demandes de connexion et conversations privées aux GenAI Days." },
-      { property: "og:title", content: "Messages · GenAI Days Nantes" },
+      { property: "og:title", content: "Messages · GenAI Days Agora" },
       { property: "og:description", content: "Vos échanges avec les participant·es des GenAI Days." },
     ],
   }),

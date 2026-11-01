@@ -8,9 +8,9 @@ export const Route = createFileRoute("/speakers/")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Speakers · GenAI Days Nantes" },
+      { title: "Speakers · GenAI Days Agora" },
       { name: "description", content: "Les intervenantes et intervenants des GenAI Days 2026 à Nantes." },
-      { property: "og:title", content: "Speakers · GenAI Days Nantes" },
+      { property: "og:title", content: "Speakers · GenAI Days Agora" },
       { property: "og:description", content: "Découvrez les speakers, jurys et modérateurs des GenAI Days." },
     ],
   }),

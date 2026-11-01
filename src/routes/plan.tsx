@@ -17,9 +17,9 @@ export const Route = createFileRoute("/plan")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Plan · GenAI Days Nantes" },
+      { title: "Plan · GenAI Days Agora" },
       { name: "description", content: "Plan de l'Hôtel de Région Pays de la Loire : rez-de-chaussée et 1er étage." },
-      { property: "og:title", content: "Plan · GenAI Days Nantes" },
+      { property: "og:title", content: "Plan · GenAI Days Agora" },
       { property: "og:description", content: "Retrouvez la Salle Loire et l'Hémicycle." },
     ],
   }),

@@ -1,5 +1,5 @@
 {
-  "appName": "GenAI Days Nantes",
+  "appName": "GenAI Days Agora",
   "nav.networking": "Networking",
   "nav.messages": "Messages",
   "connection.sent": "Request sent",
@@ -89,7 +89,7 @@
   "plan.hint": "Pinch or double-tap to zoom.",
   "plan.reset": "Reset zoom",
   "install.cta": "Install the app",
-  "install.body": "Add GenAI Days Nantes to your home screen.",
+  "install.body": "Add GenAI Days Agora to your home screen.",
   "install.ios": "To install the app: tap Share, then “Add to Home Screen”.",
   "close": "Close",
   "offline": "Offline: showing saved data",
@@ -219,7 +219,7 @@
   "legal.0.heading": "Who processes your data.",
   "legal.0.body": "NaoMakers, organizer of GenAI Days 2026, is the data controller. Contact: [NaoMakers GDPR email address], [postal address].",
   "legal.1.heading": "Why.",
-  "legal.1.body": "The application lets you consult the program, find other participants and exchange with them during the event on 17 November 2026. Your data is used only for this service.",
+  "legal.1.body": "The GenAI Days Agora application, published by NaoMakers for GenAI Days 2026, lets you consult the program, find other participants and exchange with them during the event on 17 November 2026. Your data is used only for this service.",
   "legal.2.heading": "What data.",
   "legal.2.body": "Data from your Billetweb registration: last name, first name and email address. Data you enter or validate: LinkedIn profile URL, photo, job title, company, company size and sector, professional tags, intentions, introduction and AI experience. Usage data: connection requests, messages, liked sessions and session feedback. Profile fields may be prefilled from your public LinkedIn profile by our enrichment provider. You can edit all of them.",
   "legal.3.heading": "Who sees what.",
@@ -317,5 +317,6 @@
   "messages.emoji": "Emoji",
   "messages.you": "You",
   "messages.actionFailed": "That didn’t work. Please try again.",
-  "messages.pushBody": "New message from {name}"
+  "messages.pushBody": "New message from {name}",
+  "appShortName": "Agora"
 }
