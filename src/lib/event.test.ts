@@ -1,8 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { buildIcs, currentOrNext, googleCalendarUrl, office365CalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
+import { buildIcs, currentOrNext, displayTitle, googleCalendarUrl, office365CalendarUrl, overlaps, parisNow, resolveRoom, toggleSessionLike, type Session } from "./event";
 
 const s = (o: Partial<Session>): Session => ({
   id: "x", title: "T", format: "talk", track: "tech", startTime: "09:40", durationMinutes: 40, room: null, ...o,
+});
+
+describe("title quotes", () => {
+  it("quoteTitle true → title between guillemets", () => {
+    expect(displayTitle(s({ title: "Mon titre", quoteTitle: true }))).toBe("« Mon titre »");
+  });
+  it("quoteTitle false or missing → plain title", () => {
+    expect(displayTitle(s({ title: "Pause café", quoteTitle: false }))).toBe("Pause café");
+    expect(displayTitle(s({ title: "Keynote de clôture" }))).toBe("Keynote de clôture");
+  });
 });
 
 describe("room rule", () => {

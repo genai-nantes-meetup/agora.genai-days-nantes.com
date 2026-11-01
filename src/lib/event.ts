@@ -13,6 +13,7 @@ export interface Session {
   id: string;
   kind?: "session" | "break" | "lunch";
   title: string;
+  quoteTitle?: boolean;
   subtitle?: string | null;
   description?: string | null;
   format: Format | string | null;
@@ -24,6 +25,11 @@ export interface Session {
   speakers?: SessionSpeakerRef[];
   image?: string | null;
   pageUrl?: string;
+}
+
+/** Titles are shown between guillemets only when the API marks them quoteTitle. */
+export function displayTitle(s: Pick<Session, "title" | "quoteTitle">): string {
+  return s.quoteTitle ? `« ${s.title} »` : s.title;
 }
 
 export interface EventInfo {
