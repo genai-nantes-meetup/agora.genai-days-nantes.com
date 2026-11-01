@@ -28,6 +28,7 @@
 - Messaging is in-house (Postgres + Realtime): authenticated users only SELECT via RLS; every write goes through SECURITY DEFINER RPCs (send/edit/delete/react/read/heartbeat) that re-check membership, blocks, suspension, closure and the read-only cutoff, because the database is the only trustworthy enforcement point. Sends go through the sendMessage server function so push follows; database triggers broadcast changes on private `conversation:{id}` topics guarded by realtime.messages policies.
 - Browser notifications use a separate worker under /notifications/ and Worker-native Web Push; sender keys remain server-only except the public subscription key.
 - Push activation requests permission directly from the click gesture and waits for the notification worker to activate before subscribing; serviceWorker.ready cannot be used because the notification scope excludes app pages.
+- Notification clicks focus an existing app window before navigation and fall back to openWindow on stale-client failures, because suspended mobile windows may reject navigation before activation.
 
 - Phase 4 modules live in src/lib/phase4: pure schemas/rules have focused tests, provider code stays in server helpers, and authenticated RPCs validate access before privileged work.
 - Purge runs in bounded leased batches, checks its dated paused control before destructive stages, preserves two verified designated admins, and is never executed destructively in tests.
