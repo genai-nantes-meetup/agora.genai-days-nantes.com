@@ -90,3 +90,4 @@ Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
 - [x] Favoris : table session_likes, copie local -> base à la connexion, lecture/écriture en base. Vérifié connecté : ajout (POST), rechargement depuis la base, retrait (DELETE); compte de test nettoyé.
 - [x] Profil : enregistrement automatique (champ quitté ou 10 s d'inactivité, cases à cocher incluses). Vérifié e2e avec un compte de test : champ sauvegardé au blur, case à cocher sauvegardée après 10 s ; compte et invitations de test supprimés.
 - [x] Footer : lien vers l'asso NaoMakers (https://naomakers.com/), libellé traduit FR/EN, vérifié sur capture.
+- [x] Profil : boutons IA « Proposer des tags » et « Proposer une phrase » supprimés ; la suggestion automatique des tags à partir du poste reste active (63 tests src/lib au vert, suite complète 64).
