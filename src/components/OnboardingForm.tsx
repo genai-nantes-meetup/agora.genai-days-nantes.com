@@ -50,6 +50,6 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
   </div>}
   {prefillFailed&&<p role="status" className="text-sm text-muted-foreground">{t('enrichment.unavailable')}</p>}
   {error&&<p role="alert" className="text-sm text-destructive">{t('form.onboardingValidation')}</p>}
-  <div className="flex gap-3">{step===1&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>setStep(0)}>{t('form.previous')}</Button>}<Button type="submit" className="flex-1" disabled={busy||loading}>{t(busy||loading?'loading':step===0?'form.next':'form.finish')}</Button></div>
+  <div className="flex gap-3">{step===1&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>setStep(0)}>{t('form.previous')}</Button>}{step===0&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>{pending.current=null;setLoading(false);setStep(1);}}>{t('form.skip')}</Button>}<Button type="submit" className="flex-1" disabled={busy||loading}>{t(busy||loading?'loading':step===0?'form.next':'form.finish')}</Button></div>
  </form>;
 }
