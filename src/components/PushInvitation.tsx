@@ -1,7 +1,7 @@
 import {track} from '@/lib/analytics';
 import {useEffect,useState} from 'react';
 import {useServerFn} from '@tanstack/react-start';
-import {Bell} from 'lucide-react';
+import {Bell,Loader2} from 'lucide-react';
 import {toast} from 'sonner';
 import {Button} from './ui/button';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from './ui/dialog';
@@ -24,5 +24,5 @@ export function PushInvitation({showTrigger=false}:{showTrigger?:boolean}){const
   const json=subscription.toJSON();if(!json.endpoint||!json.keys?.['p256dh']||!json.keys['auth'])throw new Error('Unavailable');
   stage='save';const result=await subscribe({data:{endpoint:json.endpoint,keys:{p256dh:json.keys['p256dh'],auth:json.keys['auth']}}});if(!result.ok){toast.error(t(result.error,'host' in result?{host:result.host}:undefined));return;}setEnabled(true);setOpen(false);
  }catch(error){const key=pushErrorKey(error,stage);if(key==='push.denied')setAvailability('denied');toast.error(t(key));}finally{setBusy(false);}}
- return <>{showTrigger&&user&&<div className="flex justify-end px-5 pt-3"><Button variant="ghost" size="sm" className="text-xs text-muted-foreground" disabled={busy||enabled} onClick={()=>{setOpen(true);track('push_prompt_shown');}}><Bell className="size-3.5"/>{t(enabled?'push.enabled':'push.activate')}</Button></div>}<Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogTitle className="flex items-center gap-2"><Bell className="size-5"/>{t('push.title')}</DialogTitle><DialogDescription>{t(ios?'push.ios':availability==='denied'?'push.denied':availability==='unsupported'?'push.unavailable':'push.body')}</DialogDescription><div className="flex justify-end gap-2"><Button variant="outline" onClick={()=>setOpen(false)}>{t('push.later')}</Button>{!ios&&availability==='supported'&&<Button disabled={busy} onClick={()=>void enable()}>{t('push.enable')}</Button>}</div></DialogContent></Dialog></>;
+ return <>{showTrigger&&user&&<div className="flex justify-end px-5 pt-3"><Button variant="ghost" size="sm" className="text-xs text-muted-foreground" disabled={busy||enabled} onClick={()=>{setOpen(true);track('push_prompt_shown');}}><Bell className="size-3.5"/>{t(enabled?'push.enabled':'push.activate')}</Button></div>}<Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogTitle className="flex items-center gap-2"><Bell className="size-5"/>{t('push.title')}</DialogTitle><DialogDescription>{t(ios?'push.ios':availability==='denied'?'push.denied':availability==='unsupported'?'push.unavailable':'push.body')}</DialogDescription><div className="flex justify-end gap-2"><Button variant="outline" onClick={()=>setOpen(false)}>{t('push.later')}</Button>{!ios&&availability==='supported'&&<Button disabled={busy} onClick={()=>void enable()}>{busy&&<Loader2 className="size-4 animate-spin"/>}{t('push.enable')}</Button>}</div></DialogContent></Dialog></>;
 }
