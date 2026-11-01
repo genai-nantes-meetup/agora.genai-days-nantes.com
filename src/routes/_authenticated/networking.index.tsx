@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/networking/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { title: "Networking · GenAI Days Nantes" },
-      { name: "description", content: "Networking — bientôt disponible dans Hey GenAI Days." },
+      { name: "description", content: "Networking — bientôt disponible dans GenAI Days Nantes." },
       { property: "og:title", content: "Networking · GenAI Days Nantes" },
       { property: "og:description", content: "Networking — bientôt disponible dans l'app des GenAI Days." },
     ],
