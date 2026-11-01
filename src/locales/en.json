@@ -115,6 +115,8 @@
   "auth.login": "Sign in",
   "auth.email": "Email",
   "auth.send": "Send me a magic link",
+  "auth.google": "Continue with Google",
+  "auth.or": "or",
   "auth.sent": "Check your inbox to sign in.",
   "auth.unknown": "No account with this email. Use the link you received in your invitation.",
   "auth.invalid": "This invitation is invalid or has already been used.",
