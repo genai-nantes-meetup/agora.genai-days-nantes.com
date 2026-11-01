@@ -238,6 +238,7 @@
   "feedback.too_salesy": "Trop commercial",
   "feedback.comment": "Commentaire (optionnel)",
   "feedback.closed": "Les contributions ouvrent au début de la session.",
+  "feedback.anonymous": "Anonyme",
   "admin.title": "Administration",
   "admin.denied": "Accès réservé aux administrateur·ices.",
   "admin.invites": "Invitations",
