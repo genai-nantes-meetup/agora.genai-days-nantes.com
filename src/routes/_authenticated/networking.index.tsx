@@ -21,9 +21,9 @@ export const Route = createFileRoute("/_authenticated/networking/")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Networking · Hey GenAI Days" },
+      { title: "Networking · GenAI Days Nantes" },
       { name: "description", content: "Networking — bientôt disponible dans Hey GenAI Days." },
-      { property: "og:title", content: "Networking · Hey GenAI Days" },
+      { property: "og:title", content: "Networking · GenAI Days Nantes" },
       { property: "og:description", content: "Networking — bientôt disponible dans l'app des GenAI Days." },
     ],
   }),

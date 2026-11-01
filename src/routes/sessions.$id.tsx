@@ -13,9 +13,9 @@ export const Route = createFileRoute("/sessions/$id")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Session · Hey GenAI Days" },
+      { title: "Session · GenAI Days Nantes" },
       { name: "description", content: "Détail d'une session des GenAI Days : horaire, salle, speakers." },
-      { property: "og:title", content: "Session · Hey GenAI Days" },
+      { property: "og:title", content: "Session · GenAI Days Nantes" },
       { property: "og:description", content: "Horaire, salle et speakers de cette session des GenAI Days." },
     ],
   }),
