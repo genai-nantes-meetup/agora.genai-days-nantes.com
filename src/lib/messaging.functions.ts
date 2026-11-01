@@ -6,10 +6,10 @@ const uuid=z.object({id:z.string().uuid()});
 export const inbox=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
  setResponseHeader('Cache-Control','no-store');
  const {data:active}=await context.supabase.rpc('is_active_member',{uid:context.userId});if(!active)throw new Error('Forbidden');
- const [requests,conversations]=await Promise.all([context.supabase.rpc('member_connections'),context.supabase.from('conversations').select('*')]);
- if(requests.error||conversations.error)throw new Error('Unavailable');
+ const [requests,conversations,summaries]=await Promise.all([context.supabase.rpc('member_connections'),context.supabase.from('conversations').select('id,request_id,user_a,user_b,created_at,closed_at'),context.supabase.rpc('inbox_summaries')]);
+ if(requests.error||conversations.error||summaries.error)throw new Error('Unavailable');
  // A declined response is deliberately indistinguishable from pending for the sender.
- return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data};
+ return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data,summaries:summaries.data};
 });
 export const sendConnection=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
  setResponseHeader('Cache-Control','no-store');const {data:before}=await context.supabase.rpc('member_connections');const existing=before?.some(r=>[r.requester_id,r.recipient_id].includes(data.id));const {data:id,error}=await context.supabase.rpc('request_connection',{target:data.id});if(error||!id)throw new Error('Forbidden');if(!existing){const {notifyRequest}=await import('./notifications.server');await notifyRequest(id).catch(()=>{});}const {emailConnectionRequest}=await import('./app-emails.server');await emailConnectionRequest(id).catch(()=>console.error('Request email failed'));return {id};
@@ -21,22 +21,22 @@ export const acceptConnection=createServerFn({method:'POST'}).middleware([requir
  setResponseHeader('Cache-Control','no-store');const {data:visible,error}=await context.supabase.rpc('member_connections');const r=visible?.find(x=>x.id===data.id);if(error||!r||r.recipient_id!==context.userId||r.cancelled_at)throw new Error('Forbidden');
  if(r.status==='accepted'){const {data:c}=await context.supabase.from('conversations').select('id').eq('request_id',r.id).single();if(c)return {id:c.id};}
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const claim=crypto.randomUUID();const {data:reserved,error:reserveError}=await supabaseAdmin.rpc('claim_connection_accept',{request:r.id,actor:context.userId,claim});if(reserveError||!reserved)throw new Error('Unavailable');
- const {provisionConversation,closeTwilioConversation}=await import('./twilio.server');let sid:string|null=null;
- try{const c=await provisionConversation(r.id,r.requester_id,r.recipient_id);sid=c.sid;const {data:id,error:finishError}=await supabaseAdmin.rpc('finish_connection_accept',{request:r.id,claim,sid:c.sid,pa:c.pa,pb:c.pb});if(finishError||!id)throw new Error('Cancelled');const {emailConnectionAccepted}=await import('./app-emails.server');await emailConnectionAccepted(r.id,id).catch(()=>console.error('Accepted email failed'));return {id};}
- catch(error){if(sid)await closeTwilioConversation(sid).catch(()=>{});await supabaseAdmin.from('connection_requests').update({provisioning_at:null,provisioning_claim:null}).eq('id',r.id).eq('provisioning_claim',claim);throw error;}
+ const {data:id,error:finishError}=await supabaseAdmin.rpc('finish_connection_accept',{request:r.id,claim});
+ if(finishError||!id){await supabaseAdmin.from('connection_requests').update({provisioning_at:null,provisioning_claim:null}).eq('id',r.id).eq('provisioning_claim',claim);throw new Error('Cancelled');}
+ const {emailConnectionAccepted}=await import('./app-emails.server');await emailConnectionAccepted(r.id,id).catch(()=>console.error('Accepted email failed'));return {id};
 });
-export const twilioToken=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
- setResponseHeader('Cache-Control','no-store');const {data:active}=await context.supabase.rpc('is_active_member',{uid:context.userId});if(!active)throw new Error('Forbidden');const {issueTwilioToken}=await import('./twilio.server');return {token:await issueTwilioToken(context.userId)};
-});
-export const sendMessage=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({id:z.string().uuid(),body:z.string().trim().min(1).max(1600)})).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {data:c,error}=await context.supabase.from('conversations').select('*').eq('id',data.id).single();if(error||!c||c.closed_at||!c.conversation_sid)throw new Error('Forbidden');
- const {canSendTwilio,twilio}=await import('./twilio.server');if(!await canSendTwilio(c.conversation_sid,context.userId))throw new Error('Forbidden');
- const message=await twilio<{sid:string;index:number}>(`/Conversations/${c.conversation_sid}/Messages`,{Author:context.userId,Body:data.body});
- const {supabaseAdmin}=await import('@/integrations/supabase/client.server');await supabaseAdmin.from('message_events').upsert({message_sid:message.sid,conversation_id:c.id,sender_id:context.userId,recipient_id:c.user_a===context.userId?c.user_b:c.user_a,message_index:message.index,excerpt:data.body.slice(0,240)},{onConflict:'message_sid',ignoreDuplicates:true});return {sid:message.sid};
+const PERMANENT=['Forbidden','ReadOnly','InvalidBody','InvalidReply','RateLimited'] as const;
+export type SendResult={ok:true;message:import('./messaging').ChatMessage}|{ok:false;code:(typeof PERMANENT)[number]|'Unavailable'};
+/** Idempotent on the client-generated id; push is attempted only for a newly created message and never fails the send. */
+export const sendMessage=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({id:z.string().uuid(),conversationId:z.string().uuid(),body:z.string().trim().min(1).max(1600),replyTo:z.string().uuid().nullable()})).handler(async({data,context}):Promise<SendResult>=>{
+ setResponseHeader('Cache-Control','no-store');
+ const {data:result,error}=await context.supabase.rpc('send_message',{p_id:data.id,p_conversation_id:data.conversationId,p_body:data.body,...(data.replyTo?{p_reply_to_id:data.replyTo}:{})});
+ if(error){const code=PERMANENT.find(c=>error.message.includes(c));return {ok:false,code:code??'Unavailable'};}
+ const r=result as {message:import('./messaging').ChatMessage;created:boolean};
+ if(r.created){try{const {notifyMessage}=await import('./notifications.server');await notifyMessage(r.message.id);}catch{console.error('Message push failed');}}
+ return {ok:true,message:r.message};
 });
 export const blockMember=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
- setResponseHeader('Cache-Control','no-store');const {error}=await context.supabase.from('blocks').insert({blocker_id:context.userId,blocked_id:data.id});if(error)throw new Error('Forbidden');
- const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:rows}=await supabaseAdmin.from('conversations').select('id,conversation_sid').or(`and(user_a.eq.${context.userId},user_b.eq.${data.id}),and(user_b.eq.${context.userId},user_a.eq.${data.id})`).not('closed_at','is',null).is('twilio_closed_at',null);
- const {deleteTwilioConversation}=await import('./twilio.server');for(const c of rows??[]){if(!c.conversation_sid)continue;try{await deleteTwilioConversation(c.conversation_sid);await supabaseAdmin.from('conversations').update({twilio_closed_at:new Date().toISOString()}).eq('id',c.id);}catch{console.error('Conversation closure awaiting reconciliation');}}
- return {ok:true};
+ // The database trigger cancels the pair's requests and closes their conversation.
+ setResponseHeader('Cache-Control','no-store');const {error}=await context.supabase.from('blocks').insert({blocker_id:context.userId,blocked_id:data.id});if(error)throw new Error('Forbidden');return {ok:true};
 });

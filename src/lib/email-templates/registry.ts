@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 import { template as invitation } from "./invitation"
 import { template as connectionRequest } from "./connection-request"
 import { template as connectionAccepted } from "./connection-accepted"
-import { template as unreadReminder } from "./unread-reminder"
+import { template as unreadDigest } from "./unread-digest"
 
 export interface TemplateEntry {
   component: ComponentType<any>
@@ -25,5 +25,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'invitation': invitation,
   'connection-request': connectionRequest,
   'connection-accepted': connectionAccepted,
-  'unread-reminder': unreadReminder,
+  'unread-digest': unreadDigest,
 }

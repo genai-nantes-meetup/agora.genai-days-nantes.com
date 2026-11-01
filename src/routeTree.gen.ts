@@ -31,8 +31,6 @@ import { Route as AuthenticatedNetworkingIdRouteImport } from './routes/_authent
 import { Route as ApiPublicInvitationsRouteImport } from './routes/api/public/invitations'
 import { Route as ApiPublicJobsMessagingRouteImport } from './routes/api/public/jobs/messaging'
 import { Route as ApiPublicJobsPurgeRouteImport } from './routes/api/public/jobs/purge'
-import { Route as ApiPublicTwilioEventsRouteImport } from './routes/api/public/twilio/events'
-import { Route as ApiPublicTwilioPreRouteImport } from './routes/api/public/twilio/pre'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -148,16 +146,6 @@ const ApiPublicJobsPurgeRoute = ApiPublicJobsPurgeRouteImport.update({
   path: '/api/public/jobs/purge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicTwilioEventsRoute = ApiPublicTwilioEventsRouteImport.update({
-  id: '/api/public/twilio/events',
-  path: '/api/public/twilio/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicTwilioPreRoute = ApiPublicTwilioPreRouteImport.update({
-  id: '/api/public/twilio/pre',
-  path: '/api/public/twilio/pre',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   id: '/lovable/email/auth/preview',
   path: '/lovable/email/auth/preview',
@@ -197,8 +185,6 @@ export interface FileRoutesByFullPath {
   '/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
-  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
-  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -224,8 +210,6 @@ export interface FileRoutesByTo {
   '/networking': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
-  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
-  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -254,8 +238,6 @@ export interface FileRoutesById {
   '/_authenticated/networking/': typeof AuthenticatedNetworkingIndexRoute
   '/api/public/jobs/messaging': typeof ApiPublicJobsMessagingRoute
   '/api/public/jobs/purge': typeof ApiPublicJobsPurgeRoute
-  '/api/public/twilio/events': typeof ApiPublicTwilioEventsRoute
-  '/api/public/twilio/pre': typeof ApiPublicTwilioPreRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -284,8 +266,6 @@ export interface FileRouteTypes {
     | '/networking/'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
-    | '/api/public/twilio/events'
-    | '/api/public/twilio/pre'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -311,8 +291,6 @@ export interface FileRouteTypes {
     | '/networking'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
-    | '/api/public/twilio/events'
-    | '/api/public/twilio/pre'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -340,8 +318,6 @@ export interface FileRouteTypes {
     | '/_authenticated/networking/'
     | '/api/public/jobs/messaging'
     | '/api/public/jobs/purge'
-    | '/api/public/twilio/events'
-    | '/api/public/twilio/pre'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -363,8 +339,6 @@ export interface RootRouteChildren {
   ApiPublicInvitationsRoute: typeof ApiPublicInvitationsRoute
   ApiPublicJobsMessagingRoute: typeof ApiPublicJobsMessagingRoute
   ApiPublicJobsPurgeRoute: typeof ApiPublicJobsPurgeRoute
-  ApiPublicTwilioEventsRoute: typeof ApiPublicTwilioEventsRoute
-  ApiPublicTwilioPreRoute: typeof ApiPublicTwilioPreRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -526,20 +500,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicJobsPurgeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/twilio/events': {
-      id: '/api/public/twilio/events'
-      path: '/api/public/twilio/events'
-      fullPath: '/api/public/twilio/events'
-      preLoaderRoute: typeof ApiPublicTwilioEventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/twilio/pre': {
-      id: '/api/public/twilio/pre'
-      path: '/api/public/twilio/pre'
-      fullPath: '/api/public/twilio/pre'
-      preLoaderRoute: typeof ApiPublicTwilioPreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/lovable/email/auth/preview': {
       id: '/lovable/email/auth/preview'
       path: '/lovable/email/auth/preview'
@@ -626,8 +586,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInvitationsRoute: ApiPublicInvitationsRoute,
   ApiPublicJobsMessagingRoute: ApiPublicJobsMessagingRoute,
   ApiPublicJobsPurgeRoute: ApiPublicJobsPurgeRoute,
-  ApiPublicTwilioEventsRoute: ApiPublicTwilioEventsRoute,
-  ApiPublicTwilioPreRoute: ApiPublicTwilioPreRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

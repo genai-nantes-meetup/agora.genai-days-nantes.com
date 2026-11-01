@@ -4,7 +4,8 @@ Current tasks:
 
 - [x] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; matching existing account updated and verified in directory and participant page
 
-- [ ] Fix Twilio acceptance: reproduced API-key refusal (401 / 70051); account-token verification also rejected (401 / 20003). Help replace a consistent set of Twilio credentials, then verify acceptance end to end. Waiting for valid credentials.
+- [x] Replace Twilio with in-house messaging (Postgres + Realtime): accept flow, send/edit/delete/reactions/reply/seen/typing, push by sender name with presence suppression, 30-minute unread digest email, purge/delete/block cleaned of Twilio. Twilio no longer blocks acceptance.
+- [ ] User: delete unused Twilio secrets in Project Settings → Secrets.
 
 - [x] Retirer le badge speaker de Maxime Pitussi en base, et corriger l'attribution automatique (LinkedIn vides considérés comme identiques) pour que le badge ne revienne pas
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field

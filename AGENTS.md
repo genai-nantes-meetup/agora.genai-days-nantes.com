@@ -25,7 +25,7 @@
 - Email signup/login shares the passwordless flow; the account layout gates incomplete profiles with the two-step onboarding form, and completion is validated by the shared schema and database trigger. LinkedIn prefill uses server-only Airscale with durable per-account reservations and manual fallback.
 - Signed-out account screens and /login render the shared EmailSignIn form directly, avoiding a second welcome-to-login step.
 - Keep messaging rules browser-independent in src/lib/messaging.ts; private states are returned through authenticated RPCs so declined requests remain hidden from their sender.
-- Twilio SDK is imported only after hydration and has read-only roles; messages are sent through authenticated server functions with deadline/block checks, because old ChatGrant tokens and webhook outages must never bypass those rules. Issue tokens only after role and signed webhook configuration checks.
+- Messaging is in-house (Postgres + Realtime): authenticated users only SELECT via RLS; every write goes through SECURITY DEFINER RPCs (send/edit/delete/react/read/heartbeat) that re-check membership, blocks, suspension, closure and the read-only cutoff, because the database is the only trustworthy enforcement point. Sends go through the sendMessage server function so push follows; database triggers broadcast changes on private `conversation:{id}` topics guarded by realtime.messages policies.
 - Browser notifications use a separate worker under /notifications/ and Worker-native Web Push; sender keys remain server-only except the public subscription key.
 
 - Phase 4 modules live in src/lib/phase4: pure schemas/rules have focused tests, provider code stays in server helpers, and authenticated RPCs validate access before privileged work.

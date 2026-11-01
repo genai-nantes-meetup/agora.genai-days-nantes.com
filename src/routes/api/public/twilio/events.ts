@@ -1,9 +1,0 @@
-import {createFileRoute} from '@tanstack/react-router';
-import {z} from 'zod';
-export const Route=createFileRoute('/api/public/twilio/events')({server:{handlers:{POST:async({request})=>{
- const raw=await request.text();if(raw.length>16000)return new Response(null,{status:413});const {verifyTwilioRequest}=await import('@/lib/twilio.server');if(!await verifyTwilioRequest(request,raw))return new Response(null,{status:401});
- const fields=Object.fromEntries(new URLSearchParams(raw));const p=z.object({EventType:z.literal('onMessageAdded'),ConversationSid:z.string().regex(/^CH[a-fA-F0-9]{32}$/),MessageSid:z.string().regex(/^IM[a-fA-F0-9]{32}$/),Author:z.string().uuid(),Index:z.coerce.number().int().min(0),Body:z.string().max(1600).default('')}).safeParse(fields);if(!p.success)return new Response(null,{status:400});
- const {supabaseAdmin}=await import('@/integrations/supabase/client.server');const {data:c,error}=await supabaseAdmin.from('conversations').select('*').eq('conversation_sid',p.data.ConversationSid).single();if(error||!c||c.closed_at||![c.user_a,c.user_b].includes(p.data.Author))return new Response(null,{status:403});
- const recipient=c.user_a===p.data.Author?c.user_b:c.user_a;const {error:writeError}=await supabaseAdmin.from('message_events').upsert({message_sid:p.data.MessageSid,conversation_id:c.id,sender_id:p.data.Author,recipient_id:recipient,message_index:p.data.Index,excerpt:p.data.Body.slice(0,240)},{onConflict:'message_sid',ignoreDuplicates:true});if(writeError)return new Response(null,{status:503});
- const {notifyMessage}=await import('@/lib/notifications.server');await notifyMessage(p.data.MessageSid).catch(()=>{});return new Response(null,{status:204});
-}}}});
