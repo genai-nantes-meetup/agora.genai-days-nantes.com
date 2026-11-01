@@ -27,15 +27,15 @@ export function ProfileForm({initial,editing=false,busy,onSubmit,onAutoSave,avat
  const activity=<div className="space-y-5">{text('job_title')}{text('company')}{select('company_size',companySizes,'size.')}{text('sector')}<AiProfileFields value={value} onChange={patch}/></div>;
  const goals=<div className="space-y-5"><fieldset><legend className="mb-2 text-sm font-bold">{t('form.intentions')}</legend><Choices values={intentions} selected={value.intentions} onChange={v=>set('intentions',v)} prefix="intention."/></fieldset>{select('ai_level',aiLevels,'level.')}<div className="flex items-start gap-3"><Checkbox id="consent" checked={consent} onCheckedChange={v=>{setConsent(v===true);scheduler.current?.changed();}}/><div className="text-sm leading-relaxed"><label htmlFor="consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div></div>;
  const errorLine=error&&<p role="alert" className="text-sm text-destructive">{t('form.validation')}</p>;
- const blurProps={onBlur:(e:React.FocusEvent<HTMLFormElement>)=>{const rt=e.relatedTarget as HTMLElement|null;if(rt&&rt.closest('button'))return;scheduler.current?.focusLeft();}};
- if(editing)return <form className="space-y-8" {...blurProps} onSubmit={e=>{e.preventDefault();void submit();}}>
+ const blur=e=>{const rt=e.relatedTarget as HTMLElement|null;if(rt&&rt.closest('button'))return;scheduler.current?.focusLeft();};
+ if(editing)return <form className="space-y-8" onBlur={blur} onSubmit={e=>{e.preventDefault();void submit();}}>
   <section className="space-y-5"><h2 className="font-label text-xs uppercase">{t('form.identity')}</h2>{identity}</section>
   <section className="space-y-5"><h2 className="font-label text-xs uppercase">{t('form.activity')}</h2>{activity}</section>
   <section className="space-y-5"><h2 className="font-label text-xs uppercase">{t('form.goals')}</h2>{goals}</section>
   {errorLine}
   <Button className="w-full" type="submit" disabled={busy}>{busy?t('loading'):t('form.save')}</Button>
  </form>;
- return <form className="space-y-6" {...blurProps} onSubmit={e=>{e.preventDefault();void submit();}}><div><div className="mb-2 flex justify-between font-label text-xs"><span>{t(['form.identity','form.activity','form.goals'][step] as TKey)}</span><span>{step+1}/3</span></div><div className="grid h-1 grid-cols-3 gap-1" role="progressbar" aria-valuemin={1} aria-valuemax={3} aria-valuenow={step+1}>{[0,1,2].map(n=><span key={n} className={n<=step?'bg-accent':'bg-border'}/>)}</div></div>
+ return <form className="space-y-6" onBlur={blur} onSubmit={e=>{e.preventDefault();void submit();}}><div><div className="mb-2 flex justify-between font-label text-xs"><span>{t(['form.identity','form.activity','form.goals'][step] as TKey)}</span><span>{step+1}/3</span></div><div className="grid h-1 grid-cols-3 gap-1" role="progressbar" aria-valuemin={1} aria-valuemax={3} aria-valuenow={step+1}>{[0,1,2].map(n=><span key={n} className={n<=step?'bg-accent':'bg-border'}/>)}</div></div>
  {step===0&&identity}
  {step===1&&activity}
  {step===2&&goals}
