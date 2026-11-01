@@ -2,6 +2,8 @@
 
 Current tasks:
 
+- [x] Harden mobile notification opening: focus before navigation, recover from stale windows and failed discovery, restrict destination to app messaging/networking paths; worker regression tests added.
+- [ ] Verify notification tap opens the installed app on a physical phone after publishing: sandbox cannot reproduce OS-level notification activation.
 - [x] Harden notification activation: permission requested within click gesture, wait for worker activation, distinguish blocked permission from temporary errors; 19 targeted tests pass and signed-in failure handling verified.
 - [ ] Verify real notification subscription and delivery on a physical browser: sandbox Chromium push service does not complete subscription; needs a real-device check after publishing.
 - [x] Delete all contact requests: one pending request removed, zero remaining verified; no accepted requests or conversations affected.
