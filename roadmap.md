@@ -2,6 +2,8 @@
 
 Current tasks:
 
+- [x] Verify notification registration on preview and published site with signed-in requesting account and synthetic browser subscription: persisted and UI shows enabled. Separate inactive-account and unsupported-service responses; log database error codes without endpoints or keys.
+- [ ] Resolve user's real notification subscription save failure: synthetic registration succeeds; next real attempt must expose the specific rejection or logged database code.
 - [x] Distinguish Chrome desktop activation failures: permission-denied AbortError, unreachable push service, worker setup and server registration now have separate localized errors and regression tests.
 - [ ] Confirm activation on user's desktop Chrome after publishing: sandbox reproduces Chrome permission-denied AbortError, but the user's exact browser failure is not yet captured.
 - [x] Harden mobile notification opening: focus before navigation, recover from stale windows and failed discovery, restrict destination to app messaging/networking paths; worker regression tests added.
