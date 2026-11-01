@@ -9,6 +9,7 @@ type YesNo = 'yes' | 'no';
 export type AnalyticsEvents = {
   invitation_opened: Record<string, never>;
   magic_link_requested: Record<string, never>;
+  google_signin_started: Record<string, never>;
   signed_in: Record<string, never>;
   signed_out: Record<string, never>;
   onboarding_step_completed: { step: number };

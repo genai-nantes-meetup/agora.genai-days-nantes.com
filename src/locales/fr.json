@@ -115,6 +115,8 @@
   "auth.login": "Se connecter",
   "auth.email": "E-mail",
   "auth.send": "Recevoir un lien magique",
+  "auth.google": "Continuer avec Google",
+  "auth.or": "ou",
   "auth.sent": "Consultez votre boîte e-mail pour vous connecter.",
   "auth.unknown": "Aucun compte avec cet e-mail. Utilise le lien reçu dans ton invitation.",
   "auth.invalid": "Cette invitation est invalide ou a déjà été utilisée.",
