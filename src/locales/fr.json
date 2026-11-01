@@ -33,7 +33,7 @@
   "push.serviceFailed": "Le service de notifications du navigateur ne répond pas. Vérifiez votre connexion et réessayez. Un VPN ou un réseau d’entreprise peut bloquer ce service.",
   "push.saveFailed": "Le navigateur est prêt, mais l’enregistrement des notifications a échoué. Rechargez la page puis réessayez.",
   "push.inactiveAccount": "Votre compte ne permet pas encore d’activer les notifications. Vérifiez que votre profil est terminé ; un compte suspendu ne peut pas les activer.",
-  "push.endpointFailed": "Le service de notifications proposé par votre navigateur n’est pas pris en charge.",
+  "push.endpointFailed": "Le service de notifications {host} n’est pas encore autorisé. Transmettez uniquement ce nom de service pour que nous puissions vérifier sa compatibilité.",
   "push.workerFailed": "La préparation des notifications a échoué. Rechargez la page puis réessayez.",
   "nav.program": "Programme",
   "nav.plan": "Plan",

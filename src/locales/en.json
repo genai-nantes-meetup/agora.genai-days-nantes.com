@@ -33,7 +33,7 @@
   "push.serviceFailed": "The browser's notification service is unavailable. Check your connection and try again. A VPN or corporate network may block this service.",
   "push.saveFailed": "Your browser is ready, but saving notification registration failed. Reload the page and try again.",
   "push.inactiveAccount": "Your account cannot enable notifications yet. Check that your profile is complete; suspended accounts cannot enable them.",
-  "push.endpointFailed": "The notification service provided by your browser is not supported.",
+  "push.endpointFailed": "The notification service {host} is not yet allowed. Share only this service name so we can check compatibility.",
   "push.workerFailed": "Notification setup failed. Reload the page and try again.",
   "nav.program": "Program",
   "nav.plan": "Map",
