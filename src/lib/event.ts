@@ -27,6 +27,11 @@ export interface Session {
   pageUrl?: string;
 }
 
+/** Titles are shown between guillemets only when the API marks them quoteTitle. */
+export function displayTitle(s: Pick<Session, "title" | "quoteTitle">): string {
+  return s.quoteTitle ? `« ${s.title} »` : s.title;
+}
+
 export interface EventInfo {
   name: string;
   date: string;
