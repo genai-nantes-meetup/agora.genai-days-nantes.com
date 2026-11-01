@@ -60,6 +60,7 @@ export type AnalyticsEvents = {
 };
 
 let ph: PostHog | null = null;
+let superProps: Record<string, unknown> = {};
 let loading: Promise<PostHog | null> | null = null;
 const queue: Array<(p: PostHog) => void> = [];
 
@@ -95,7 +96,8 @@ export function initAnalytics(lang: string): Promise<PostHog | null> {
         mask_all_text: false,
         mask_all_element_attributes: false,
       });
-      posthog.register({ lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env['VITE_APP_VERSION'] ?? 'web' });
+      superProps = { lang, is_pwa_standalone: isStandalone(), app_version: import.meta.env['VITE_APP_VERSION'] ?? 'web' };
+      posthog.register(superProps);
       ph = posthog;
       for (const fn of queue.splice(0)) { try { fn(posthog); } catch { /* silent */ } }
       return posthog;
@@ -114,8 +116,9 @@ export function setPersonProperties(props: Record<string, unknown>) {
   run(p => p.setPersonProperties(props));
 }
 export function registerSuper(props: Record<string, unknown>) {
+  superProps = { ...superProps, ...props };
   run(p => p.register(props));
 }
 export function resetAnalytics() {
-  run(p => p.reset());
+  run(p => { p.reset(); p.register(superProps); });
 }
