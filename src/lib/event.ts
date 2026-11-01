@@ -202,6 +202,20 @@ export function googleCalendarUrl(s: Session, date: string, roomText: string): s
   return `https://calendar.google.com/calendar/render?${p.toString()}`;
 }
 
+/** Office 365 / Outlook web deep link. Paris is UTC+1 in November, so times carry the +01:00 offset. */
+export function office365CalendarUrl(s: Session, date: string, roomText: string): string {
+  const p = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: `${s.title} · GenAI Days`,
+    startdt: `${date}T${s.startTime}:00+01:00`,
+    enddt: `${date}T${endTime(s)}:00+01:00`,
+    location: VENUE,
+    body: [roomText, s.subtitle, s.pageUrl].filter(Boolean).join("\n\n"),
+  });
+  return `https://outlook.office.com/calendar/0/deeplink/compose?${p.toString()}`;
+}
+
 export type SponsorTier = "platinum" | "gold" | "silver";
 export interface Sponsor {
   id: string;
