@@ -136,7 +136,7 @@ export function AppLockup({ shortName, label }: { shortName: string; label: stri
   return (
     <span aria-label={label} className="flex flex-col leading-none">
       <Wordmark className="text-2xl leading-none" />
-      <span aria-hidden="true" className="font-display -mt-0.5 text-sm font-extrabold italic text-primary">{shortName}</span>
+      <span aria-hidden="true" className="font-display -mt-0.5 text-sm font-extrabold italic text-accent">{shortName}</span>
     </span>
   );
 }
