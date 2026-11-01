@@ -144,7 +144,7 @@
   "photo.confirm": "Utiliser cette photo",
   "photo.error": "Impossible d’utiliser cette photo. Choisissez une image de moins de 5 Mo.",
   "directory.title": "Participant·es",
-  "directory.search": "Nom, poste ou entreprise",
+  "directory.search": "Mot clé",
   "directory.filters": "Filtres",
   "directory.results": "{n} participant·es",
   "directory.empty": "Aucun profil ne correspond à vos critères.",

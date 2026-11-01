@@ -144,7 +144,7 @@
   "photo.confirm": "Use this photo",
   "photo.error": "Could not use this photo. Choose an image smaller than 5 MB.",
   "directory.title": "Participants",
-  "directory.search": "Name, job title or company",
+  "directory.search": "Keyword",
   "directory.filters": "Filters",
   "directory.results": "{n} participants",
   "directory.empty": "No profiles match your criteria.",
