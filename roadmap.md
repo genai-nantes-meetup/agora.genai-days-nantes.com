@@ -7,6 +7,7 @@ Current tasks:
 - [x] Messages: discreet notification activation button
 - [x] Onboarding step 2: optional LinkedIn URL field added (empty accepted by schema and DB trigger)
 - [x] Onboarding: at least one professional job tag required before finishing (onboarding schema + updated validation message)
+- [x] Participant page: program section removed (sessions no longer listed on a member profile)
 - [x] Signed-in end-to-end verification of the onboarding additions (real session, step 2 screenshot, submission blocked without a tag)
 
 - [x] Back buttons: link pointer cursor
