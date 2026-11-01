@@ -21,5 +21,5 @@ export async function activePushRegistration(registration: ServiceWorkerRegistra
 }
 
 export function pushErrorKey(error: unknown): 'push.denied' | 'push.failed' {
-  return error instanceof Error && error.name === 'NotAllowedError' ? 'push.denied' : 'push.failed';
+  return error !== null && typeof error === 'object' && 'name' in error && error.name === 'NotAllowedError' ? 'push.denied' : 'push.failed';
 }
