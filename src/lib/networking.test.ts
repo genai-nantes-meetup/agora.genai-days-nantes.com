@@ -7,6 +7,12 @@ describe('phase 2 rules',()=>{
  it('keeps a typed profile suffix',()=>expect(linkedInSuffix('camille-test')).toBe('camille-test'));
  it('normalizes protocol, www, case, parameters and trailing slash',()=>expect(normalizeLinkedIn('HTTPS://WWW.LinkedIn.com/in/Maxime/?trk=hello#x')).toBe('linkedin.com/in/maxime'));
  it('rejects impersonating domains',()=>expect(normalizeLinkedIn('https://linkedin.com.evil.test/in/maxime')).toBe(''));
+ it('never attributes a speaker badge to an empty or non-standard LinkedIn URL',()=>{
+  const speakers=[{id:'constance-nebbula',links:{linkedin:'fr.linkedin.com/in/constance-nebbula'}},{id:'real-speaker',links:{linkedin:'https://www.linkedin.com/in/camille-test'}}];
+  expect(findSpeakerProfile('',speakers)).toBeUndefined();
+  expect(findSpeakerProfile('https://www.linkedin.com/in/constance-nebbula',speakers)).toBeUndefined();
+  expect(findSpeakerProfile('linkedin.com/in/camille-test',speakers)?.id).toBe('real-speaker');
+ });
  it('finds exact lowercase sponsor domain',()=>expect(emailDomain(' Maxime@ExploreTheVault.ai ')).toBe('explorethevault.ai'));
  it('orders Platinum, Gold, Silver, standard then surname',()=>{const rows=[['Z','platinum'],['A',null],['B','gold'],['C','silver'],['A','platinum']].map(([last_name,tier])=>({last_name:last_name??'',first_name:'X',profile_status:{sponsor_tier:tier??null}}));expect(sortDirectory(rows).map(x=>x.last_name)).toEqual(['A','Z','B','C','A']);});
  const valid={...emptyProfile,email:'test@example.com',first_name:'A',last_name:'B',linkedin_url:'https://linkedin.com/in/test',job_tags:['tech_data'],intentions:['recruit']};
