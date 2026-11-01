@@ -42,7 +42,7 @@ const InvitationEmail = ({ lang = 'fr', firstName, url = 'https://hey.genai-days
 
 export const template = {
   component: InvitationEmail,
-  subject: (d: Record<string, any>) => (copy[d.lang as 'fr' | 'en'] ?? copy.fr).subject,
+  subject: (d: Props) => (copy[d.lang ?? "fr"] ?? copy.fr).subject,
   displayName: 'Invitation',
   previewData: { lang: 'fr', firstName: 'Camille', url: 'https://hey.genai-days-nantes.com/join?token=exemple' },
 } satisfies TemplateEntry

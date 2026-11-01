@@ -35,8 +35,8 @@ const ConnectionAcceptedEmail = ({ lang = 'fr', recipientName, url = 'https://he
 
 export const template = {
   component: ConnectionAcceptedEmail,
-  subject: (d: Record<string, any>) => {
-    const c = copy[d.lang as 'fr' | 'en'] ?? copy.fr
+  subject: (d: Props) => {
+    const c = copy[d.lang ?? "fr"] ?? copy.fr
     return c.subject(d.recipientName || (d.lang === 'en' ? 'An attendee' : 'Un·e participant·e'))
   },
   displayName: 'Connexion acceptée',

@@ -34,7 +34,7 @@ const UnreadReminderEmail = ({ lang = 'fr', senderName, url = 'https://hey.genai
 
 export const template = {
   component: UnreadReminderEmail,
-  subject: (d: Record<string, any>) => (copy[d.lang as 'fr' | 'en'] ?? copy.fr).subject(d.senderName || fallback(d.lang)),
+  subject: (d: Props) => (copy[d.lang ?? "fr"] ?? copy.fr).subject(d.senderName || fallback(d.lang)),
   displayName: 'Rappel de message non lu',
   previewData: { lang: 'fr', senderName: 'Camille Martin' },
 } satisfies TemplateEntry

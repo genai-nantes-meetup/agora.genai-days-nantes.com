@@ -35,8 +35,8 @@ const ConnectionRequestEmail = ({ lang = 'fr', senderName, url = 'https://hey.ge
 
 export const template = {
   component: ConnectionRequestEmail,
-  subject: (d: Record<string, any>) => {
-    const c = copy[d.lang as 'fr' | 'en'] ?? copy.fr
+  subject: (d: Props) => {
+    const c = copy[d.lang ?? "fr"] ?? copy.fr
     return c.subject(d.senderName || (d.lang === 'en' ? 'An attendee' : 'Un·e participant·e'))
   },
   displayName: 'Demande de connexion',
