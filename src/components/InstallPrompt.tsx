@@ -1,13 +1,12 @@
 import { Share, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { getCapturedInstallEvent, subscribeInstallEvent } from "@/lib/pwa";
 
 const IOS_KEY = "hey-genai:ios-hint-seen";
 const ANDROID_KEY = "hey-genai:android-hint-seen";
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<void>;
-}
+type BeforeInstallPromptEvent = Parameters<typeof subscribeInstallEvent>[0];
 
 export function InstallPrompt() {
   const { t } = useI18n();
@@ -22,38 +21,9 @@ export function InstallPrompt() {
 
     const ua = navigator.userAgent;
     const isIos = /iphone|ipad|ipod/i.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
-    const isAndroid = /android/i.test(ua);
 
-    if (isAndroid) {
-      // Chrome/Android fires beforeinstallprompt before React mounts: if we
-      // miss it, register a late listener and ask the browser for the saved one.
-      const onPrompt = (e: Event) => {
-        e.preventDefault();
-        if (androidEvent) return;
-        try {
-          if (localStorage.getItem(ANDROID_KEY)) return;
-          localStorage.setItem(ANDROID_KEY, "1"); // shown only once
-        } catch {
-          /* ignore */
-        }
-        setAndroidEvent(e as BeforeInstallPromptEvent);
-      };
-      window.addEventListener("beforeinstallprompt", onPrompt);
-      const native = (navigator as Navigator & { getInstalledRelatedApps?: unknown }).getInstalledRelatedApps;
-      if (native) {
-        // If the event never arrives (some Android browsers), fall back silently.
-        window.setTimeout(() => undefined, 0);
-      }
-      const onInstalled = () => setAndroidEvent(null);
-      window.addEventListener("appinstalled", onInstalled);
-      return () => {
-        window.removeEventListener("beforeinstallprompt", onPrompt);
-        window.removeEventListener("appinstalled", onInstalled);
-      };
-    }
-
-    // Desktop: swallow the event, no custom UI.
     if (!isIos) {
+      // Desktop: no custom UI (pwa.ts only captures the prompt event on Android).
       const swallow = (e: Event) => e.preventDefault();
       window.addEventListener("beforeinstallprompt", swallow);
       return () => window.removeEventListener("beforeinstallprompt", swallow);
@@ -68,8 +38,31 @@ export function InstallPrompt() {
       /* ignore */
     }
     return undefined;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const showOnce = (e: BeforeInstallPromptEvent): boolean => {
+      try {
+        if (localStorage.getItem(ANDROID_KEY)) return false;
+        localStorage.setItem(ANDROID_KEY, "1"); // shown only once
+      } catch {
+        /* ignore */
+      }
+      setAndroidEvent(e);
+      return true;
+    };
+
+    const captured = getCapturedInstallEvent();
+    if (captured) showOnce(captured);
+    return subscribeInstallEvent((e) => showOnce(e));
+  }, []);
+
+  useEffect(() => {
+    if (!androidEvent) return;
+    const onInstalled = () => setAndroidEvent(null);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => window.removeEventListener("appinstalled", onInstalled);
+  }, [androidEvent]);
 
   if (!ios && !androidEvent) return null;
 
@@ -100,7 +93,7 @@ export function InstallPrompt() {
               </button>
             </>
           ) : (
-            <p className="flex-1 text-sm leading-snug">{t("install.ios")}</p>
+            <p className="text-sm leading-snug">{t("install.ios")}</p>
           )}
         </div>
         <button
