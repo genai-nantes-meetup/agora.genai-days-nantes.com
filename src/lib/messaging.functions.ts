@@ -6,10 +6,10 @@ const uuid=z.object({id:z.string().uuid()});
 export const inbox=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
  setResponseHeader('Cache-Control','no-store');
  const {data:active}=await context.supabase.rpc('is_active_member',{uid:context.userId});if(!active)throw new Error('Forbidden');
- const [requests,conversations]=await Promise.all([context.supabase.rpc('member_connections'),context.supabase.from('conversations').select('*')]);
- if(requests.error||conversations.error)throw new Error('Unavailable');
+ const [requests,conversations,summaries]=await Promise.all([context.supabase.rpc('member_connections'),context.supabase.from('conversations').select('id,request_id,user_a,user_b,created_at,closed_at'),context.supabase.rpc('inbox_summaries')]);
+ if(requests.error||conversations.error||summaries.error)throw new Error('Unavailable');
  // A declined response is deliberately indistinguishable from pending for the sender.
- return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data};
+ return {requests:requests.data.map(r=>({...r,status:r.requester_id===context.userId&&r.status==='declined'?'pending':r.status})),conversations:conversations.data,summaries:summaries.data};
 });
 export const sendConnection=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(uuid).handler(async({data,context})=>{
  setResponseHeader('Cache-Control','no-store');const {data:before}=await context.supabase.rpc('member_connections');const existing=before?.some(r=>[r.requester_id,r.recipient_id].includes(data.id));const {data:id,error}=await context.supabase.rpc('request_connection',{target:data.id});if(error||!id)throw new Error('Forbidden');if(!existing){const {notifyRequest}=await import('./notifications.server');await notifyRequest(id).catch(()=>{});}const {emailConnectionRequest}=await import('./app-emails.server');await emailConnectionRequest(id).catch(()=>console.error('Request email failed'));return {id};
