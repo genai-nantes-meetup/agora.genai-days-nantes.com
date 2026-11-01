@@ -1,4 +1,4 @@
-import {useState,useEffect,useRef} from 'react';
+import {useState,useRef} from 'react';
 import {Link} from '@tanstack/react-router';
 import {useServerFn} from '@tanstack/react-start';
 import {Button} from '@/components/ui/button';
