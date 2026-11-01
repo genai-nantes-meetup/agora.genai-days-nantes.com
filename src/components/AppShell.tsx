@@ -40,9 +40,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const {unread}=useMessaging();
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-2xl flex-col lg:max-w-6xl lg:px-6">
+    <div className="flex min-h-dvh flex-col">
       <header className="grain pt-safe sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
-        <div className="grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
+        <div className="mx-auto grid h-16 w-full max-w-2xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 lg:max-w-6xl lg:px-6">
           <Link to="/" className="flex min-w-0 items-baseline">
             <Wordmark className="text-2xl leading-none" />
           </Link>
@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       </header>
 
-      <div className="flex flex-1 lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8"><aside className="sticky top-24 hidden h-fit border-r pr-5 pt-6 lg:block"><nav aria-label={t("nav.program")}><ul className="space-y-2">{tabs.map(({to,key,icon:Icon,match})=><li key={to}><Button asChild variant={match(pathname)?"secondary":"ghost"} className="h-12 w-full justify-start gap-3"><Link to={to} aria-current={match(pathname)?"page":undefined}><Icon className="size-5 shrink-0"/>{t(key)}</Link></Button></li>)}</ul></nav><Button asChild variant="link" className="mt-6 text-xs"><Link to="/donnees">{t("legal.link")}</Link></Button></aside><main className="min-w-0 flex-1 pb-24 lg:pb-8">{children}</main></div>
+      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col lg:max-w-6xl lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-8 lg:px-6"><aside className="sticky top-24 hidden h-fit border-r pr-5 pt-6 lg:block"><nav aria-label={t("nav.program")}><ul className="space-y-2">{tabs.map(({to,key,icon:Icon,match})=><li key={to}><Button asChild variant={match(pathname)?"secondary":"ghost"} className="h-12 w-full justify-start gap-3"><Link to={to} aria-current={match(pathname)?"page":undefined}><Icon className="size-5 shrink-0"/>{t(key)}</Link></Button></li>)}</ul></nav><Button asChild variant="link" className="mt-6 text-xs"><Link to="/donnees">{t("legal.link")}</Link></Button></aside><main className="min-w-0 flex-1 pb-24 lg:pb-8">{children}</main></div>
 
       <SiteFooter />
 
