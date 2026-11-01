@@ -28,6 +28,7 @@
   "push.later": "Not now",
   "push.ios": "Install the app on your home screen to receive notifications.",
   "push.unavailable": "Notifications are not available yet.",
+  "push.failed": "Activation failed. Try again with the app opened directly in your browser.",
   "nav.program": "Program",
   "nav.plan": "Map",
   "nav.profile": "Profile",

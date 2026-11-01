@@ -3,7 +3,7 @@
 Current tasks:
 
 - [ ] Fix notification activation error and verify signed-in activation.
-- [ ] Delete all invitation requests once the requested type is clarified.
+- [x] Delete all contact requests: one pending request removed, zero remaining verified; no accepted requests or conversations affected.
 
 - [x] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; matching existing account updated and verified in directory and participant page
 

@@ -28,6 +28,7 @@
   "push.later": "Pas maintenant",
   "push.ios": "Installez l’app sur l’écran d’accueil pour recevoir les notifications.",
   "push.unavailable": "Les notifications ne sont pas encore disponibles.",
+  "push.failed": "L’activation a échoué. Réessayez depuis l’application ouverte directement dans votre navigateur.",
   "nav.program": "Programme",
   "nav.plan": "Plan",
   "nav.profile": "Profil",
