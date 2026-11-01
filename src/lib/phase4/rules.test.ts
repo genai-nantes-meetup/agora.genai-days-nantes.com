@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {staffSize,feedbackOpen,purgeAllowed,feedbackInput,tagsSchema,pitchSchema,iceSchema,filtersSchema,fillEmpty} from './rules';
+import {staffSize,feedbackOpen,purgeAllowed,feedbackInput,tagsSchema,pitchSchema,iceSchema,filtersSchema,fillEmpty,parseAirscalePerson} from './rules';
 import {parseInvites,exportCsv} from './csv';
 describe('Phase 4 concrete rules',()=>{
  it('maps exact staff boundaries',()=>{expect([0,9,10,249,250,4999,5000].map(staffSize)).toEqual(['tpe','tpe','pme','pme','eti','eti','grand_groupe']);expect(staffSize(null)).toBeNull();});
