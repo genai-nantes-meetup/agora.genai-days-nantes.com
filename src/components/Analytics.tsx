@@ -53,7 +53,7 @@ export function Analytics() {
     prevUser.current = id;
     if (id && id !== prev) {
       void identifyCurrentUser(id);
-      if (prev === null) track('signed_in');
+      if (prev === null || (prev === undefined && /[?&#](code|access_token|token_hash)=/.test(window.location.href))) track('signed_in');
     } else if (!id && prev) {
       track('signed_out');
       resetAnalytics();
