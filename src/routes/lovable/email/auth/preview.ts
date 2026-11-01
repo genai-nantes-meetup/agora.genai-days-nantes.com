@@ -18,7 +18,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "Hey Genai Days Companion"
+const SITE_NAME = "GenAI Days Nantes"
 const ROOT_DOMAIN = "hey.genai-days-nantes.com"
 
 // Sample data for preview mode ONLY (not used in actual email sending).
