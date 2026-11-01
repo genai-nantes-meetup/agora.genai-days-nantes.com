@@ -1,6 +1,5 @@
 import {buildPushPayload} from '@block65/webcrypto-web-push';
 import fr from '@/locales/fr.json';
-import en from '@/locales/en.json';
 const allowedPushHosts=['fcm.googleapis.com','updates.push.services.mozilla.com','web.push.apple.com','wns2-bl2p.notify.windows.com'];
 export function validPushEndpoint(endpoint:string){const u=new URL(endpoint);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&(allowedPushHosts.includes(u.hostname)||u.hostname.endsWith('.notify.windows.com'));}
 export async function pushToUser(uid:string,payload:{title:string;body:string;url:string;tag:string}){
