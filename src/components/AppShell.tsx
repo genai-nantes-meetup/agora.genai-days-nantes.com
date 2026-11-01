@@ -1,3 +1,4 @@
+import {track} from '@/lib/analytics';
 import { Link, useRouterState } from "@tanstack/react-router";
 import { CalendarDays, Map, MessageCircle, User, Users, WifiOff } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -48,7 +49,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           <div className="flex shrink-0 items-center gap-2"><Button asChild variant="ghost" size="icon" aria-label={t(user ? "nav.profile" : "auth.login")} title={t(user ? "nav.profile" : "auth.login")}><Link to={user ? "/profil" : "/login"}><User className="size-4" /></Link></Button><Button
             type="button"
-            onClick={() => setLang(lang === "fr" ? "en" : "fr")}
+            onClick={() => { const to = lang === "fr" ? "en" : "fr"; track("language_switched", { from: lang, to }); setLang(to); }}
             aria-label={t("lang.switch")}
             variant="outline" className="flex h-auto gap-0 overflow-hidden rounded-full p-0 font-label text-xs"
           >
