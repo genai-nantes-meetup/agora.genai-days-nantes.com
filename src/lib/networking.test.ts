@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,onboardingSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX} from './networking';
+import {normalizeLinkedIn,emailDomain,sortDirectory,profileSchema,onboardingSchema,emptyProfile,profileComplete,linkedInSuffix,LINKEDIN_PREFIX,findSpeakerProfile} from './networking';
 describe('phase 2 rules',()=>{
  it('uses the requested fixed LinkedIn prefix',()=>expect(LINKEDIN_PREFIX).toBe('https://www.linkedin.com/in/'));
  it('strips the prefix of a pasted full LinkedIn URL',()=>expect(linkedInSuffix('https://www.linkedin.com/in/camille-test')).toBe('camille-test'));
