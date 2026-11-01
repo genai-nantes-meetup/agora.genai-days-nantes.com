@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {supabaseAdmin} from '@/integrations/supabase/client.server';
 import {staffSize,parseAirscalePerson} from './rules';
 export async function enrich(uid:string,url:string,key:string){
- const {data:cached}=await supabaseAdmin.from('enrichment_cache').select('result,success').eq('user_id',uid).eq('linkedin_url',url).maybeSingle();if(cached)return {profile:cached.result,success:cached.success};
+ const {data:cached}=await supabaseAdmin.from('enrichment_cache').select('result,success').eq('user_id',uid).eq('linkedin_url',url).maybeSingle();if(cached?.success)return {profile:cached.result,success:true};if(cached)await supabaseAdmin.from('enrichment_cache').delete().eq('user_id',uid).eq('linkedin_url',url).eq('success',false);
  const {data:reserved,error}=await supabaseAdmin.rpc('reserve_enrichment',{uid,url});if(error||!reserved)return {profile:null,success:false};
  const signal=AbortSignal.timeout(8000);
  const post=async(path:string,url:string)=>{const r=await fetch(`https://api.airscale.io/v1/${path}`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({linkedin_profile_url:url}),signal});if(!r.ok)throw new Error('Unavailable');return r.json();};
