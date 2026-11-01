@@ -22,16 +22,12 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
  const prefill=useServerFn(enrichLinkedIn);
  const [prefillFailed,setPrefillFailed]=useState(false);
  const [avatar,setAvatar]=useState<string|null>(null);
- const latest=useRef(value.linkedin_url);latest.current=value.linkedin_url;
  const pending=useRef<Promise<void>|null>(null);
- useEffect(()=>{pending.current=null;},[value.linkedin_url]);
- useEffect(()=>{if(step!==0||!/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(value.linkedin_url)))return;const url=value.linkedin_url;const timer=setTimeout(()=>{setLoading(true);setPrefillFailed(false);const call=prefill({data:{linkedin_url:url}}).then(result=>{if(latest.current!==url)return;if(result.profile&&typeof result.profile==='object'&&!Array.isArray(result.profile))setValue(old=>fillEmpty(old,result.profile as Partial<ProfileInput>));setPrefillFailed(!result.success);setAvatar(result.avatar??null);}).catch(()=>setPrefillFailed(true)).finally(()=>setLoading(false));pending.current=call;},650);return()=>clearTimeout(timer);},[value.linkedin_url,step,prefill]);
  async function submit(){
   setError(false);
   if(step===0){
    if(!/^linkedin\.com\/in\/[^/]+$/.test(normalizeLinkedIn(value.linkedin_url))){setError(true);return;}
-   if(pending.current)await pending.current;
-   else {setLoading(true);try{const result=await prefill({data:{linkedin_url:value.linkedin_url}});if(result.profile&&typeof result.profile==='object'&&!Array.isArray(result.profile))setValue(old=>fillEmpty(old,result.profile as Partial<ProfileInput>));setPrefillFailed(!result.success);setAvatar(result.avatar??null);}catch{setPrefillFailed(true);}finally{setLoading(false);}}
+   setLoading(true);try{const result=await prefill({data:{linkedin_url:value.linkedin_url}});if(result.success&&result.profile&&typeof result.profile==='object'&&!Array.isArray(result.profile))setValue(old=>fillEmpty(old,result.profile as Partial<ProfileInput>));if(result.success)setAvatar(result.avatar??null);}catch{/* skip silently */}finally{setLoading(false);}
    setStep(1);
    return;
   }
