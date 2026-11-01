@@ -12,9 +12,9 @@ export const Route = createFileRoute("/")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Programme · Hey GenAI Days" },
+      { title: "Programme et meetings - GenAI Days Nantes" },
       { name: "description", content: "Le programme des GenAI Days du 17 novembre 2026 à Nantes : talks, keynotes et tables rondes." },
-      { property: "og:title", content: "Programme · Hey GenAI Days" },
+      { property: "og:title", content: "Programme et meetings - GenAI Days Nantes" },
       { property: "og:description", content: "Toutes les sessions des GenAI Days, track Décideurs et track Tech." },
     ],
   }),

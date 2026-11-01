@@ -70,7 +70,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Hey GenAI Days" },
+      { title: "Programme et meetings - GenAI Days Nantes" },
       { name: "description", content: "L'app compagnon des GenAI Days, 17 novembre 2026, Nantes." },
       { name: "theme-color", content: "#09122e" },
       { name: "apple-mobile-web-app-capable", content: "yes" },

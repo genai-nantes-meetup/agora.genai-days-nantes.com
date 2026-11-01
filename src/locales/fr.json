@@ -1,5 +1,5 @@
 {
-  "appName": "Hey GenAI Days",
+  "appName": "GenAI Days Nantes",
   "nav.networking": "Networking",
   "nav.messages": "Messages",
   "connection.sent": "Demande envoyée",
@@ -79,7 +79,7 @@
   "plan.hint": "Pincez ou double-touchez pour zoomer.",
   "plan.reset": "Réinitialiser le zoom",
   "install.cta": "Installer l'app",
-  "install.body": "Ajoutez Hey GenAI Days à votre écran d'accueil.",
+  "install.body": "Ajoutez GenAI Days Nantes à votre écran d’accueil.",
   "install.ios": "Pour installer l'app : touchez Partager, puis « Sur l'écran d'accueil ».",
   "close": "Fermer",
   "offline": "Hors connexion : données enregistrées",
