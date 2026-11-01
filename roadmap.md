@@ -4,7 +4,7 @@ Current tasks:
 
 - [x] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; matching existing account updated and verified in directory and participant page
 
-- [ ] Accepter dans Messages : erreur reproduite avec le compte connecté, Twilio refuse la clé configurée (401, code 70051), y compris sur les lectures du service, configuration et rôles. Bloqué : remplacer les accès Twilio valides pour Conversations, puis vérifier l’acceptation de bout en bout.
+- [ ] Fix Twilio acceptance: reproduced API-key refusal (401 / 70051); account-token verification also rejected (401 / 20003). Help replace a consistent set of Twilio credentials, then verify acceptance end to end. Waiting for valid credentials.
 
 - [x] Retirer le badge speaker de Maxime Pitussi en base, et corriger l'attribution automatique (LinkedIn vides considérés comme identiques) pour que le badge ne revienne pas
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field
