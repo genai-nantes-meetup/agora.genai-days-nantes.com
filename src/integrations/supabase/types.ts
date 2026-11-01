@@ -81,6 +81,7 @@ export type Database = {
       }
       connection_requests: {
         Row: {
+          accepted_email_sent_at: string | null
           cancelled_at: string | null
           created_at: string
           id: string
@@ -93,6 +94,7 @@ export type Database = {
           status: string
         }
         Insert: {
+          accepted_email_sent_at?: string | null
           cancelled_at?: string | null
           created_at?: string
           id?: string
@@ -105,6 +107,7 @@ export type Database = {
           status?: string
         }
         Update: {
+          accepted_email_sent_at?: string | null
           cancelled_at?: string | null
           created_at?: string
           id?: string
@@ -236,6 +239,24 @@ export type Database = {
           },
         ]
       }
+      email_settings: {
+        Row: {
+          auto_send_late_invites: boolean
+          id: boolean
+          updated_at: string
+        }
+        Insert: {
+          auto_send_late_invites?: boolean
+          id?: boolean
+          updated_at?: string
+        }
+        Update: {
+          auto_send_late_invites?: boolean
+          id?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       enrichment_cache: {
         Row: {
           created_at: string
@@ -277,6 +298,7 @@ export type Database = {
           email: string
           first_name: string
           id: string
+          invitation_sent_at: string | null
           last_name: string
           token: string
           used_at: string | null
@@ -289,6 +311,7 @@ export type Database = {
           email: string
           first_name?: string
           id?: string
+          invitation_sent_at?: string | null
           last_name?: string
           token?: string
           used_at?: string | null
@@ -301,6 +324,7 @@ export type Database = {
           email?: string
           first_name?: string
           id?: string
+          invitation_sent_at?: string | null
           last_name?: string
           token?: string
           used_at?: string | null
@@ -662,6 +686,7 @@ export type Database = {
       claim_connection_accept: {
         Args: { actor: string; claim: string; request: string }
         Returns: {
+          accepted_email_sent_at: string | null
           cancelled_at: string | null
           created_at: string
           id: string

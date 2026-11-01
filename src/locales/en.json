@@ -266,5 +266,15 @@
   "admin.metric.accepted": "Requests accepted",
   "admin.metric.conversations": "Conversations",
   "admin.metric.message_events": "Messages",
-  "admin.metric.session_feedback": "Feedback entries"
+  "admin.metric.session_feedback": "Feedback entries",
+  "admin.emails": "Invitation emails",
+  "admin.sendUnsent": "Send unsent invitations",
+  "admin.sendConfirm": "{n} invitation(s) will be emailed. Confirm sending?",
+  "admin.confirmSend": "Send",
+  "admin.cancel": "Cancel",
+  "admin.sendResult": "Sent: {sent} · Not sent: {failed}",
+  "admin.autoLate": "Automatically send late invitations",
+  "admin.sentAt": "Sent on {date}",
+  "admin.notSent": "Not sent",
+  "admin.resend": "Resend"
 }

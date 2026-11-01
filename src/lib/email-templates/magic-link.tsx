@@ -1,79 +1,20 @@
 import * as React from 'react'
+import { Code, Cta, Divider, Frame, H1, H2, P } from './layout'
 
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Text,
-} from '@react-email/components'
+interface MagicLinkEmailProps { siteName: string; confirmationUrl: string }
 
-interface MagicLinkEmailProps {
-  siteName: string
-  confirmationUrl: string
-}
-
-export const MagicLinkEmail = ({
-  siteName,
-  confirmationUrl,
-}: MagicLinkEmailProps) => (
-  <Html lang="en" dir="ltr">
-    <Head>
-      <style>{darkModeCss}</style>
-    </Head>
-    <Preview>Your login link for {siteName}</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Your login link</Heading>
-        <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
-        </Text>
-        <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Log In
-        </Button>
-        <Text style={footer}>
-          If you didn't request this link, you can safely ignore this email.
-        </Text>
-      </Container>
-    </Body>
-  </Html>
+export const MagicLinkEmail = ({ confirmationUrl }: MagicLinkEmailProps) => (
+  <Frame lang="fr" preview="Votre lien de connexion / Your login link">
+      <H1>Votre lien de connexion</H1>
+      <P>Cliquez sur le bouton pour vous connecter à l'app GenAI Days. Ce lien expire rapidement.</P>
+      <Cta href={confirmationUrl}>Me connecter</Cta>
+      <P small>Vous n'avez rien demandé ? Ignorez simplement cet e-mail.</P>
+      <Divider />
+      <H2>Your login link</H2>
+      <P>Click the button to sign in to the GenAI Days app. This link expires shortly.</P>
+      <Cta href={confirmationUrl}>Sign in</Cta>
+      <P small>Didn't request this? You can ignore this email.</P>
+  </Frame>
 )
 
 export default MagicLinkEmail
-
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#09122e',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#393636',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const button = {
-  backgroundColor: '#fe4d1b',
-  color: '#ffffff',
-  fontSize: '14px',
-  border: '1px solid #fe4d1b',
-  borderRadius: '8px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
-// Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
-const darkModeCss = `
-  @media (prefers-color-scheme: dark) {
-    .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-  }
-  [data-ogsc] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-  [data-ogsb] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-`
