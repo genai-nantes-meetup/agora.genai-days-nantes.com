@@ -20,7 +20,7 @@ const EmojiPicker=lazy(()=>import('@/components/EmojiPicker'));
 
 export const Route=createFileRoute('/_authenticated/messages/$id')({head:()=>({meta:[{title:'Conversation · GenAI Days Nantes'},{name:'description',content:'Votre conversation privée aux GenAI Days.'},{property:'og:title',content:'Conversation · GenAI Days Nantes'},{property:'og:description',content:'Échanges privés entre participant·es.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:ConversationPage});
 
-type Local=ChatMessage&{status?:'sending'|'failed';firstTry?:number;error?:string};
+type Local=ChatMessage&{status?:'sending'|'failed'|undefined;firstTry?:number|undefined;error?:string|undefined};
 type ReactionRow={message_id:string;user_id:string;emoji:string};
 
 function ConversationPage(){

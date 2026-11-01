@@ -30,7 +30,7 @@ export type SendResult={ok:true;message:import('./messaging').ChatMessage}|{ok:f
 /** Idempotent on the client-generated id; push is attempted only for a newly created message and never fails the send. */
 export const sendMessage=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({id:z.string().uuid(),conversationId:z.string().uuid(),body:z.string().trim().min(1).max(1600),replyTo:z.string().uuid().nullable()})).handler(async({data,context}):Promise<SendResult>=>{
  setResponseHeader('Cache-Control','no-store');
- const {data:result,error}=await context.supabase.rpc('send_message',{p_id:data.id,p_conversation_id:data.conversationId,p_body:data.body,p_reply_to_id:data.replyTo??undefined});
+ const {data:result,error}=await context.supabase.rpc('send_message',{p_id:data.id,p_conversation_id:data.conversationId,p_body:data.body,...(data.replyTo?{p_reply_to_id:data.replyTo}:{})});
  if(error){const code=PERMANENT.find(c=>error.message.includes(c));return {ok:false,code:code??'Unavailable'};}
  const r=result as {message:import('./messaging').ChatMessage;created:boolean};
  if(r.created){try{const {notifyMessage}=await import('./notifications.server');await notifyMessage(r.message.id);}catch{console.error('Message push failed');}}
