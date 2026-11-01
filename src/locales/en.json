@@ -320,5 +320,7 @@
   "messages.you": "You",
   "messages.actionFailed": "That didn’t work. Please try again.",
   "messages.pushBody": "New message from {name}",
-  "appShortName": "Agora"
+  "appShortName": "Agora",
+  "push.rateTitle": "GenAI Days Agora",
+  "push.rateBody": "Rate the session: {title}"
 }
