@@ -34,7 +34,7 @@ export function BackLink({ to = "/" }: { to?: "/" | "/speakers" | "/sponsors" })
     <button
       type="button"
       onClick={() => (window.history.length > 1 ? router.history.back() : router.navigate({ to }))}
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground"
+      className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-muted-foreground"
     >
       <ArrowLeft className="size-4" />
       {t("back")}
