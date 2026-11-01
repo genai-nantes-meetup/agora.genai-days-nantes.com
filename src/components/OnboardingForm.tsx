@@ -33,7 +33,7 @@ export function OnboardingForm({initial,initialAvatar=null,busy,onSubmit}:{initi
    setStep(1);
    return;
   }
-  const parsed=profileSchema.safeParse({...value,lang,consent});
+  const parsed=onboardingSchema.safeParse({...value,lang,consent});
   if(!parsed.success){setError(true);return;}
   await onSubmit(parsed.data,photo);
  }
