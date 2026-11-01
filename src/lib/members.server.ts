@@ -1,5 +1,5 @@
 import {supabaseAdmin} from '@/integrations/supabase/client.server';
-import {normalizeLinkedIn,emailDomain} from './networking';
+import {findSpeakerProfile,emailDomain} from './networking';
 import type {SpeakersPayload} from './event';
 export async function recalculateStatus(uid:string,email:string,linkedin:string) {
  const {data:old,error}=await supabaseAdmin.from('profile_status').select('*').eq('user_id',uid).single(); if(error) throw error;
