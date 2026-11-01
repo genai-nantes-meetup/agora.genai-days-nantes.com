@@ -35,3 +35,4 @@
 
 - App emails go only through the scaffolded Lovable send helper from src/lib/app-emails.server.ts, each send claimed by a database timestamp first, because this guarantees deduplication and a single provider.
 - Product analytics go only through src/lib/analytics.ts (`track`, typed event map, browser-only, never throws) with pure helpers in src/lib/analytics-rules.ts; event props carry ids and enums only, and private free text is marked `ph-no-capture`, because analytics must never leak user-typed content or break the app.
+- Session rating pushes run from a managed 5-minute schedule on the event day only; eligibility lives in feedbackPushDue (src/lib/event.ts) and each session is claimed once in session_feedback_pushes, so retries never double-send.
