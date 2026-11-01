@@ -20,7 +20,6 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
  const [loading,setLoading]=useState(false);
  const [error,setError]=useState(false);
  const prefill=useServerFn(enrichLinkedIn);
- const [prefillFailed,setPrefillFailed]=useState(false);
  const [avatar,setAvatar]=useState<string|null>(null);
  const pending=useRef<Promise<void>|null>(null);
  async function submit(){
