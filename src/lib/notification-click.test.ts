@@ -1,10 +1,9 @@
-// @vitest-environment node
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it, vi } from 'vitest';
 
 const origin = 'https://hey.genai-days-nantes.com';
-const source = readFileSync(new URL('../../public/notifications/worker.js', import.meta.url), 'utf8');
+const source = readFileSync('public/notifications/worker.js', 'utf8');
 
 function worker(windows: unknown[] = []) {
   const listeners = new Map<string, (event: unknown) => void>();
