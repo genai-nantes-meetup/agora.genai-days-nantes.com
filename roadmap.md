@@ -4,6 +4,7 @@ Current tasks:
 
 - [ ] City: LinkedIn prefill during onboarding and editable autosaved profile field
 - [ ] Participant page: visible contact request button
+- [ ] Messages: discreet notification activation button
 
 - [x] Back buttons: link pointer cursor
 - [x] Profile edit page: single page, all fields editable without steps; Save button removed (autosave only)
