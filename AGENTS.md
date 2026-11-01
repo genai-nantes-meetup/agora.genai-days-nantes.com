@@ -29,3 +29,5 @@
 
 - Phase 4 modules live in src/lib/phase4: pure schemas/rules have focused tests, provider code stays in server helpers, and authenticated RPCs validate access before privileged work.
 - Purge runs in bounded leased batches, checks its dated paused control before destructive stages, preserves two verified designated admins, and is never executed destructively in tests.
+
+- App emails go only through the scaffolded Lovable send helper from src/lib/app-emails.server.ts, each send claimed by a database timestamp first, because this guarantees deduplication and a single provider.

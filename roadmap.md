@@ -31,7 +31,7 @@ Phase 2 scope excluded connection requests, messaging, Airscale, AI, invitation 
 - [x] Enforce messaging closure on 24 November 2026 at midnight Paris time through authenticated send functions and read-only Twilio client roles; exact date unit-tested.
 - [x] Add signed Twilio callbacks, Web Push delivery code and one-time permission invitation.
 - [ ] Activate browser push: requires a securely supplied VAPID public/private key pair and real-device verification.
-- [ ] Add bilingual per-event emails and five-minute reminder sends: blocked on configuring an owned email domain; no email scaffold or schedule created yet.
+- [x] Bilingual per-event emails built; five-minute reminder prepared (see Emails section).
 - [ ] Activate cleanup/reconciliation schedule and configure read-only Twilio roles/callbacks: blocked on authorized Twilio key and publication.
 - [x] Run 29 rule/routing tests, three-account request/decline/block/privacy flows, unsigned-callback rejection and desktop/mobile screenshots.
 - [ ] Verify real acceptance/messages/token renewal/unread/read receipts/push/email delivery: blocked on Twilio permissions, VAPID and sender domain.
@@ -61,7 +61,7 @@ Phase 3 excludes Airscale, AI, feedback and administration.
 - [ ] Assign Maxime as initial admin: blocked because verified ownership is not yet established. Add Samuel through /admin after he has a verified account; his email remains to be supplied. Purge retains exactly two designated admins and stays paused until then.
 - [x] n8n endpoint implemented: POST https://hey.genai-days-nantes.com/api/public/invitations; JSON email, first_name, last_name, billetweb_ref; Authorization Bearer shared secret; idempotent email upsert preserves token and returns {url: joinLink}. Missing-secret request safely returns JSON 401 (no server-crash signal).
 - [ ] Activate/test signed n8n requests: blocked on N8N_INVITE_SECRET and publishing the endpoint. Secure secret form tool is unavailable; user must enter it in Project Settings -> Secrets. Use the same strong random value in n8n.
-- [ ] App emails intentionally not created: no sender domain configured. Connection/request/accepted/unread emails await sender-domain setup.
+- [x] App emails sent via Lovable managed email (sender domain verified).
 - [x] Purge: dated 2026-12-17 00:00 Paris guard, paused control, simulation, atomic retained-admin settings, lease and bounded deletion stages; checks pause before destructive stages. Simulation and pre-date rejection verified. No actual purge run in tests.
 - [x] Managed purge schedule created: December, twice hourly (00/30 UTC), /api/public/jobs/purge; may start within ~30 seconds of scheduled minute, then processes batches. Handler needs publication. Purge is currently paused.
 - [ ] Verify destructive Twilio/avatar/auth purge in production after credentials recovery and two retained-admin designation; never tested destructively. Existing Twilio denial safely leaves purge blocked for later recovery.
@@ -72,3 +72,13 @@ POST https://hey.genai-days-nantes.com/api/public/invitations
 Headers: Content-Type: application/json; Authorization: Bearer <N8N_INVITE_SECRET configured securely in n8n>
 Body: {"email":"participant@example.com","first_name":"Camille","last_name":"Martin","billetweb_ref":"12345"}
 Response: {"url":"https://hey.genai-days-nantes.com/join?token=..."}
+
+# Emails
+- [x] Invitation email (FR), admin bulk send with count + confirmation, invitation_sent_at, per-row Resend, no send on CSV import. Real send + no double send verified.
+- [x] Late n8n invitations auto-sent only when the admin switch is on (off by default). Verified off/on.
+- [x] Connection request email (one per request) and accepted email (to requester), profile language. Real sends + dedupe verified.
+- [x] Unread reminder (5 min, one per conversation until read, no message content); per-minute November schedule on the messaging job. Template delivery verified; job safely skips while Twilio rejects reads (401/70051).
+- [ ] Verify the reminder end-to-end: blocked on an authorized Twilio key, and publishing.
+- [x] No app emails from 24 Nov 2026 00:00 Paris (tested); auth emails unaffected.
+- [x] Auth emails bilingual FR then EN, same branding. Rendering checked; live delivery of the new version needs publishing.
+- [ ] User proofreading of email copy.
