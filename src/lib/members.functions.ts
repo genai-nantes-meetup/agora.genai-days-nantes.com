@@ -7,11 +7,11 @@ const tokenSchema=z.string().min(32).max(128).regex(/^[a-f0-9]+$/);
 export const prefillLinkedIn=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(z.object({linkedin_url:profileSchema.shape.linkedin_url,lang:z.enum(['fr','en'])})).handler(async({data})=>{
  setResponseHeader('Cache-Control','no-store');
  try{
-  const {normalizeLinkedIn}=await import('./networking');
+  const {findSpeakerProfile}=await import('./networking');
   const response=await fetch(`https://genai-days-nantes.com/api/${data.lang}/speakers.json`,{cache:'no-store',signal:AbortSignal.timeout(4000)});
   if(!response.ok)return {profile:null};
   const payload=await response.json() as import('./event').SpeakersPayload;
-  const speaker=payload.speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalizeLinkedIn(data.linkedin_url));
+  const speaker=findSpeakerProfile(data.linkedin_url,payload.speakers);
   if(!speaker)return {profile:null};
   const [first_name,...last]=speaker.name.trim().split(/\s+/);
   return {profile:{first_name:first_name??'',last_name:last.join(' '),job_title:speaker.role??null,company:speaker.company??null}};
