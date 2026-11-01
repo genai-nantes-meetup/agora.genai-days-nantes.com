@@ -1,6 +1,9 @@
 # Roadmap
 
-All current tasks done:
+Current tasks:
+
+- [ ] City: LinkedIn prefill during onboarding and editable autosaved profile field
+- [ ] Participant page: visible contact request button
 
 - [x] Back buttons: link pointer cursor
 - [x] Profile edit page: single page, all fields editable without steps; Save button removed (autosave only)
