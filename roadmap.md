@@ -2,7 +2,8 @@
 
 Current tasks:
 
-- [ ] Fix notification activation error and verify signed-in activation.
+- [x] Harden notification activation: permission requested within click gesture, wait for worker activation, distinguish blocked permission from temporary errors; 19 targeted tests pass and signed-in failure handling verified.
+- [ ] Verify real notification subscription and delivery on a physical browser: sandbox Chromium push service does not complete subscription; needs a real-device check after publishing.
 - [x] Delete all contact requests: one pending request removed, zero remaining verified; no accepted requests or conversations affected.
 
 - [x] Add Organizer badge for seven specified emails, including future accounts, without administrative privileges; matching existing account updated and verified in directory and participant page
