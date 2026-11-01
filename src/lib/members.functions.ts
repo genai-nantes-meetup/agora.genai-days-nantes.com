@@ -11,7 +11,7 @@ export const prefillLinkedIn=createServerFn({method:'POST'}).middleware([require
   const response=await fetch(`https://genai-days-nantes.com/api/${data.lang}/speakers.json`,{cache:'no-store',signal:AbortSignal.timeout(4000)});
   if(!response.ok)return {profile:null};
   const payload=await response.json() as import('./event').SpeakersPayload;
-  const speaker=payload.speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalizeLinkedIn(data.linkedin_url));
+  const speaker=normalizeLinkedIn(data.linkedin_url)?payload.speakers.find(s=>s.links?.linkedin&&normalizeLinkedIn(s.links.linkedin)===normalizeLinkedIn(data.linkedin_url)):undefined;
   if(!speaker)return {profile:null};
   const [first_name,...last]=speaker.name.trim().split(/\s+/);
   return {profile:{first_name:first_name??'',last_name:last.join(' '),job_title:speaker.role??null,company:speaker.company??null}};
