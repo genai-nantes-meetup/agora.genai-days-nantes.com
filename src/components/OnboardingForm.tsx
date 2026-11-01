@@ -43,7 +43,6 @@ export function OnboardingForm({initial,busy,onSubmit}:{initial:Partial<ProfileI
    <AiProfileFields value={value} onChange={patch=>setValue(old=>({...old,...patch}))}/>
    <div className="flex items-start gap-3"><Checkbox id="onboarding-consent" checked={consent} onCheckedChange={v=>setConsent(v===true)}/><div className="text-sm leading-relaxed"><label htmlFor="onboarding-consent">{t('form.consent')}</label>{' '}<Link to="/donnees" target="_blank" className="underline">{t('form.consentLink')}</Link></div></div>
   </div>}
-  {prefillFailed&&<p role="status" className="text-sm text-muted-foreground">{t('enrichment.unavailable')}</p>}
   {error&&<p role="alert" className="text-sm text-destructive">{t('form.onboardingValidation')}</p>}
   <div className="flex gap-3">{step===1&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>setStep(0)}>{t('form.previous')}</Button>}{step===0&&<Button type="button" variant="outline" disabled={busy||loading} onClick={()=>{pending.current=null;setLoading(false);setStep(1);}}>{t('form.skip')}</Button>}<Button type="submit" className="flex-1" disabled={busy||loading}>{t(busy||loading?'loading':step===0?'form.next':'form.finish')}</Button></div>
  </form>;
