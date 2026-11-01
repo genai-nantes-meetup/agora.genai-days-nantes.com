@@ -13,6 +13,7 @@ export interface Session {
   id: string;
   kind?: "session" | "break" | "lunch";
   title: string;
+  quoteTitle?: boolean;
   subtitle?: string | null;
   description?: string | null;
   format: Format | string | null;
