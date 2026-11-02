@@ -120,6 +120,13 @@
       "when": 1793571360757,
       "tag": "0016_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793642908210,
+      "tag": "0017_sponsor_domains_source_sync",
+      "breakpoints": true
     }
   ]
 }
