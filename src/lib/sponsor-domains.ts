@@ -19,7 +19,7 @@ export function domainFromWebsite(website: string | null | undefined): string | 
   return host;
 }
 
-export type SponsorSource = { id: string; tier: string; website?: string | null; name?: string };
+export type SponsorSource = { id: string; tier: string; website?: string | null | undefined; name?: string | undefined };
 export type DesiredDomain = { domain: string; sponsor_id: string; tier: SponsorTier };
 
 /** Domain rows the sync should own; first sponsor wins on a shared domain. */
