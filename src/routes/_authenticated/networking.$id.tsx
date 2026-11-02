@@ -16,6 +16,7 @@ import {membersOptions} from '@/lib/member-queries';
 import {useAuth} from '@/lib/auth';
 import {useI18n,type TKey} from '@/lib/i18n';
 import {supabase} from '@/integrations/supabase/client';
+import {useSponsors} from '@/lib/data';
 import {useServerFn} from '@tanstack/react-start';
 import {ConnectionAction} from '@/components/ConnectionAction';
 import {participantBadges} from '@/lib/networking';
