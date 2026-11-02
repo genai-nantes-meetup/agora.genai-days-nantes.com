@@ -12,7 +12,7 @@ export function domainFromWebsite(website: string | null | undefined): string | 
   host = host.replace(/\.$/, '');
   if (host.startsWith('www.')) host = host.slice(4);
   const labels = host.split('.');
-  if (labels.length > 2 && /^[a-z]{2}$/.test(labels[0])) labels.shift();
+  if (labels.length > 2 && /^[a-z]{2}$/.test(labels[0] ?? '')) labels.shift();
   host = labels.join('.');
   if (!/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/.test(host)) return null;
   if (GENERIC_DOMAINS.some(g => host === g || host.endsWith(`.${g}`))) return null;
