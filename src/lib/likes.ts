@@ -71,13 +71,15 @@ export function useLikes() {
         let owner: string | null = null;
         try { owner = localStorage.getItem(OWNER_KEY); } catch { /* ignore */ }
         const local = read();
-        if (owner !== userId && local.length) {
+        let { data } = await supabase.from("session_likes").select("session_id").eq("user_id", userId);
+        if (!data) return;
+        // Push device likes only on this account's first sync here, and only if the account has none yet.
+        if (owner !== userId && local.length && data.length === 0) {
           const { error } = await supabase
             .from("session_likes")
             .upsert(local.map((session_id) => ({ user_id: userId, session_id })), { onConflict: "user_id,session_id", ignoreDuplicates: true });
-          if (error) return;
+          if (!error) data = local.map((session_id) => ({ session_id }));
         }
-        const { data } = await supabase.from("session_likes").select("session_id").eq("user_id", userId);
         if (cancelled || !data) return;
         try { localStorage.setItem(OWNER_KEY, userId); } catch { /* ignore */ }
         write(data.map((r) => r.session_id));
