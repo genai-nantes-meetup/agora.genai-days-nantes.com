@@ -2,10 +2,11 @@ import {track} from '@/lib/analytics';
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { toggleSessionLike, type Session } from "./event";
+import { overlaps, toggleSessionLike, type Session } from "./event";
 import { useAuth } from "./auth";
 
 const KEY = "hey-genai:likes";
+const OWNER_KEY = "hey-genai:likes-owner";
 const EMPTY: string[] = [];
 let cacheRaw: string | null = null;
 let cache: string[] = EMPTY;
@@ -56,25 +57,42 @@ export function useLikes() {
   const navigate = useNavigate();
   const userId = user?.id ?? null;
 
-  // On sign-in (including right after signup): push local likes to the DB, then load the DB list as source of truth.
+  // The database is the source of truth. Local likes are pushed only once per account on this device
+  // (likes made before signing in); afterwards the local copy is a cache refreshed on sign-in and on return to the app,
+  // so a replacement made on another device is never resurrected here.
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
-    void (async () => {
-      const local = read();
-      if (local.length) {
-        await supabase
-          .from("session_likes")
-          .upsert(local.map((session_id) => ({ user_id: userId, session_id })), {
-            onConflict: "user_id,session_id",
-            ignoreDuplicates: true,
-          });
+    let running = false;
+    const refresh = async () => {
+      if (running) return;
+      running = true;
+      try {
+        let owner: string | null = null;
+        try { owner = localStorage.getItem(OWNER_KEY); } catch { /* ignore */ }
+        const local = read();
+        if (owner !== userId && local.length) {
+          const { error } = await supabase
+            .from("session_likes")
+            .upsert(local.map((session_id) => ({ user_id: userId, session_id })), { onConflict: "user_id,session_id", ignoreDuplicates: true });
+          if (error) return;
+        }
+        const { data } = await supabase.from("session_likes").select("session_id").eq("user_id", userId);
+        if (cancelled || !data) return;
+        try { localStorage.setItem(OWNER_KEY, userId); } catch { /* ignore */ }
+        write(data.map((r) => r.session_id));
+      } finally {
+        running = false;
       }
-      const { data } = await supabase.from("session_likes").select("session_id").eq("user_id", userId);
-      if (!cancelled && data) write(data.map((r) => r.session_id));
-    })();
+    };
+    void refresh();
+    const onVisible = () => { if (document.visibilityState === "visible") void refresh(); };
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
     return () => {
       cancelled = true;
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
     };
   }, [userId]);
 
@@ -89,7 +107,10 @@ export function useLikes() {
       const next = toggleSessionLike(prev, session, all);
       write(next);
       track(next.includes(session.id) ? 'session_liked' : 'session_unliked', { session_id: session.id });
-      const removed = prev.filter((x) => !next.includes(x));
+      // When adding, clear every overlapping like in the database, including ones made on another device.
+      const removed = next.includes(session.id)
+        ? all.filter((o) => o.id !== session.id && overlaps(o, session)).map((o) => o.id)
+        : [session.id];
       const added = next.filter((x) => !prev.includes(x));
       void (async () => {
         try {
