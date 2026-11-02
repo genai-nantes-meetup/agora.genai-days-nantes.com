@@ -863,16 +863,19 @@ export type Database = {
       sponsor_domains: {
         Row: {
           domain: string
+          source: string
           sponsor_id: string
           tier: string
         }
         Insert: {
           domain: string
+          source?: string
           sponsor_id: string
           tier: string
         }
         Update: {
           domain?: string
+          source?: string
           sponsor_id?: string
           tier?: string
         }
@@ -1063,6 +1066,10 @@ export type Database = {
         }[]
       }
       messaging_closed: { Args: never; Returns: boolean }
+      refresh_sponsor_status_for_domains: {
+        Args: { domains: string[] }
+        Returns: undefined
+      }
       request_connection: { Args: { target: string }; Returns: string }
       reserve_ai_call: { Args: { kind: string; uid: string }; Returns: string }
       reserve_enrichment: {
