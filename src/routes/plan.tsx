@@ -43,7 +43,7 @@ function PlanPage() {
             role="tab"
             aria-selected={floor === f.id}
             onClick={() => setFloor(f.id)}
-            className={`-mb-px min-h-11 flex-1 border-b-2 py-2 text-xs font-bold uppercase tracking-[0.08em] ${floor === f.id ? "border-primary text-primary [&]:bg-transparent text-primary-foreground" : "text-muted-foreground"}`}
+            className={`-mb-px min-h-11 flex-1 border-b-2 py-2 text-xs font-bold uppercase tracking-[0.08em] ${floor === f.id ? "border-primary text-primary" : "border-transparent text-foreground"}`}
           >
             {t(f.key)}
           </button>
