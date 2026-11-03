@@ -2,7 +2,7 @@ import { useTrackView } from '@/hooks/use-track-view';
 import {track} from '@/lib/analytics';
 import { createFileRoute } from "@tanstack/react-router";
 import { Minus, Plus } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { useI18n } from "@/lib/i18n";
 
@@ -29,9 +29,32 @@ export const Route = createFileRoute("/plan")({
 function PlanPage() {
   const { t } = useI18n();
   const [floor, setFloor] = useState<(typeof FLOORS)[number]["id"]>("rdc");
-  const current = FLOORS.find((f) => f.id === floor)!;
+  const current = FLOORS.find((f) => f.id === floor) ?? FLOORS[0];
   useTrackView('map_viewed', { floor });
   const zoomed = useRef<string | null>(null);
+  const mapArea = useRef<HTMLDivElement>(null);
+  const [mapHeight, setMapHeight] = useState<number>();
+
+  useEffect(() => {
+    const area = mapArea.current;
+    if (!area) return;
+    const navigation = document.querySelector<HTMLElement>('nav.pb-safe');
+    const updateHeight = () => {
+      const navigationHeight = navigation?.getBoundingClientRect().height ?? 0;
+      // Measure from the page's initial position, not its current scroll position.
+      const top = area.getBoundingClientRect().top + window.scrollY;
+      setMapHeight(Math.max(1, window.innerHeight - top - navigationHeight));
+    };
+    const observer = new ResizeObserver(updateHeight);
+    if (area.previousElementSibling) observer.observe(area.previousElementSibling);
+    if (navigation) observer.observe(navigation);
+    window.addEventListener('resize', updateHeight);
+    updateHeight();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
 
   return (
     <>
@@ -51,12 +74,12 @@ function PlanPage() {
           ))}
         </div>
       </div>
-      <div className="bleed-window relative border-y border-foreground/80 bg-card">
+      <div ref={mapArea} className="bleed-window relative h-[calc(100dvh-13rem)] border-y border-foreground/80 bg-card" style={mapHeight === undefined ? undefined : { height: mapHeight }}>
         <TransformWrapper key={floor} onZoomStop={(ref) => { if (ref.state.scale > 1 && zoomed.current !== floor) { zoomed.current = floor; track('map_zoomed', { floor }); } }} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
           {({ zoomIn, zoomOut }) => (
             <>
-              <TransformComponent wrapperClass="!w-full touch-none" contentClass="!w-full">
-                <img src={current.src} alt={`${t("plan.coming")} · ${t(current.key)}`} className="w-full select-none" draggable={false} />
+              <TransformComponent wrapperClass="!h-full !w-full touch-none" contentClass="!h-full !w-full">
+                <img src={current.src} alt={`${t("plan.coming")} · ${t(current.key)}`} className="h-full w-full select-none object-contain object-center" draggable={false} />
               </TransformComponent>
               <div className="absolute right-2 top-2 flex flex-col gap-2">
                 <button
