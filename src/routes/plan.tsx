@@ -51,7 +51,7 @@ function PlanPage() {
           ))}
         </div>
       </div>
-      <div className="relative border-y border-foreground/80 bg-card">
+      <div className="bleed-window relative border-y border-foreground/80 bg-card">
         <TransformWrapper key={floor} onZoomStop={(ref) => { if (ref.state.scale > 1 && zoomed.current !== floor) { zoomed.current = floor; track('map_zoomed', { floor }); } }} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
           {({ zoomIn, zoomOut }) => (
             <>
