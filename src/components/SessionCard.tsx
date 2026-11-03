@@ -49,7 +49,7 @@ export function SessionCard({
               decoding="async"
               width={640}
               height={280}
-              onError={() => setFailedImage(session.image)}
+              onError={() => setFailedImage(session.image ?? null)}
               className="absolute inset-0 size-full object-cover"
             />
           </div>

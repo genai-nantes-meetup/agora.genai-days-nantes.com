@@ -262,7 +262,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     & .speaker-photo, & .speaker-caption {
-      transition: none;
+      transition: none !important;
     }
     &:is(:hover, :focus, :active) .speaker-photo {
       transform: none;
