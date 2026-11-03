@@ -9,7 +9,7 @@ import { TEMPLATES } from './registry'
 const SITE_NAME = "GenAI Days Agora"
 // SENDER_DOMAIN is the verified sender subdomain FQDN (e.g., "notify.example.com").
 // It MUST match the subdomain delegated to Lovable's nameservers. NEVER use the root domain.
-const SENDER_DOMAIN = "notify.agora.genai-days-nantes.com"
+const SENDER_DOMAIN = "notify.hey.genai-days-nantes.com"
 // FROM_DOMAIN is the domain shown in the From: header (e.g., "example.com").
 // Can be the root domain when display_from_root is enabled — this is cosmetic only.
 const FROM_DOMAIN = "hey.genai-days-nantes.com"
