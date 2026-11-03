@@ -26,9 +26,9 @@ function SpeakersPage() {
     <div>
       <ProgramTabs active="speakers" />
       <OfflineDataNote at={offlineAt} />
-      <div className="px-4 pt-5">
-        <p className="font-label text-xs uppercase text-muted-foreground">{list.length || ""} speakers</p>
-        <h1 className="mt-1 text-page font-extrabold">{t("speakers")}</h1>
+      <div className="px-gutter pb-5 pt-7">
+        <p className="font-label text-xs text-muted-foreground">{list.length || ""} speakers</p>
+        <h1 className="text-page mt-3">{t("speakers")}</h1>
       </div>
       {isPending ? (
         <LoadingView />
@@ -37,23 +37,22 @@ function SpeakersPage() {
       ) : !list.length ? (
         <p className="p-6 text-center text-muted-foreground">{t("speakers.empty")}</p>
       ) : (
-        <ul className="grid grid-cols-2 items-start gap-3 p-4 sm:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-px border-y border-foreground/80 bg-foreground/80 sm:grid-cols-3 lg:grid-cols-4">
           {list.map((s) => (
-            <li key={s.id}>
-              <Link to="/speakers/$id" params={{ id: s.id }} className="flex flex-col overflow-hidden rounded-xl bg-card shadow-card">
+            <li key={s.id} className="bg-background">
+              <Link to="/speakers/$id" params={{ id: s.id }} className="group flex h-full flex-col">
                 <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-surface">
-                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />}
-                </div>
-                <div className="min-w-0 space-y-1.5 p-3">
-                  <p className="font-display break-words text-lg font-semibold leading-tight">{s.name}</p>
+                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="absolute inset-0 size-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0" />}
                   {s.eventRole && (
-                    <span className="inline-block max-w-full rounded bg-accent px-1.5 py-0.5 text-[10px] font-bold uppercase text-accent-foreground">
+                    <span className="font-label sticker absolute left-2 top-2 max-w-[85%] truncate bg-accent px-1.5 py-0.5 text-[10px] text-night">
                       {s.eventRole}
                     </span>
                   )}
-                  <p className="break-words text-xs text-muted-foreground">
-                    {[s.role, s.company].filter(Boolean).join(" · ")}
-                  </p>
+                </div>
+                <div className="flex min-w-0 grow flex-col border-t border-foreground/80 px-3 pb-4 pt-3">
+                  <p className="font-display line-clamp-1 text-lg font-semibold leading-tight">{s.name}</p>
+                  <p className="mt-1 line-clamp-1 text-xs text-foreground">{s.role || "\u00a0"}</p>
+                  <p className="font-label mt-1 line-clamp-1 text-[10.5px] text-muted-foreground">{s.company || "\u00a0"}</p>
                 </div>
               </Link>
             </li>

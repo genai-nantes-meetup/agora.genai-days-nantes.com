@@ -49,7 +49,7 @@ export function SessionCard({
             {speakers.length ? speakers.map((s) => s.name).join(", ") : t("speakers.tbc")}
           </p>
           <p className="font-label mt-3 text-[11px] text-muted-foreground">
-            <span className="block whitespace-nowrap">{session.startTime}-{endTime(session)}</span>
+            <span className="block whitespace-nowrap">{session.startTime}–{endTime(session)}</span>
             <span className="mt-0.5 flex items-center gap-1">
               <MapPin className="size-3 shrink-0" />
               <span className="min-w-0">
