@@ -95,7 +95,7 @@ function SessionPage() {
             <h2 className="font-label text-xs uppercase text-muted-foreground">{t("themes")}</h2>
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {s.themes.map((th) => (
-                <li key={th} className="font-label rounded-full border bg-card px-2.5 py-1 text-xs">{th}</li>
+                <li key={th} className="font-label rounded-label border border-foreground/60 bg-card px-2.5 py-1 text-[11px]">{th}</li>
               ))}
             </ul>
           </section>

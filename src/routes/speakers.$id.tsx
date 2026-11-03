@@ -66,7 +66,7 @@ function SpeakerPage() {
         {s.photo && <img src={s.photo} alt="" className="size-24 shrink-0 rounded-full object-cover shadow-card" />}
         <div className="min-w-0">
           {s.eventRole && (
-            <span className="font-label inline-block rounded bg-accent px-1.5 py-0.5 text-[11px] uppercase text-accent-foreground">{s.eventRole}</span>
+            <span className="font-label sticker inline-block bg-accent px-1.5 py-0.5 text-[11px] text-night">{s.eventRole}</span>
           )}
           <h1 className="mt-1 text-page leading-tight">{s.name}</h1>
           <p className="text-sm text-muted-foreground">{[s.role, s.company].filter(Boolean).join(" · ")}</p>
