@@ -5,7 +5,8 @@ import { currentOrNext, parisNow, toMinutes, type Session } from "@/lib/event";
 import { useSessions } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
 import { useLikes } from "@/lib/likes";
-import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs } from "@/components/common";
+import { ErrorView, LoadingView, OfflineDataNote, ProgramTabs, Wordmark, trackIcon } from "@/components/common";
+import { Heart } from "lucide-react";
 import { SessionCard } from "@/components/SessionCard";
 
 export const Route = createFileRoute("/")({
@@ -111,23 +112,23 @@ function ProgramPage() {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, [targetId]);
 
-  const filters: { id: Filter; label: string }[] = [
+  const filters: { id: Filter; label: string; icon?: typeof Heart }[] = [
     { id: "all", label: t("filter.all") },
-    { id: "decideurs", label: t("track.decideurs") },
-    { id: "tech", label: t("track.tech") },
-    { id: "mine", label: `♥ ${t("filter.mine")}` },
+    { id: "decideurs", label: t("track.decideurs"), icon: trackIcon.decideurs },
+    { id: "tech", label: t("track.tech"), icon: trackIcon.tech },
+    { id: "mine", label: t("filter.mine"), icon: Heart },
   ];
 
   return (
     <div>
       <ProgramTabs active="program" />
       <OfflineDataNote at={offlineAt} />
-      <div className="px-4 pt-5">
-        <p className="font-label text-xs uppercase text-muted-foreground">{t("nav.program")} · 17.11.2026 · Nantes</p>
-        <h1 className="mt-1 text-4xl font-extrabold leading-tight">GenAI Days</h1>
+      <div className="px-gutter pb-2 pt-7">
+        <p className="font-label text-xs text-muted-foreground">{t("nav.program")} · 17.11.2026 · Nantes</p>
+        <h1 className="text-page mt-3"><Wordmark /></h1>
       </div>
 
-      <div className="sticky top-14 z-20 -mt-1 bg-background/95 px-4 py-3 backdrop-blur">
+      <div className="px-gutter sticky top-[3.65rem] z-20 border-b border-surface bg-background py-3">
         <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
           {filters.map((f) => (
             <button
@@ -135,8 +136,9 @@ function ProgramPage() {
               type="button"
               aria-pressed={filter === f.id}
               onClick={() => { setFilter(f.id); if (f.id === 'mine') track('my_sessions_viewed'); else track('program_filter_changed', { track: f.id }); }}
-              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${filter === f.id ? "border-primary bg-primary text-primary-foreground" : "bg-card"}`}
+              className={`inline-flex min-h-11 shrink-0 items-center gap-1.5 border-2 px-3.5 text-sm font-bold tracking-[0.04em] transition-colors ${filter === f.id ? "border-primary bg-primary text-primary-foreground" : "border-foreground bg-transparent text-foreground hover:border-primary hover:text-primary"}`}
             >
+              {f.icon && <f.icon aria-hidden="true" className="size-4" />}
               {f.label}
             </button>
           ))}
@@ -148,12 +150,12 @@ function ProgramPage() {
       ) : isError || !data ? (
         <ErrorView onRetry={() => refetch()} />
       ) : filter === "mine" && !filtered.length ? (
-        <p className="mx-4 mt-4 rounded-xl bg-surface p-6 text-center text-sm text-muted-foreground">{t("mine.empty")}</p>
+        <p className="mx-[var(--gutter)] mt-4 bg-surface p-6 text-center text-sm text-muted-foreground">{t("mine.empty")}</p>
       ) : (
-        <ol className="space-y-6 px-4 pt-2">
+        <ol className="px-gutter pb-8 pt-2">
           {slots.map(({ time, list }) => (
-            <li key={time} className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3">
-              <div className="font-label pt-3 text-sm">{time}</div>
+            <li key={time} className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3 border-t border-surface py-5 first:border-t-0">
+              <div className="font-display pt-2 text-[1.125rem] font-semibold leading-none">{time}</div>
               <div className={`grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3 ${list.length > 1 ? "sm:grid-cols-[repeat(2,minmax(0,1fr))]" : ""}`}>
                 {list.map((s) => (
                   <SessionCard

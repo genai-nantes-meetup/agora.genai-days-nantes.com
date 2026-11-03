@@ -35,21 +35,21 @@ function PlanPage() {
 
   return (
     <div className="px-4 pt-5">
-      <h1 className="text-4xl font-medium">{t("plan.title")}</h1>
-      <div className="mt-4 flex rounded-full bg-surface p-1" role="tablist">
+      <h1 className="text-page">{t("plan.title")}</h1>
+      <div className="mt-4 flex border-b border-foreground/80" role="tablist">
         {FLOORS.map((f) => (
           <button
             key={f.id}
             role="tab"
             aria-selected={floor === f.id}
             onClick={() => setFloor(f.id)}
-            className={`flex-1 rounded-full py-2 text-sm font-semibold ${floor === f.id ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            className={`-mb-px min-h-11 flex-1 border-b-2 py-2 text-xs font-bold uppercase tracking-[0.08em] ${floor === f.id ? "border-primary text-primary" : "border-transparent text-foreground"}`}
           >
             {t(f.key)}
           </button>
         ))}
       </div>
-      <div className="relative mt-4 overflow-hidden rounded-xl border bg-card shadow-card">
+      <div className="relative mt-4 overflow-hidden border border-foreground/80 bg-card">
         <TransformWrapper key={floor} onZoomStop={(ref) => { if (ref.state.scale > 1 && zoomed.current !== floor) { zoomed.current = floor; track('map_zoomed', { floor }); } }} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
           {({ resetTransform }) => (
             <>
@@ -60,7 +60,7 @@ function PlanPage() {
                 type="button"
                 onClick={() => resetTransform()}
                 aria-label={t("plan.reset")}
-                className="absolute right-2 top-2 rounded-full bg-card/90 p-2 shadow-card"
+                className="absolute right-2 top-2 flex size-11 items-center justify-center border-2 border-foreground bg-card"
               >
                 <RotateCcw className="size-4" />
               </button>

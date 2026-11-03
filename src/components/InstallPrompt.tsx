@@ -78,7 +78,7 @@ export function InstallPrompt() {
   };
 
   return (
-    <div className="fixed inset-x-3 bottom-20 z-40 mx-auto max-w-md rounded-xl bg-primary p-4 text-primary-foreground shadow-card">
+    <div className="fixed inset-x-3 bottom-20 z-40 mx-auto max-w-md border-2 border-night bg-night p-4 text-primary-foreground shadow-[0.3rem_0.3rem_0_0_var(--primary)]">
       <div className="flex items-start gap-3">
         <Share className="mt-0.5 size-5 shrink-0 text-accent" />
         <div className="flex-1">

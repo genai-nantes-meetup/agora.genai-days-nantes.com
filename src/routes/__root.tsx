@@ -24,9 +24,9 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-[70dvh] items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-medium">404</h1>
+        <h1 className="text-page">404</h1>
         <div className="mt-6">
-          <Link to="/" className="inline-flex rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground">
+          <Link to="/" className="inline-flex min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-5 py-2 text-sm font-bold text-primary-foreground">
             Programme
           </Link>
         </div>
@@ -45,7 +45,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-2xl font-medium">Oups / Oops</h1>
+        <h1 className="text-2xl">Oups / Oops</h1>
         <p className="mt-2 text-sm text-muted-foreground">Une erreur est survenue. Something went wrong.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -53,11 +53,11 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
               router.invalidate();
               reset();
             }}
-            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+            className="min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-5 py-2 text-sm font-bold text-primary-foreground"
           >
             Réessayer / Retry
           </button>
-          <a href="/" className="rounded-full border px-5 py-2 text-sm font-semibold">
+          <a href="/" className="min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-5 py-2 text-sm font-bold tracking-[0.04em]">
             Programme
           </a>
         </div>
@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,800;1,600;1,800&family=Special+Elite&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap",
       },
     ],
     scripts: [

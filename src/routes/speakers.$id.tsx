@@ -66,9 +66,9 @@ function SpeakerPage() {
         {s.photo && <img src={s.photo} alt="" className="size-24 shrink-0 rounded-full object-cover shadow-card" />}
         <div className="min-w-0">
           {s.eventRole && (
-            <span className="font-label inline-block rounded bg-accent px-1.5 py-0.5 text-[11px] uppercase text-accent-foreground">{s.eventRole}</span>
+            <span className="font-label sticker inline-block bg-accent px-1.5 py-0.5 text-[11px] text-night">{s.eventRole}</span>
           )}
-          <h1 className="mt-1 text-3xl font-medium leading-tight">{s.name}</h1>
+          <h1 className="mt-1 text-page leading-tight">{s.name}</h1>
           <p className="text-sm text-muted-foreground">{[s.role, s.company].filter(Boolean).join(" · ")}</p>
         </div>
       </header>
@@ -78,7 +78,7 @@ function SpeakerPage() {
       {!!links.length && (
         <div className="flex flex-wrap gap-2">
           {links.map(({ href, label, icon: Icon }) => (
-            <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium">
+            <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-3 py-1.5 text-sm font-bold tracking-[0.04em]">
               <Icon className="size-4" /> {label}
             </a>
           ))}
@@ -125,7 +125,7 @@ function SpeakerPage() {
         <Section title={t("companies")}>
           <ul className="space-y-2">
             {s.companies.map((c) => (
-              <li key={c.name} className="rounded-xl bg-surface p-3">
+              <li key={c.name} className="bg-surface p-3">
                 <p className="font-semibold">
                   {c.website ? <a href={c.website} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">{c.name}</a> : c.name}
                   {c.relationship && <span className="font-normal text-muted-foreground"> · {c.relationship}</span>}
