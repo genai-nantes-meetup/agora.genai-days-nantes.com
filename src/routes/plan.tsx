@@ -1,7 +1,7 @@
 import { useTrackView } from '@/hooks/use-track-view';
 import {track} from '@/lib/analytics';
 import { createFileRoute } from "@tanstack/react-router";
-import { RotateCcw } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { useI18n } from "@/lib/i18n";
