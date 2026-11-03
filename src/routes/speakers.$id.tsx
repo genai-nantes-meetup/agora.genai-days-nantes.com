@@ -125,7 +125,7 @@ function SpeakerPage() {
         <Section title={t("companies")}>
           <ul className="space-y-2">
             {s.companies.map((c) => (
-              <li key={c.name} className="rounded-xl bg-surface p-3">
+              <li key={c.name} className="bg-surface p-3">
                 <p className="font-semibold">
                   {c.website ? <a href={c.website} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">{c.name}</a> : c.name}
                   {c.relationship && <span className="font-normal text-muted-foreground"> · {c.relationship}</span>}

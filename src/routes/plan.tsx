@@ -49,7 +49,7 @@ function PlanPage() {
           </button>
         ))}
       </div>
-      <div className="relative mt-4 overflow-hidden rounded-xl border bg-card shadow-card">
+      <div className="relative mt-4 overflow-hidden border border-foreground/80 bg-card">
         <TransformWrapper key={floor} onZoomStop={(ref) => { if (ref.state.scale > 1 && zoomed.current !== floor) { zoomed.current = floor; track('map_zoomed', { floor }); } }} minScale={1} maxScale={5} doubleClick={{ mode: "toggle", step: 1.5 }}>
           {({ resetTransform }) => (
             <>

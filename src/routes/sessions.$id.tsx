@@ -46,10 +46,10 @@ function SessionPage() {
         <BackLink />
       </div>
       {s.image && (
-        <img src={s.image} alt="" className="mt-3 aspect-[16/9] w-full object-cover sm:rounded-xl" loading="eager" />
+        <img src={s.image} alt="" className="mt-3 aspect-[16/9] w-full object-cover " loading="eager" />
       )}
       <div className="space-y-5 px-4 pt-5">
-        <div className="grain relative overflow-hidden rounded-2xl border-2 border-foreground/80 bg-card p-4 shadow-card">
+        <div className="grain relative overflow-hidden rounded-card border-2 border-night bg-card p-4 shadow-ink">
           <div className="flex items-start justify-between gap-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <TrackTag track={s.track} />
@@ -104,7 +104,7 @@ function SessionPage() {
         <section>
           <h2 className="font-label text-xs uppercase text-muted-foreground">{t("speakers")}</h2>
           {speakers.length ? (
-            <ul className="mt-2 divide-y overflow-hidden rounded-xl bg-card shadow-card">
+            <ul className="mt-2 divide-y divide-surface border-y border-foreground/80 bg-card">
               {speakers.map((ref) => {
                 const full = sp?.speakers.find((x) => x.id === ref.id);
                 return (
@@ -126,7 +126,7 @@ function SessionPage() {
               })}
             </ul>
           ) : (
-            <p className="mt-2 rounded-xl bg-surface p-4 text-sm text-muted-foreground">{t("speakers.tbc")}</p>
+            <p className="mt-2 bg-surface p-4 text-sm text-muted-foreground">{t("speakers.tbc")}</p>
           )}
         </section>
 
