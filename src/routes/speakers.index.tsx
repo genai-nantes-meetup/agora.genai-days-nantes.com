@@ -28,7 +28,7 @@ function SpeakersPage() {
       <OfflineDataNote at={offlineAt} />
       <div className="px-4 pt-5">
         <p className="font-label text-xs uppercase text-muted-foreground">{list.length || ""} speakers</p>
-        <h1 className="mt-1 text-4xl font-extrabold">{t("speakers")}</h1>
+        <h1 className="mt-1 text-page font-extrabold">{t("speakers")}</h1>
       </div>
       {isPending ? (
         <LoadingView />

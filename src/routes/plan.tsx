@@ -35,7 +35,7 @@ function PlanPage() {
 
   return (
     <div className="px-4 pt-5">
-      <h1 className="text-4xl font-medium">{t("plan.title")}</h1>
+      <h1 className="text-page">{t("plan.title")}</h1>
       <div className="mt-4 flex rounded-full bg-surface p-1" role="tablist">
         {FLOORS.map((f) => (
           <button

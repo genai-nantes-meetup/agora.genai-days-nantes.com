@@ -68,7 +68,7 @@ function SpeakerPage() {
           {s.eventRole && (
             <span className="font-label inline-block rounded bg-accent px-1.5 py-0.5 text-[11px] uppercase text-accent-foreground">{s.eventRole}</span>
           )}
-          <h1 className="mt-1 text-3xl font-medium leading-tight">{s.name}</h1>
+          <h1 className="mt-1 text-page leading-tight">{s.name}</h1>
           <p className="text-sm text-muted-foreground">{[s.role, s.company].filter(Boolean).join(" · ")}</p>
         </div>
       </header>

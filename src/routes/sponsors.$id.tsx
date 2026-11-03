@@ -45,7 +45,7 @@ function SponsorPage() {
           </span>
           {s.coOrganizer && <CoOrgBadge />}
         </div>
-        <h1 className="mt-2 text-4xl font-extrabold leading-tight">{s.name}</h1>
+        <h1 className="mt-2 text-page font-extrabold leading-tight">{s.name}</h1>
       </div>
       {s.description && <p className="whitespace-pre-line leading-relaxed">{s.description}</p>}
       <div className="flex flex-wrap gap-3">

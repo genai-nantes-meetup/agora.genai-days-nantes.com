@@ -89,7 +89,7 @@ export function ComingSoon() {
       <div className="mb-6 flex size-16 items-center justify-center rounded-full bg-accent">
         <Sparkles className="size-7 text-accent-foreground" />
       </div>
-      <h1 className="text-4xl font-medium">{t("soon.title")}</h1>
+      <h1 className="text-page">{t("soon.title")}</h1>
       <p className="mt-3 max-w-xs text-muted-foreground">{t("soon.body")}</p>
       <Link to="/" className="mt-8 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground">
         {t("soon.cta")}
