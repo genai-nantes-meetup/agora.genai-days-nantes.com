@@ -37,22 +37,22 @@ function SpeakersPage() {
       ) : !list.length ? (
         <p className="p-6 text-center text-muted-foreground">{t("speakers.empty")}</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-px border-y border-foreground/80 bg-foreground/80 sm:grid-cols-3 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-px border border-ink/18 bg-ink/18 sm:grid-cols-3 lg:grid-cols-4">
           {list.map((s) => (
-            <li key={s.id} className="bg-background">
-              <Link to="/speakers/$id" params={{ id: s.id }} className="group flex h-full flex-col">
+            <li key={s.id} className="min-w-0 bg-card">
+              <Link to="/speakers/$id" params={{ id: s.id }} className="speaker-tile relative flex h-full min-w-0 flex-col bg-card">
                 <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-surface">
-                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="absolute inset-0 size-full object-cover grayscale transition-[filter] duration-200 group-hover:grayscale-0" />}
+                  {s.photo && <img src={s.photo} alt="" loading="lazy" className="speaker-photo absolute inset-0 size-full object-cover object-[50%_28%]" />}
                   {s.eventRole && (
-                    <span className="font-label sticker absolute left-2 top-2 max-w-[85%] truncate bg-accent px-1.5 py-0.5 text-[10px] text-night">
+                    <span className="absolute left-[0.85rem] top-[0.85rem] max-w-[calc(100%-1.7rem)] origin-top-left -rotate-[1.5deg] truncate whitespace-nowrap bg-accent px-[0.6rem] pb-[0.35rem] pt-[0.4rem] font-sans text-[0.625rem] font-bold uppercase tracking-[0.06em] text-night">
                       {s.eventRole}
                     </span>
                   )}
                 </div>
-                <div className="flex min-w-0 grow flex-col border-t border-foreground/80 px-3 pb-4 pt-3">
-                  <p className="font-display line-clamp-1 text-lg font-semibold leading-tight">{s.name}</p>
-                  <p className="mt-1 line-clamp-1 text-xs text-foreground">{s.role || "\u00a0"}</p>
-                  <p className="font-label mt-1 line-clamp-1 text-[10.5px] text-muted-foreground">{s.company || "\u00a0"}</p>
+                <div className="speaker-caption flex min-w-0 grow flex-col px-3 pb-4 pt-3">
+                  <p className="truncate font-display text-xl font-semibold leading-[1.05] tracking-[-0.025em] sm:text-2xl">{s.name}</p>
+                  <p className="mt-1 truncate font-sans text-xs font-medium text-ink/76">{s.role || "\u00a0"}</p>
+                  <p className="mt-1 truncate font-sans text-xs font-medium uppercase tracking-[0.05em] text-ink/54">{s.company || "\u00a0"}</p>
                 </div>
               </Link>
             </li>

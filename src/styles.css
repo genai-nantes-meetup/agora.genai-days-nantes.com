@@ -238,6 +238,38 @@
   }
 }
 
+@utility speaker-tile {
+  & .speaker-photo {
+    filter: grayscale(100%) contrast(1.04);
+    transition: filter 360ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  & .speaker-caption {
+    background-color: color-mix(in srgb, var(--white) 94%, transparent);
+    transition: background-color 220ms ease, color 220ms ease;
+  }
+  &:is(:hover, :focus, :active) .speaker-photo {
+    filter: grayscale(18%) contrast(1.02);
+    transform: scale(1.025);
+  }
+  &:is(:hover, :focus, :active) .speaker-caption {
+    background-color: var(--cream);
+  }
+  &:focus-visible {
+    z-index: 1;
+    outline: 3px solid var(--blue);
+    outline-offset: -3px;
+    box-shadow: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    & .speaker-photo, & .speaker-caption {
+      transition: none !important;
+    }
+    &:is(:hover, :focus, :active) .speaker-photo {
+      transform: none;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
