@@ -32,16 +32,16 @@ export function SessionCard({
       to="/sessions/$id"
       params={{ id: session.id }}
       id={`s-${session.id}`}
-      className={`relative block min-w-0 scroll-mt-32 border-l-[3px] bg-card transition-transform active:scale-[0.99] ${trackBorder[session.track] ?? trackBorder["commun"]} ${now === "live" ? "outline outline-2 outline-offset-0 outline-accent" : ""}`}
+      className={`@container relative block min-w-0 scroll-mt-32 border-l-[3px] bg-card transition-transform active:scale-[0.99] ${trackBorder[session.track] ?? trackBorder["commun"]} ${now === "live" ? "outline outline-2 outline-offset-0 outline-accent" : ""}`}
     >
       {now && (
         <span className={`font-label sticker absolute -top-2.5 right-12 bg-accent px-2 py-0.5 text-[11px] text-ink ${now === "live" ? "now-pulse" : ""}`}>
           {now === "live" ? t("now") : t("next")}
         </span>
       )}
-      <div className={showImage ? "grid min-w-0 sm:grid-cols-[minmax(7rem,11rem)_minmax(0,1fr)]" : ""}>
+      <div className={showImage ? "grid min-w-0 @min-[34rem]:grid-cols-[minmax(7rem,11rem)_minmax(0,1fr)]" : ""}>
         {showImage && session.image && (
-          <div className="relative aspect-[16/7] overflow-hidden sm:aspect-auto">
+          <div className="relative aspect-[16/7] overflow-hidden @min-[34rem]:aspect-auto">
             <img
               src={session.image}
               alt=""
