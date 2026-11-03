@@ -29,7 +29,7 @@ function WebsiteLink({ url, id, tier }: { url: string; id: string; tier: string 
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => { e.stopPropagation(); track('sponsor_link_clicked', { sponsor_id: id, tier }); }}
-      className="inline-flex min-h-11 items-center gap-1 text-xs font-bold tracking-[0.04em] text-primary underline underline-offset-2"
+      className="relative z-10 inline-flex items-center gap-1 text-sm font-bold text-secondary underline-offset-2 hover:underline"
     >
       {t("sponsors.visit")} <ExternalLink className="size-3.5" />
     </a>
@@ -37,14 +37,26 @@ function WebsiteLink({ url, id, tier }: { url: string; id: string; tier: string 
 }
 
 function SponsorCard({ s, tier }: { s: Sponsor; tier: SponsorTier }) {
-  const size: Record<SponsorTier, string> = { platinum: "h-28 sm:h-32", gold: "h-20", silver: "h-14" };
+  const big = tier === "platinum";
+  const mid = tier === "gold";
   return (
-    <li className="flex flex-col items-center gap-2 text-center">
-      <Link to="/sponsors/$id" params={{ id: s.id }} aria-label={s.name} className="flex w-full justify-center">
-        <SponsorLogo sponsor={s} className={size[tier]} />
-      </Link>
-      {s.coOrganizer && <CoOrgBadge />}
-      {s.website && tier !== "silver" && <WebsiteLink url={s.website} id={s.id} tier={tier} />}
+    <li className="relative overflow-hidden rounded-xl bg-surface shadow-card">
+      <Link to="/sponsors/$id" params={{ id: s.id }} className="absolute inset-0" aria-label={s.name} />
+      <div className={big ? "p-4" : "p-3"}>
+        <SponsorLogo sponsor={s} className={big ? "h-28" : mid ? "h-20" : "h-14"} />
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {s.coOrganizer && <CoOrgBadge />}
+          <p className={`font-bold ${big ? "text-lg" : "text-sm"}`}>{s.name}</p>
+        </div>
+        {s.description && tier !== "silver" && (
+          <p className={`mt-1 text-sm text-muted-foreground ${big ? "line-clamp-3" : "line-clamp-2"}`}>{s.description}</p>
+        )}
+        {s.website && (
+          <div className="mt-2">
+            <WebsiteLink url={s.website} id={s.id} tier={tier} />
+          </div>
+        )}
+      </div>
     </li>
   );
 }
@@ -54,9 +66,9 @@ function SponsorsPage() {
   const { data, offlineAt, isPending, isError, refetch } = useSponsors();
   const groups = groupSponsors(data?.sponsors ?? []);
   const grid: Record<SponsorTier, string> = {
-    platinum: "grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-16",
-    gold: "grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3",
-    silver: "grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-4 lg:grid-cols-5",
+    platinum: "grid-cols-1",
+    gold: "grid-cols-1 sm:grid-cols-2",
+    silver: "grid-cols-2 sm:grid-cols-3",
   };
 
   return (
@@ -68,13 +80,13 @@ function SponsorsPage() {
       ) : isError || !data ? (
         <ErrorView onRetry={() => refetch()} />
       ) : !groups.length ? (
-        <p className="m-4 bg-surface p-6 text-center text-sm text-muted-foreground">{t("sponsors.empty")}</p>
+        <p className="m-4 rounded-xl bg-surface p-6 text-center text-sm text-muted-foreground">{t("sponsors.empty")}</p>
       ) : (
-        <div className="px-gutter divide-y divide-surface py-6">
+        <div className="space-y-8 p-4">
           {groups.map(({ tier, sponsors }) => (
-            <section key={tier} className="py-[var(--space-close)] first:pt-2">
-              <h2 className="sr-only">{t(`tier.${tier}` as TKey)}</h2>
-              <ul className={`grid items-center ${grid[tier]}`}>
+            <section key={tier}>
+              <h2 className="text-3xl font-extrabold">{t(`tier.${tier}` as TKey)}</h2>
+              <ul className={`mt-3 grid gap-3 ${grid[tier]}`}>
                 {sponsors.map((s) => (
                   <SponsorCard key={s.id} s={s} tier={tier} />
                 ))}
