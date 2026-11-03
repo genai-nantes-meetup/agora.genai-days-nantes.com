@@ -78,7 +78,7 @@ function SpeakerPage() {
       {!!links.length && (
         <div className="flex flex-wrap gap-2">
           {links.map(({ href, label, icon: Icon }) => (
-            <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium">
+            <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-3 py-1.5 text-sm font-bold tracking-[0.04em]">
               <Icon className="size-4" /> {label}
             </a>
           ))}

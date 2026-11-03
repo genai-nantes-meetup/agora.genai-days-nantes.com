@@ -50,12 +50,12 @@ function SponsorPage() {
       {s.description && <p className="whitespace-pre-line leading-relaxed">{s.description}</p>}
       <div className="flex flex-wrap gap-3">
         {s.website && (
-          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground">
+          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-5 py-2.5 text-sm font-bold text-primary-foreground">
             {t("sponsors.visit")} <ExternalLink className="size-4" />
           </a>
         )}
         {s.pageUrl && (
-          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.pageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border px-5 py-2.5 text-sm font-bold">
+          <a onClick={() => track('sponsor_link_clicked', { sponsor_id: s.id, tier: s.tier ?? undefined })} href={s.pageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-5 py-2.5 text-sm font-bold tracking-[0.04em]">
             {t("moreInfo")} <ExternalLink className="size-4" />
           </a>
         )}

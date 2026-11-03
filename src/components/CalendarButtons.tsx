@@ -22,14 +22,14 @@ export function CalendarButtons({ session, date }: { session: Session; date: str
   };
 
   const linkClass =
-    "flex items-center justify-center rounded-full border-2 border-primary px-3 py-2 text-sm font-semibold";
+    "flex items-center justify-center min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-3 py-2 text-sm font-bold tracking-[0.04em]";
 
   return (
     <div className="grid grid-cols-2 gap-2">
       <button
         type="button"
         onClick={downloadIcs}
-        className="flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground"
+        className="flex items-center justify-center gap-2 min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-3 py-2.5 text-sm font-bold text-primary-foreground"
       >
         <CalendarPlus className="size-4" /> {t("cal.add")}
       </button>

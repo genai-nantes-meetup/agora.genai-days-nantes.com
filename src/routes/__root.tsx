@@ -26,7 +26,7 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-page">404</h1>
         <div className="mt-6">
-          <Link to="/" className="inline-flex rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground">
+          <Link to="/" className="inline-flex min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-5 py-2 text-sm font-bold text-primary-foreground">
             Programme
           </Link>
         </div>
@@ -53,11 +53,11 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
               router.invalidate();
               reset();
             }}
-            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
+            className="min-h-11 border-2 border-primary bg-primary uppercase tracking-[0.04em] shadow-ink transition-[box-shadow,transform] duration-150 hover:shadow-[var(--shadow-ink-pressed)] active:scale-[0.96] px-5 py-2 text-sm font-bold text-primary-foreground"
           >
             Réessayer / Retry
           </button>
-          <a href="/" className="rounded-full border px-5 py-2 text-sm font-semibold">
+          <a href="/" className="min-h-11 border-2 border-primary text-primary hover:bg-primary/10 px-5 py-2 text-sm font-bold tracking-[0.04em]">
             Programme
           </a>
         </div>
