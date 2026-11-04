@@ -58,7 +58,7 @@ export function SessionCard({
       <div className="-mr-2 -mt-2 flex items-start gap-2">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
-            <TrackTag track={session.track} />
+            {session.track !== "tech" && session.track !== "decideurs" && <TrackTag track={session.track} />}
             <span className="font-label text-[11px] text-muted-foreground">
               {t(`format.${session.format}` as TKey) || session.format}
             </span>
