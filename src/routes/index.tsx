@@ -143,6 +143,19 @@ function ProgramPage() {
             </button>
           ))}
         </div>
+        {filter !== "mine" && !isPending && !isError && data && (
+          <div className="mt-3 grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3">
+            <div aria-hidden="true" />
+            <div className={`grid gap-1.5 sm:gap-3 ${filter === "all" ? "sm:grid-cols-[repeat(2,minmax(0,1fr))]" : ""}`}>
+              {(filter === "all" ? (["decideurs", "tech"] as const) : [filter]).map((tr) => (
+                <div key={tr} className={`border-t-[3px] pt-1.5 sm:pt-2 ${tr === "tech" ? "border-t-track-tech" : "border-t-track-decideurs"}`}>
+                  <p className="font-display text-base font-extrabold leading-tight sm:text-xl">{t(`trackHead.${tr}`)}</p>
+                  <p className="font-label text-[10px] text-muted-foreground sm:text-[11px]">{t(`trackHead.${tr}Room`)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {isPending ? (
