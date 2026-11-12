@@ -4,6 +4,7 @@ import { CalendarDays, Map, MessageCircle, User, Users, WifiOff } from "lucide-r
 import { useEffect, useState, type ReactNode } from "react";
 import { useI18n, type TKey } from "@/lib/i18n";
 import { InstallPrompt } from "./InstallPrompt";
+import { MyQrCode } from "./MyQrCode";
 import { SiteFooter } from "./SiteFooter";
 import { AppLockup } from "./common";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/" className="flex min-w-0 items-center">
             <AppLockup shortName={t("appShortName")} label={t("appName")} />
           </Link>
-          <div className="flex shrink-0 items-center gap-2"><Button asChild variant="ghost" size="icon" aria-label={t(user ? "nav.profile" : "auth.login")} title={t(user ? "nav.profile" : "auth.login")}><Link to={user ? "/profil" : "/login"}><User className="size-5" /></Link></Button><button
+          <div className="flex shrink-0 items-center gap-2">{user && <MyQrCode />}<Button asChild variant="ghost" size="icon" aria-label={t(user ? "nav.profile" : "auth.login")} title={t(user ? "nav.profile" : "auth.login")}><Link to={user ? "/profil" : "/login"}><User className="size-5" /></Link></Button><button
             type="button"
             onClick={() => { const to = lang === "fr" ? "en" : "fr"; track("language_switched", { from: lang, to }); setLang(to); }}
             aria-label={t("lang.switch")}
