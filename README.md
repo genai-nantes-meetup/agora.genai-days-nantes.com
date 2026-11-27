@@ -2,7 +2,7 @@
 
 Agora is the companion web app for the GenAI Days event (Tuesday, November 17, 2026, Nantes).
 
-**Live app**: https://genai-days-companion.lovable.app
+**Live app**: https://agora.genai-days-nantes.com
 
 ## Features
 

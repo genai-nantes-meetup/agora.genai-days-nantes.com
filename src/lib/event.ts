@@ -182,7 +182,7 @@ export function buildIcs(s: Session, date: string, roomText: string, now: Date =
     "METHOD:PUBLISH",
     ...VTIMEZONE,
     "BEGIN:VEVENT",
-    `UID:${s.id}@hey.genai-days-nantes.com`,
+    `UID:${s.id}@agora.genai-days-nantes.com`,
     `DTSTAMP:${stamp}`,
     `DTSTART;TZID=Europe/Paris:${compact(date, s.startTime)}`,
     `DTEND;TZID=Europe/Paris:${compact(date, endTime(s))}`,

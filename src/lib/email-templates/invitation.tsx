@@ -26,7 +26,7 @@ const copy = {
   },
 }
 
-const InvitationEmail = ({ lang = 'fr', firstName, url = 'https://hey.genai-days-nantes.com' }: Props) => {
+const InvitationEmail = ({ lang = 'fr', firstName, url = 'https://agora.genai-days-nantes.com' }: Props) => {
   const c = copy[lang] ?? copy.fr
   return (
     <Frame lang={lang} preview={c.preview}>
@@ -44,5 +44,5 @@ export const template = {
   component: InvitationEmail,
   subject: (d: Props) => (copy[d.lang ?? "fr"] ?? copy.fr).subject,
   displayName: 'Invitation',
-  previewData: { lang: 'fr', firstName: 'Camille', url: 'https://hey.genai-days-nantes.com/join?token=exemple' },
+  previewData: { lang: 'fr', firstName: 'Camille', url: 'https://agora.genai-days-nantes.com/join?token=exemple' },
 } satisfies TemplateEntry

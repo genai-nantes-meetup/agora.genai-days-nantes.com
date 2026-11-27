@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it, vi } from 'vitest';
 
-const origin = 'https://hey.genai-days-nantes.com';
+const origin = 'https://agora.genai-days-nantes.com';
 const source = readFileSync('public/notifications/worker.js', 'utf8');
 
 function worker(windows: unknown[] = []) {

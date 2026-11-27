@@ -1,6 +1,6 @@
 import {supabaseAdmin} from '@/integrations/supabase/client.server';
 import {inviteSchema} from './rules';
-export async function upsertInvite(input:unknown){const row=inviteSchema.parse(input);const {data,error}=await supabaseAdmin.from('invitations').upsert(row,{onConflict:'email'}).select('email,first_name,last_name,token,billetweb_ref').single();if(error)throw new Error('Unavailable');return {...data,url:`https://hey.genai-days-nantes.com/join?token=${data.token}`};}
+export async function upsertInvite(input:unknown){const row=inviteSchema.parse(input);const {data,error}=await supabaseAdmin.from('invitations').upsert(row,{onConflict:'email'}).select('email,first_name,last_name,token,billetweb_ref').single();if(error)throw new Error('Unavailable');return {...data,url:`https://agora.genai-days-nantes.com/join?token=${data.token}`};}
 export async function overview(){
  const {data:control}=await supabaseAdmin.from('purge_control').select('*').eq('id',true).maybeSingle();
  const tables=['invitations','profiles','connection_requests','conversations','messages','session_feedback'] as const;const counts:Record<string,number>={};for(const table of tables){const {count,error}=await supabaseAdmin.from(table).select('*',{count:'exact',head:true});if(error)throw new Error('Unavailable');counts[table]=count??0;}

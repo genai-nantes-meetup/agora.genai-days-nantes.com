@@ -20,7 +20,7 @@ const copy = {
   },
 }
 
-const ConnectionRequestEmail = ({ lang = 'fr', senderName, url = 'https://hey.genai-days-nantes.com/messages' }: Props) => {
+const ConnectionRequestEmail = ({ lang = 'fr', senderName, url = 'https://agora.genai-days-nantes.com/messages' }: Props) => {
   const c = copy[lang] ?? copy.fr
   const name = senderName || (lang === 'en' ? 'An attendee' : 'Un·e participant·e')
   return (

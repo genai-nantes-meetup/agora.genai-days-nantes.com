@@ -24,7 +24,7 @@ const copy = {
   },
 }
 
-const UnreadDigestEmail = ({ lang = 'fr', items = [], url = 'https://hey.genai-days-nantes.com/messages' }: Props) => {
+const UnreadDigestEmail = ({ lang = 'fr', items = [], url = 'https://agora.genai-days-nantes.com/messages' }: Props) => {
   const c = copy[lang] ?? copy.fr
   return (
     <Frame lang={lang} preview={c.intro}>
