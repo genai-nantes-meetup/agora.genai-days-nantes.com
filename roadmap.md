@@ -17,7 +17,7 @@ Current tasks:
 - [x] Replace Twilio with in-house messaging (Postgres + Realtime): accept flow, send/edit/delete/reactions/reply/seen/typing, push by sender name with presence suppression, 30-minute unread digest email, purge/delete/block cleaned of Twilio. Twilio no longer blocks acceptance.
 - [ ] User: delete unused Twilio secrets in Project Settings → Secrets.
 
-- [x] Retirer le badge speaker de Maxime Pitussi en base, et corriger l'attribution automatique (LinkedIn vides considérés comme identiques) pour que le badge ne revienne pas
+- [x] Remove Maxime Pitussi's speaker badge in the database, and fix the automatic assignment (empty LinkedIn values were treated as identical) so the badge does not come back
 - [x] City: LinkedIn prefill during onboarding and editable autosaved profile field
 - [x] Participant page: visible contact request button below the profile header
 - [x] Messages: discreet notification activation button
@@ -36,7 +36,7 @@ Current tasks:
 
 
 - [x] Analytics: PostHog (proxy hogpost.naomakers.com, no session replay, identify/reset, named events, ph-no-capture on private text) and GA4 (default page views only); /donnees updated; SW never intercepts analytics hosts.
-- [ ] User: replace the [adresse e-mail RGPD] placeholders on /donnees (now also used for analytics objections).
+- [ ] User: replace the [adresse e-mail RGPD] (GDPR email address) placeholders on /donnees (now also used for analytics objections).
 
 - [x] Rename display name to GenAI Days Agora / Agora
 - [x] Conversation opens scrolled to the latest message

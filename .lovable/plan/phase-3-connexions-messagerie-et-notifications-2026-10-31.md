@@ -1,41 +1,41 @@
-# Phase 3 : connexions, messagerie et notifications
+# Phase 3: connections, messaging and notifications
 
-## Résultat attendu
-- Remplacer le bouton provisoire des profils par les états demander, envoyée, accepter/refuser et envoyer un message.
-- Afficher les demandes reçues en tête de Messages, puis les conversations avec photo, dernier message, heure et non-lus.
-- Ouvrir une conversation à deux lors de l’acceptation ; échanges en temps réel, lecture, renouvellement de session Twilio et badges.
-- Notifications navigateur et e-mails attendus par le destinataire, en français ou anglais. Aucun Airscale, IA, feedback ou outil d’administration.
+## Expected outcome
+- Replace the provisional profile button with the states: request, sent, accept/decline, and send a message.
+- Show received requests at the top of Messages, then conversations with photo, last message, time and unread count.
+- Open a two-person conversation on acceptance; real-time exchanges, read receipts, Twilio session renewal and badges.
+- Browser notifications and emails expected by the recipient, in French or English. No Airscale, AI, feedback or admin tooling.
 
-## Règles conservées
-- Une seule demande par paire, sans message, limite ni relance. Un refus reste « Demande envoyée » pour son auteur·ice.
-- Bloquer masque les profils, annule les demandes en attente et ferme la conversation. La fermeture locale empêche immédiatement l’accès ; la fermeture Twilio doit être confirmée et réessayée en cas d’échec.
-- Un e-mail par nouvelle demande. Pour les messages, premier rappel après cinq minutes sans lecture, au plus un par conversation jusqu’à une nouvelle lecture du destinataire. Le contrôle du read horizon se fait chez Twilio.
-- À partir du **24 novembre 2026 à 00:00, heure de Paris**, aucune écriture de message n’est autorisée, y compris depuis un ancien jeton Twilio.
+## Rules kept
+- One request per pair, with no message, no limit and no reminder. A decline stays "Request sent" for its author.
+- Blocking hides profiles, cancels pending requests and closes the conversation. Local closure blocks access immediately; Twilio closure must be confirmed and retried on failure.
+- One email per new request. For messages, a first reminder after five minutes without being read, at most one per conversation until the recipient reads again. The read horizon check happens at Twilio.
+- From **November 24, 2026 at 00:00, Paris time**, no message write is allowed, including from an old Twilio token.
 
-## Prérequis à fournir
-**Twilio :** aucun identifiant n’est actuellement enregistré. Le connecteur peut gérer les appels REST, mais ne remplace pas nécessairement les clés de signature des jetons ni le secret de vérification du webhook. Prévoir `TWILIO_ACCOUNT_SID`, `TWILIO_API_KEY_SID`, `TWILIO_API_KEY_SECRET`, `TWILIO_CONVERSATIONS_SERVICE_SID` et **`TWILIO_AUTH_TOKEN`** pour les signatures Twilio. Ces valeurs se saisissent uniquement dans Project Settings → Secrets, jamais dans le chat.
+## Prerequisites to provide
+**Twilio:** no credential is currently stored. The connector can handle REST calls, but does not necessarily replace the token signing keys or the webhook verification secret. Plan for `TWILIO_ACCOUNT_SID`, `TWILIO_API_KEY_SID`, `TWILIO_API_KEY_SECRET`, `TWILIO_CONVERSATIONS_SERVICE_SID` and **`TWILIO_AUTH_TOKEN`** for Twilio signatures. These values are entered only in Project Settings → Secrets, never in the chat.
 
-**E-mails :** configurer un domaine d’envoi que vous possédez avec l’outil de configuration Lovable. Utiliser l’envoi natif, expéditeur affiché « GenAI Days ». Aucun système de file d’attente d’e-mails ni expéditeur générique ouvert au navigateur.
+**Emails:** configure a sending domain that you own with the Lovable setup tool. Use native sending, with the displayed sender "GenAI Days". No email queue system and no generic sender exposed to the browser.
 
-**Push :** créer une paire de clés VAPID compatible Web Push et conserver la clé privée comme secret. La clé publique est transmise uniquement pour l’inscription aux notifications ; aucune clé privée n’est exposée. La génération doit suivre une méthode de stockage sécurisée compatible avec les outils disponibles, qui ne génèrent actuellement que des secrets alphanumériques, pas des paires VAPID.
+**Push:** create a Web Push compatible VAPID key pair and keep the private key as a secret. The public key is passed only for notification registration; no private key is exposed. Generation must follow a secure storage method compatible with the available tools, which currently generate only alphanumeric secrets, not VAPID pairs.
 
-Les demandes, les écrans et les tests indépendants de ces services seront réalisés sans attendre ; les échanges réels, les push et les e-mails seront signalés comme non vérifiés tant que leurs prérequis manquent.
+Requests, screens and tests that do not depend on these services will be built without waiting; real exchanges, push and emails will be flagged as unverified while their prerequisites are missing.
 
-## Mise en œuvre technique
-- Respecter l’architecture TanStack Start : fonctions serveur authentifiées pour les actions internes ; routes publiques sécurisées pour les callbacks Twilio. Pas de nouvelles Edge Functions.
-- Ajouter `connection_requests`, `conversations`, `message_events` et `push_subscriptions`, avec GRANT et RLS limités aux personnes concernées. Unicité SQL sur la paire non ordonnée, transitions atomiques, accès refusé aux comptes suspendus ou bloqués. Les événements et états de livraison sont écrits côté serveur uniquement.
-- Séparer les règles pures testables, l’accès Twilio via fetch et les fonctions authentifiées. Générer les jetons ChatGrant courts avec une bibliothèque compatible serveur ou Web Crypto, identity = user_id ; charger le SDK `@twilio/conversations` après hydratation.
-- Valider les callbacks sur l’URL publique canonique et le corps brut. Utiliser un callback pré-event en plus du post-event pour interdire les messages après fermeture ou blocage : l’interface seule ne suffit pas avec un SDK Twilio.
-- Configurer des rôles Twilio restrictifs : le client ne peut ni créer une conversation ni ajouter des participant·es. Réserver atomiquement la création, récupérer une conversation par son nom opaque déterministe et gérer les courses acceptation/blocage. Le nettoyage côté base couvre aussi les blocages directs ; déconnexion, suspension et suppression arrêtent le client et retirent les accès externes.
-- Ajouter une route de conversation dédiée, une gestion partagée des non-lus, la Badging API lorsqu’elle existe, et un worker de notification séparé du worker de cache actuel. Conserver les exclusions de cache des comptes et réponses privées.
-- Demander l’autorisation push une fois à l’ouverture de Messages ; proposer activer/pas maintenant. Sur iPhone non installé, afficher la condition d’installation sans demander une autorisation impossible.
-- Scaffolder les deux gabarits d’e-mails après configuration du domaine. Chaque événement envoie un gabarit fixe à son destinataire vérifié, avec une clé d’idempotence issue de l’événement.
-- Utiliser le callback planifié géré et son authentification existante pour les rappels. Un contrôle chaque minute représente **1 440 passages par jour**, avec un délai de cinq à six minutes après réception et un coût récurrent possible même sans activité. Aucun secret de planification écrit dans SQL ou le code.
-- Fournir les URLs des callbacks Twilio une fois les routes créées ; elles ne deviennent actives en production qu’après publication autorisée.
+## Technical implementation
+- Respect the TanStack Start architecture: authenticated server functions for internal actions; secured public routes for Twilio callbacks. No new Edge Functions.
+- Add `connection_requests`, `conversations`, `message_events` and `push_subscriptions`, with GRANT and RLS limited to the people involved. SQL uniqueness on the unordered pair, atomic transitions, access denied to suspended or blocked accounts. Events and delivery states are written server-side only.
+- Separate testable pure rules, Twilio access through fetch, and authenticated functions. Generate short ChatGrant tokens with a server-compatible library or Web Crypto, identity = user_id; load the `@twilio/conversations` SDK after hydration.
+- Validate callbacks against the canonical public URL and the raw body. Use a pre-event callback in addition to the post-event one to forbid messages after closure or blocking: the interface alone is not enough with a Twilio SDK.
+- Configure restrictive Twilio roles: the client can neither create a conversation nor add participants. Reserve creation atomically, fetch a conversation by its deterministic opaque name, and handle acceptance/blocking races. Database-side cleanup also covers direct blocks; sign-out, suspension and deletion stop the client and remove external access.
+- Add a dedicated conversation route, shared unread management, the Badging API when it exists, and a notification worker separate from the current cache worker. Keep the cache exclusions for accounts and private responses.
+- Request push permission once when Messages opens; offer enable/not now. On an iPhone where the app is not installed, show the installation requirement without requesting an impossible permission.
+- Scaffold the two email templates after domain configuration. Each event sends a fixed template to its verified recipient, with an idempotency key derived from the event.
+- Use the managed scheduled callback and its existing authentication for reminders. A check every minute means **1,440 runs per day**, with a delay of five to six minutes after receipt and a possible recurring cost even without activity. No scheduling secret written in SQL or code.
+- Provide the Twilio callback URLs once the routes are created; they become active in production only after authorized publication.
 
-## Vérification
-- Tests concrets : unicité par paire dans les deux sens, refus silencieux, blocage, un rappel par conversation jusqu’à lecture, frontière exacte de fermeture en heure de Paris.
-- Vérifier RLS avec deux comptes : tiers inaccessible, demande, réception, refus, acceptation, blocage.
-- Avec Twilio configuré : échange réel entre deux sessions, renouvellement de jeton, non-lus et lecture, rejet serveur après fermeture/blocage.
-- Vérifier desktop et mobile ; contrôler notifications sur appareils compatibles et e-mails dans les journaux d’envoi.
-- Résumé final séparant vérifié/non vérifié, prérequis encore absents et URLs Twilio à configurer.
+## Verification
+- Concrete tests: uniqueness per pair in both directions, silent decline, blocking, one reminder per conversation until read, exact closure boundary in Paris time.
+- Verify RLS with two accounts: third party has no access, request, receipt, decline, acceptance, blocking.
+- With Twilio configured: real exchange between two sessions, token renewal, unread counts and read state, server rejection after closure/blocking.
+- Verify on desktop and mobile; check notifications on compatible devices and emails in the sending logs.
+- Final summary separating verified from unverified, prerequisites still missing and Twilio URLs to configure.

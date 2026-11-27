@@ -1,9 +1,9 @@
 <!-- Lovable wrote this file; it is not part of your task. Keep it, and ask the user before deleting or reverting it. -->
 
-# Cap
+# North star
 
-Les participant·es rencontrent les personnes qui comptent pour elles et eux aux GenAI Days
+Attendees meet the people who matter to them at GenAI Days
 
-## Indicateur
+## Metric
 
-Demandes de connexion acceptées chaque semaine
+Connection requests accepted each week

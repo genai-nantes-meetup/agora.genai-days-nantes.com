@@ -1,54 +1,54 @@
-# Genai Days Agora
+# Agora
 
-Nous construisons « Hey GenAI Days », la web app compagnon de l'événement GenAI Days (mardi 17 novembre 2026, 8h30 à 22h, Hôtel de Région Pays de la Loire, Nantes). Elle sera servie sur hey.genai-days-nantes.com. 150 à 200 participant·es l'utiliseront, surtout sur mobile, le jour J. Priorité absolue : la stabilité.
+Agora is the companion web app for the GenAI Days event (Tuesday, November 17, 2026, 8:30 am to 10 pm, Hôtel de Région Pays de la Loire, Nantes). It will be served at hey.genai-days-nantes.com. 150 to 200 attendees will use it, mostly on mobile, on the day of the event. Top priority: stability.
 
-Le projet se construit en plusieurs phases. CETTE PHASE 1 couvre uniquement le socle, le programme, les speakers et le plan. Aucun backend, aucune authentification pour l'instant : le networking, la messagerie et le profil arriveront dans les phases suivantes.
+The project is built in several phases. THIS PHASE 1 covers only the foundation, the program, the speakers and the floor plan. No backend and no authentication for now: networking, messaging and the profile will come in later phases.
 
-## 1. Socle
+## 1. Foundation
 
-- PWA mobile-first, installable : manifeste, icônes, service worker (vite-plugin-pwa ou équivalent). Sur Android, proposer l'installation native via l'événement beforeinstallprompt. Sur iPhone, afficher une seule fois un bandeau d'aide « Partager, puis Sur l'écran d'accueil ».
-- Hors connexion : le programme, les speakers et le plan doivent rester consultables sans réseau (stratégie stale-while-revalidate sur les JSON et les images).
-- Bilingue français et anglais. Tous les libellés d'interface passent par des fichiers de traduction (fr, en). Langue initiale déduite du navigateur, bascule FR/EN dans l'en-tête, choix mémorisé en localStorage.
-- Navigation basse à 5 onglets : Networking, Messages, Programme, Plan, Profil. Networking, Messages et Profil affichent pour l'instant un écran « Bientôt disponible / Coming soon ». L'app s'ouvre sur Programme.
+- Mobile-first, installable PWA: manifest, icons, service worker (vite-plugin-pwa or equivalent). On Android, offer native installation through the beforeinstallprompt event. On iPhone, show a one-time help banner: "Share, then Add to Home Screen".
+- Offline: the program, the speakers and the floor plan must remain readable without a network (stale-while-revalidate strategy for the JSON files and images).
+- Bilingual French and English. All interface labels go through translation files (fr, en). The initial language is inferred from the browser, a FR/EN switch sits in the header, and the choice is remembered in localStorage.
+- Bottom navigation with 5 tabs: Networking, Messages, Program, Floor plan, Profile. For now, Networking, Messages and Profile show a "Coming soon" screen. The app opens on Program.
 
-## 2. Identité visuelle (reprise du site genai-days-nantes.com)
+## 2. Visual identity (taken from the genai-days-nantes.com site)
 
-Couleurs : orange #fe4d1b (accent), bleu nuit #09122e (texte et fonds sombres), crème #f9f4ec (fond principal), crème foncé #f2eadf (surfaces), bleu #3d43ce (secondaire), blanc #ffffff.
-Polices : EB Garamond pour les titres, Special Elite pour les petits labels (horaires, salles, tags), une sans-serif lisible pour le corps de texte.
-Ton éditorial, sobre et chaleureux. Contrastes accessibles (WCAG AA).
+Colors: orange #fe4d1b (accent), midnight blue #09122e (text and dark backgrounds), cream #f9f4ec (main background), dark cream #f2eadf (surfaces), blue #3d43ce (secondary), white #ffffff.
+Fonts: EB Garamond for titles, Special Elite for small labels (times, rooms, tags), a readable sans-serif for body text.
+Editorial, sober and warm tone. Accessible contrast (WCAG AA).
 
-## 3. Programme
+## 3. Program
 
-Source, lue à l'exécution selon la langue active (CORS ouvert) :
+Source, read at runtime according to the active language (open CORS):
 - https://genai-days-nantes.com/api/fr/sessions.json
 - https://genai-days-nantes.com/api/en/sessions.json
 
-Chaque session a : id, title, subtitle, description, format (talk, keynote, table-ronde, concours, podcast), track (decideurs, tech, commun), startTime (HH:MM), durationMinutes, room, themes[], speakers[{id, name, pageUrl}], image, pageUrl. La date et le fuseau sont dans event.date et event.timezone.
+Each session has: id, title, subtitle, description, format (talk, keynote, table-ronde, concours, podcast), track (decideurs, tech, commun), startTime (HH:MM), durationMinutes, room, themes[], speakers[{id, name, pageUrl}], image, pageUrl. The date and time zone are in event.date and event.timezone.
 
-Règles :
-- Le champ room vaut null sauf pour la keynote. Appliquer cette correspondance quand room est null : track tech = « Salle Loire » (rez-de-chaussée), track decideurs = « Hémicycle » (1er étage). Si room est renseigné, sa valeur prime.
-- Déroulé chronologique de cartes cliquables, les deux tracks côte à côte ou clairement distinguées par créneau.
-- Le 17 novembre 2026 (heure de Paris), l'écran défile automatiquement vers la session en cours ou la suivante, avec un repère « En ce moment / Now ». Les autres jours, il s'ouvre en haut.
-- Fiche session : titre, sous-titre, description, format, track, horaire, durée, salle et étage, thèmes, image, speakers cliquables vers leur fiche. Certaines sessions n'ont pas encore de speaker : gérer une liste vide proprement.
-- Like : cœur sur chaque carte et fiche, stocké en localStorage pour cette phase, jamais affiché publiquement. Filtre « Mes sessions ». Si on like une session qui chevauche une session déjà likée, afficher un toast d'avertissement sans bloquer.
-- Filtre par track.
-- Ajout à l'agenda, deux boutons : « Ajouter à mon agenda » qui génère un fichier .ics (heure de Paris, lieu Hôtel de Région Pays de la Loire, 1 rue de la Loire, 44200 Nantes, salle dans la description), et « Google Agenda » qui ouvre le lien de création d'événement Google pré-rempli.
+Rules:
+- The room field is null except for the keynote. Apply this mapping when room is null: track tech = "Salle Loire" (ground floor), track decideurs = "Hémicycle" (1st floor). If room is set, its value wins.
+- Chronological flow of clickable cards, with the two tracks side by side or clearly distinguished by time slot.
+- On November 17, 2026 (Paris time), the screen scrolls automatically to the current or next session, with a "Now" marker. On other days, it opens at the top.
+- Session page: title, subtitle, description, format, track, time, duration, room and floor, themes, image, speakers clickable to their page. Some sessions do not have a speaker yet: handle an empty list cleanly.
+- Like: a heart on each card and page, stored in localStorage for this phase, never shown publicly. A "My sessions" filter. If the user likes a session that overlaps a session already liked, show a warning toast without blocking.
+- Filter by track.
+- Add to calendar, two buttons: "Add to my calendar", which generates an .ics file (Paris time, location Hôtel de Région Pays de la Loire, 1 rue de la Loire, 44200 Nantes, room in the description), and "Google Calendar", which opens the pre-filled Google event creation link.
 
 ## 4. Speakers
 
-Source : https://genai-days-nantes.com/api/fr/speakers.json et /api/en/speakers.json.
-Champs : id, name, role, company, eventRole (Jury, Modératrice de table ronde, Finaliste Startup Contest, etc., parfois null), bio, profile[], genaiLegitimacy, careerHighlights[], companies[], photo, links {linkedin, website, x}, sessions[], pageUrl.
-Page liste (accessible depuis Programme, par un onglet interne ou un lien en tête) avec photo, nom, poste, entreprise, rôle événement. Fiche détaillée avec bio, parcours, liens et sessions animées (croisement avec sessions.json par id de speaker).
+Source: https://genai-days-nantes.com/api/fr/speakers.json and /api/en/speakers.json.
+Fields: id, name, role, company, eventRole (Jury, Round-table moderator, Startup Contest finalist, etc., sometimes null), bio, profile[], genaiLegitimacy, careerHighlights[], companies[], photo, links {linkedin, website, x}, sessions[], pageUrl.
+List page (reachable from Program, through an internal tab or a link at the top) with photo, name, job title, company, event role. Detail page with bio, career, links and the sessions they host (cross-referenced with sessions.json by speaker id).
 
-## 5. Plan
+## 5. Floor plan
 
-Deux onglets : « Rez-de-chaussée » et « 1er étage ». Images statiques zoomables (pincement sur mobile). Les vrais plans arrivent plus tard : mets deux images de remplacement neutres clairement marquées « Plan à venir », faciles à remplacer.
+Two tabs: "Ground floor" and "1st floor". Static zoomable images (pinch on mobile). The real plans arrive later: put in two neutral placeholder images clearly marked "Plan coming soon", easy to replace.
 
-## Hors périmètre de cette phase
+## Out of scope for this phase
 
-Backend, comptes, onboarding, annuaire, demandes de connexion, messagerie, feedback de session, e-mails, IA. Ne crée pas de base de données maintenant.
+Backend, accounts, onboarding, directory, connection requests, messaging, session feedback, emails, AI. Do not create a database now.
 
-Avant de coder, confirme brièvement ta compréhension de la phase 1, puis construis-la.
+Before coding, briefly confirm your understanding of phase 1, then build it.
 
 This project was built with [Lovable](https://lovable.dev).
 
