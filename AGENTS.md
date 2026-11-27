@@ -1,13 +1,3 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
 
 ## Architecture rules
 - Event data (sessions, speakers, sponsors) is fetched client-side via src/lib/data.ts: network-first with no-store and a 4s timeout, falling back to a localStorage copy (shown as offline data); the SW also uses NetworkFirst for these URLs. No backend in phase 1.
