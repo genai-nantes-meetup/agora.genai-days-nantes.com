@@ -26,6 +26,7 @@ Agora is the companion web app for the GenAI Days event (Tuesday, November 17, 2
 
 ### Program
 
+- The program, speakers and sponsors are loaded from the event website, [genai-days-nantes.com](https://genai-days-nantes.com), so the app always shows the latest published schedule.
 - Chronological schedule of all sessions, with the tracks clearly distinguished.
 - Automatic scroll to the session happening now or next on the day of the event, with a "Now" marker.
 - Session pages with title, description, format, track, time, duration, room and floor, themes and speakers.
